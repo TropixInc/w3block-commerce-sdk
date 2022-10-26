@@ -8,35 +8,6 @@
  * ---------------------------------------------------------------
  */
 
-export interface CurrencyGasPriceDto {
-  /**
-   * Currency name
-   * @example USD
-   */
-  currency: string;
-
-  /**
-   * current gas price on the chain/currency
-   * @example 0.0002
-   */
-  amount: string;
-}
-
-export interface GasPriceChainItemsDto {
-  '1'?: CurrencyGasPriceDto[];
-  '3'?: CurrencyGasPriceDto[];
-  '4'?: CurrencyGasPriceDto[];
-  '42'?: CurrencyGasPriceDto[];
-  '137'?: CurrencyGasPriceDto[];
-  '1337'?: CurrencyGasPriceDto[];
-  '80001'?: CurrencyGasPriceDto[];
-}
-
-export interface GasPriceResponseDto {
-  /** Gas prices for transfer transaction (price per each NFT) */
-  transfer: GasPriceChainItemsDto;
-}
-
 export enum OrderByEnum {
   ASC = 'ASC',
   DESC = 'DESC',
@@ -817,186 +788,7 @@ export interface CreateFaqContextItemDto {
   contexts: FaqContextItemDto[];
 }
 
-export namespace Health {
-  /**
-   * No description
-   * @tags Util
-   * @name Check
-   * @request GET:/health
-   */
-  export namespace Check {
-    export type RequestParams = {};
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = {
-      status?: string;
-      info?: Record<string, { status?: string }>;
-      error?: Record<string, { status?: string }>;
-      details?: Record<string, { status?: string }>;
-    };
-  }
-  /**
-   * No description
-   * @tags Util
-   * @name GetLiveness
-   * @request GET:/health/liveness
-   */
-  export namespace GetLiveness {
-    export type RequestParams = {};
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = void;
-  }
-  /**
-   * No description
-   * @tags Util
-   * @name GetReadiness
-   * @request GET:/health/readiness
-   */
-  export namespace GetReadiness {
-    export type RequestParams = {};
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = void;
-  }
-  /**
-   * No description
-   * @name Index
-   * @request GET:/health/metrics
-   */
-  export namespace Index {
-    export type RequestParams = {};
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = void;
-  }
-}
-
-export namespace Migrations {
-  /**
-   * No description
-   * @tags Util
-   * @name RunMigrations
-   * @request POST:/migrations/run
-   */
-  export namespace RunMigrations {
-    export type RequestParams = {};
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = void;
-  }
-  /**
-   * No description
-   * @tags Util
-   * @name RevertMigrations
-   * @request POST:/migrations/revert
-   */
-  export namespace RevertMigrations {
-    export type RequestParams = {};
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = void;
-  }
-  /**
-   * No description
-   * @tags Util
-   * @name GetPendingMigrations
-   * @request GET:/migrations/pending
-   */
-  export namespace GetPendingMigrations {
-    export type RequestParams = {};
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = void;
-  }
-  /**
-   * No description
-   * @tags Util
-   * @name GetAllMigrations
-   * @request GET:/migrations/list
-   */
-  export namespace GetAllMigrations {
-    export type RequestParams = {};
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = void;
-  }
-}
-
-export namespace Globals {
-  /**
-   * @description Gets currently blockchain operations estimated prices for each enabled chain and currencies
-   * @tags Globals
-   * @name GetGasPrice
-   * @request GET:/globals/blockchain/gas-price
-   * @secure
-   */
-  export namespace GetGasPrice {
-    export type RequestParams = {};
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = GasPriceResponseDto;
-  }
-  /**
-   * @description Lists system available currencies and its supported payment providers
-   * @tags Globals
-   * @name ListCurrencies
-   * @request GET:/globals/currencies
-   * @secure
-   */
-  export namespace ListCurrencies {
-    export type RequestParams = {};
-    export type RequestQuery = {
-      page?: number;
-      limit?: number;
-      search?: string;
-      sortBy?: string;
-      orderBy?: OrderByEnum;
-    };
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = CurrencyEntityPaginatedDto;
-  }
-}
-
 export namespace Companies {
-  /**
-   * No description
-   * @tags Blockchain Webhooks
-   * @name ReceiveBcsTransactionWebhook
-   * @request POST:/companies/{companyId}/webhooks/blockchain/transaction
-   * @secure
-   */
-  export namespace ReceiveBcsTransactionWebhook {
-    export type RequestParams = { companyId: string };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = { 'x-pixchain-signature': string };
-    export type ResponseBody = void;
-  }
-  /**
-   * No description
-   * @tags Blockchain Webhooks
-   * @name ReceiveBcsEventLogWebhook
-   * @request POST:/companies/{companyId}/webhooks/blockchain/event
-   * @secure
-   */
-  export namespace ReceiveBcsEventLogWebhook {
-    export type RequestParams = { companyId: string };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = { 'x-pixchain-signature': string };
-    export type ResponseBody = void;
-  }
   /**
    * No description
    * @tags Orders
@@ -1035,11 +827,11 @@ export namespace Companies {
   /**
    * No description
    * @tags Orders
-   * @name GetOrder
+   * @name GetUserOrder
    * @request GET:/companies/{companyId}/orders/{orderId}
    * @secure
    */
-  export namespace GetOrder {
+  export namespace GetUserOrder {
     export type RequestParams = { companyId: string; orderId: string };
     export type RequestQuery = {};
     export type RequestBody = never;
@@ -1063,11 +855,11 @@ export namespace Companies {
   /**
    * No description
    * @tags Products
-   * @name FindAll
+   * @name ListProducts
    * @request GET:/companies/{companyId}/products
    * @secure
    */
-  export namespace FindAll {
+  export namespace ListProducts {
     export type RequestParams = { companyId: string };
     export type RequestQuery = {
       page?: number;
@@ -1098,11 +890,11 @@ export namespace Companies {
   /**
    * @description Lists FAQ items (questions/answers) inside a context by name including global faq contexts and specific company faq context items
    * @tags Faq
-   * @name GetFaqByContext
+   * @name ListFaq
    * @request GET:/companies/{companyId}/faq
    * @secure
    */
-  export namespace GetFaqByContext {
+  export namespace ListFaq {
     export type RequestParams = { companyId: string };
     export type RequestQuery = {
       page?: number;
@@ -1172,11 +964,11 @@ export namespace Admin {
   /**
    * No description
    * @tags Products (Admin)
-   * @name Create
+   * @name CreateProduct
    * @request POST:/admin/companies/{companyId}/products
    * @secure
    */
-  export namespace Create {
+  export namespace CreateProduct {
     export type RequestParams = { companyId: string };
     export type RequestQuery = {};
     export type RequestBody = CreateProductDto;
@@ -1186,11 +978,11 @@ export namespace Admin {
   /**
    * No description
    * @tags Products (Admin)
-   * @name FindAll
+   * @name FindProducts
    * @request GET:/admin/companies/{companyId}/products
    * @secure
    */
-  export namespace FindAll {
+  export namespace FindProducts {
     export type RequestParams = { companyId: string };
     export type RequestQuery = {
       page?: number;
@@ -1208,25 +1000,11 @@ export namespace Admin {
   /**
    * No description
    * @tags Products (Admin)
-   * @name FindBySlug
-   * @request GET:/admin/companies/{companyId}/products/find-by-slug/{slug}
-   * @secure
-   */
-  export namespace FindBySlug {
-    export type RequestParams = { companyId: string; slug: string };
-    export type RequestQuery = {};
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = void;
-  }
-  /**
-   * No description
-   * @tags Products (Admin)
-   * @name GetById
+   * @name GetProduct
    * @request GET:/admin/companies/{companyId}/products/{productId}
    * @secure
    */
-  export namespace GetById {
+  export namespace GetProduct {
     export type RequestParams = { productId: string; companyId: string };
     export type RequestQuery = {};
     export type RequestBody = never;
@@ -1236,11 +1014,11 @@ export namespace Admin {
   /**
    * No description
    * @tags Products (Admin)
-   * @name UpdateById
+   * @name UpdateProduct
    * @request PATCH:/admin/companies/{companyId}/products/{productId}
    * @secure
    */
-  export namespace UpdateById {
+  export namespace UpdateProduct {
     export type RequestParams = { productId: string; companyId: string };
     export type RequestQuery = {};
     export type RequestBody = UpdateProductDto;
@@ -1250,11 +1028,25 @@ export namespace Admin {
   /**
    * No description
    * @tags Products (Admin)
-   * @name Publish
+   * @name GetProductBySlug
+   * @request GET:/admin/companies/{companyId}/products/get-by-slug/{slug}
+   * @secure
+   */
+  export namespace GetProductBySlug {
+    export type RequestParams = { companyId: string; slug: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags Products (Admin)
+   * @name PublishProduct
    * @request PATCH:/admin/companies/{companyId}/products/{productId}/publish
    * @secure
    */
-  export namespace Publish {
+  export namespace PublishProduct {
     export type RequestParams = { productId: string; companyId: string };
     export type RequestQuery = {};
     export type RequestBody = never;
@@ -1340,13 +1132,11 @@ export namespace Admin {
   /**
    * @description Create a company tag
    * @tags Tags (Admin)
-   * @name Create2
+   * @name CreateTag
    * @request POST:/admin/companies/{companyId}/tags
-   * @originalName create
-   * @duplicate
    * @secure
    */
-  export namespace Create2 {
+  export namespace CreateTag {
     export type RequestParams = { companyId: string };
     export type RequestQuery = {};
     export type RequestBody = TagDto;
@@ -1356,13 +1146,11 @@ export namespace Admin {
   /**
    * @description Get all company tags paginated
    * @tags Tags (Admin)
-   * @name FindAll2
+   * @name ListTags
    * @request GET:/admin/companies/{companyId}/tags
-   * @originalName findAll
-   * @duplicate
    * @secure
    */
-  export namespace FindAll2 {
+  export namespace ListTags {
     export type RequestParams = { companyId: string };
     export type RequestQuery = {
       page?: number;
@@ -1378,13 +1166,11 @@ export namespace Admin {
   /**
    * @description Get some company tag by id
    * @tags Tags (Admin)
-   * @name GetById2
+   * @name GetTag
    * @request GET:/admin/companies/{companyId}/tags/{id}
-   * @originalName getById
-   * @duplicate
    * @secure
    */
-  export namespace GetById2 {
+  export namespace GetTag {
     export type RequestParams = { id: string; companyId: string };
     export type RequestQuery = {};
     export type RequestBody = never;
@@ -1394,13 +1180,11 @@ export namespace Admin {
   /**
    * @description Updates some company tag
    * @tags Tags (Admin)
-   * @name UpdateById2
+   * @name UpdateTag
    * @request PATCH:/admin/companies/{companyId}/tags/{id}
-   * @originalName updateById
-   * @duplicate
    * @secure
    */
-  export namespace UpdateById2 {
+  export namespace UpdateTag {
     export type RequestParams = { id: string; companyId: string };
     export type RequestQuery = {};
     export type RequestBody = TagDto;
@@ -1452,11 +1236,11 @@ export namespace Admin {
   /**
    * @description Configures/Refresh configuration of Pagar.me payment provider in the company
    * @tags Companies (Admin)
-   * @name CreatePagarMePaymentProvider
+   * @name ConfigurePagarMePaymentProvider
    * @request PATCH:/admin/companies/{companyId}/configurations/providers/pagar-me
    * @secure
    */
-  export namespace CreatePagarMePaymentProvider {
+  export namespace ConfigurePagarMePaymentProvider {
     export type RequestParams = { companyId: string };
     export type RequestQuery = {};
     export type RequestBody = CreatePagarMePaymentProviderDto;
@@ -1466,11 +1250,11 @@ export namespace Admin {
   /**
    * @description Configures/Refresh configuration of Paypal payment provider in the company
    * @tags Companies (Admin)
-   * @name CreatePaypalPaymentProvider
+   * @name ConfigurePaypalPaymentProvider
    * @request PATCH:/admin/companies/{companyId}/configurations/providers/paypal
    * @secure
    */
-  export namespace CreatePaypalPaymentProvider {
+  export namespace ConfigurePaypalPaymentProvider {
     export type RequestParams = { companyId: string };
     export type RequestQuery = {};
     export type RequestBody = CreatePaypalPaymentProviderDto;
@@ -1480,11 +1264,11 @@ export namespace Admin {
   /**
    * @description Request a configuration of Stripe payment provider in the company (needs to be finished with oauth connection)
    * @tags Companies (Admin)
-   * @name CreateStripePaymentProvider
+   * @name RequestStripePaymentProviderConfiguration
    * @request PATCH:/admin/companies/{companyId}/configurations/providers/stripe
    * @secure
    */
-  export namespace CreateStripePaymentProvider {
+  export namespace RequestStripePaymentProviderConfiguration {
     export type RequestParams = { companyId: string };
     export type RequestQuery = {};
     export type RequestBody = CreateStripePaymentProviderDto;
@@ -1494,11 +1278,11 @@ export namespace Admin {
   /**
    * @description Finish connection of Stripe payment provider configuration
    * @tags Companies (Admin)
-   * @name SuccessCreateStripePaymentProvider
+   * @name FinishStripePaymentProviderConfiguration
    * @request PATCH:/admin/companies/{companyId}/configurations/providers/stripe/finish-connection
    * @secure
    */
-  export namespace SuccessCreateStripePaymentProvider {
+  export namespace FinishStripePaymentProviderConfiguration {
     export type RequestParams = { companyId: string };
     export type RequestQuery = {};
     export type RequestBody = never;
@@ -1508,11 +1292,11 @@ export namespace Admin {
   /**
    * @description Refresh Stripe payment provider connection
    * @tags Companies (Admin)
-   * @name RefreshStripePaymentProvider
+   * @name RefreshStripePaymentProviderConfiguration
    * @request PATCH:/admin/companies/{companyId}/configurations/providers/stripe/refresh-connection
    * @secure
    */
-  export namespace RefreshStripePaymentProvider {
+  export namespace RefreshStripePaymentProviderConfiguration {
     export type RequestParams = { companyId: string };
     export type RequestQuery = {};
     export type RequestBody = RefreshStripePaymentProviderDto;
@@ -1522,11 +1306,11 @@ export namespace Admin {
   /**
    * @description Deletes some company payment provider configuration
    * @tags Companies (Admin)
-   * @name DeletePaymentProvider
+   * @name DeletePaymentProviderConfiguration
    * @request DELETE:/admin/companies/{companyId}/configurations/providers/{provider}
    * @secure
    */
-  export namespace DeletePaymentProvider {
+  export namespace DeletePaymentProviderConfiguration {
     export type RequestParams = { companyId: string; provider: PaymentProviderEnum };
     export type RequestQuery = {};
     export type RequestBody = never;
@@ -1536,11 +1320,11 @@ export namespace Admin {
   /**
    * @description Lists all company webhooks configurations
    * @tags Companies Webhooks Configurations (Admin)
-   * @name ListCompanyWebhooksConfigurations
+   * @name ListWebhooksConfigurations
    * @request GET:/admin/companies/{companyId}/webhooks-configurations
    * @secure
    */
-  export namespace ListCompanyWebhooksConfigurations {
+  export namespace ListWebhooksConfigurations {
     export type RequestParams = { companyId: string };
     export type RequestQuery = {
       page?: number;
@@ -1556,11 +1340,11 @@ export namespace Admin {
   /**
    * @description Creates a new company webhooks configuration
    * @tags Companies Webhooks Configurations (Admin)
-   * @name CreateCompanyWebhooksConfiguration
+   * @name CreateWebhooksConfiguration
    * @request POST:/admin/companies/{companyId}/webhooks-configurations
    * @secure
    */
-  export namespace CreateCompanyWebhooksConfiguration {
+  export namespace CreateWebhooksConfiguration {
     export type RequestParams = { companyId: string };
     export type RequestQuery = {};
     export type RequestBody = CreateOrUpdateWebhooksConfigurationDto;
@@ -1570,11 +1354,11 @@ export namespace Admin {
   /**
    * @description Gets some company webhooks configuration
    * @tags Companies Webhooks Configurations (Admin)
-   * @name GetCompanyWebhookConfiguration
+   * @name GetWebhookConfiguration
    * @request GET:/admin/companies/{companyId}/webhooks-configurations/{configurationId}
    * @secure
    */
-  export namespace GetCompanyWebhookConfiguration {
+  export namespace GetWebhookConfiguration {
     export type RequestParams = { companyId: string; configurationId: string };
     export type RequestQuery = {};
     export type RequestBody = never;
@@ -1584,11 +1368,11 @@ export namespace Admin {
   /**
    * @description Updates some company webhooks configuration
    * @tags Companies Webhooks Configurations (Admin)
-   * @name UpdateCompanyWebhooksConfiguration
+   * @name UpdateWebhooksConfiguration
    * @request PATCH:/admin/companies/{companyId}/webhooks-configurations/{configurationId}
    * @secure
    */
-  export namespace UpdateCompanyWebhooksConfiguration {
+  export namespace UpdateWebhooksConfiguration {
     export type RequestParams = { companyId: string; configurationId: string };
     export type RequestQuery = {};
     export type RequestBody = CreateOrUpdateWebhooksConfigurationDto;
@@ -1598,11 +1382,11 @@ export namespace Admin {
   /**
    * @description Enables some company webhooks configuration
    * @tags Companies Webhooks Configurations (Admin)
-   * @name EnableCompanyWebhooksConfiguration
+   * @name EnableWebhooksConfiguration
    * @request PATCH:/admin/companies/{companyId}/webhooks-configurations/{configurationId}/enable
    * @secure
    */
-  export namespace EnableCompanyWebhooksConfiguration {
+  export namespace EnableWebhooksConfiguration {
     export type RequestParams = { companyId: string; configurationId: string };
     export type RequestQuery = {};
     export type RequestBody = never;
@@ -1612,11 +1396,11 @@ export namespace Admin {
   /**
    * @description Disables some company webhooks configuration
    * @tags Companies Webhooks Configurations (Admin)
-   * @name DisableCompanyWebhooksConfiguration
+   * @name DisableWebhooksConfiguration
    * @request PATCH:/admin/companies/{companyId}/webhooks-configurations/{configurationId}/disable
    * @secure
    */
-  export namespace DisableCompanyWebhooksConfiguration {
+  export namespace DisableWebhooksConfiguration {
     export type RequestParams = { companyId: string; configurationId: string };
     export type RequestQuery = {};
     export type RequestBody = never;
@@ -1626,11 +1410,11 @@ export namespace Admin {
   /**
    * @description Lists all webhooks sent using some webhooks configuration of company
    * @tags Companies Webhooks Configurations (Admin)
-   * @name ListCompanyWebhooksConfigurationWebhooks
+   * @name ListWebhooksConfigurationWebhooks
    * @request GET:/admin/companies/{companyId}/webhooks-configurations/{configurationId}/webhooks
    * @secure
    */
-  export namespace ListCompanyWebhooksConfigurationWebhooks {
+  export namespace ListWebhooksConfigurationWebhooks {
     export type RequestParams = { companyId: string; configurationId: string };
     export type RequestQuery = {
       page?: number;
@@ -1646,11 +1430,11 @@ export namespace Admin {
   /**
    * @description Gets some company webhooks configuration sent webhook
    * @tags Companies Webhooks Configurations (Admin)
-   * @name GetCompanyWebhookConfigurationWebhook
+   * @name GetWebhookConfigurationWebhook
    * @request GET:/admin/companies/{companyId}/webhooks-configurations/{configurationId}/webhooks/{webhookId}
    * @secure
    */
-  export namespace GetCompanyWebhookConfigurationWebhook {
+  export namespace GetWebhookConfigurationWebhook {
     export type RequestParams = { companyId: string; configurationId: string; webhookId: string };
     export type RequestQuery = {};
     export type RequestBody = never;
@@ -1660,11 +1444,11 @@ export namespace Admin {
   /**
    * @description Creates a new request to upload some asset (image or video) in our service. You must use this endpoint response to upload assets using the specific provider apis (ex: Cloudinary)
    * @tags Assets (Admin)
-   * @name RequestUpload
+   * @name RequestAssetUpload
    * @request POST:/admin/companies/{companyId}/assets
    * @secure
    */
-  export namespace RequestUpload {
+  export namespace RequestAssetUpload {
     export type RequestParams = { companyId: string };
     export type RequestQuery = {};
     export type RequestBody = RequestAssetUploadDto;
@@ -1674,11 +1458,11 @@ export namespace Admin {
   /**
    * @description Lists all company FAQ contexts
    * @tags Faq (Admin)
-   * @name ListCompanyFaqContexts
+   * @name ListFaqContexts
    * @request GET:/admin/companies/{companyId}/faq/contexts
    * @secure
    */
-  export namespace ListCompanyFaqContexts {
+  export namespace ListFaqContexts {
     export type RequestParams = { companyId: string };
     export type RequestQuery = {
       page?: number;
@@ -1694,13 +1478,11 @@ export namespace Admin {
   /**
    * @description Creates a new FAQ context for a company
    * @tags Faq (Admin)
-   * @name Create3
+   * @name CreateFaqContext
    * @request POST:/admin/companies/{companyId}/faq/contexts
-   * @originalName create
-   * @duplicate
    * @secure
    */
-  export namespace Create3 {
+  export namespace CreateFaqContext {
     export type RequestParams = { companyId: string };
     export type RequestQuery = {};
     export type RequestBody = CreateFaqContextDto;
@@ -1710,11 +1492,11 @@ export namespace Admin {
   /**
    * @description Gets a company FAQ context
    * @tags Faq (Admin)
-   * @name GetContextById
+   * @name GetFaqContext
    * @request GET:/admin/companies/{companyId}/faq/contexts/{contextId}
    * @secure
    */
-  export namespace GetContextById {
+  export namespace GetFaqContext {
     export type RequestParams = { companyId: string; contextId: string };
     export type RequestQuery = {};
     export type RequestBody = never;
@@ -1724,11 +1506,11 @@ export namespace Admin {
   /**
    * @description Updates some company FAQ context
    * @tags Faq (Admin)
-   * @name Update
+   * @name UpdateFaqContext
    * @request PATCH:/admin/companies/{companyId}/faq/contexts/{contextId}
    * @secure
    */
-  export namespace Update {
+  export namespace UpdateFaqContext {
     export type RequestParams = { companyId: string; contextId: string };
     export type RequestQuery = {};
     export type RequestBody = CreateFaqContextDto;
@@ -1738,11 +1520,11 @@ export namespace Admin {
   /**
    * @description Lists all FAQ items inside some company context
    * @tags Faq (Admin)
-   * @name ListCompanyFaqContextsItems
+   * @name ListFaqContextItems
    * @request GET:/admin/companies/{companyId}/faq/contexts/{contextId}/items
    * @secure
    */
-  export namespace ListCompanyFaqContextsItems {
+  export namespace ListFaqContextItems {
     export type RequestParams = { companyId: string; contextId: string };
     export type RequestQuery = {
       page?: number;
@@ -1758,11 +1540,11 @@ export namespace Admin {
   /**
    * @description Gets company context FAQ item by id
    * @tags Faq (Admin)
-   * @name GetFaqContextItemById
+   * @name GetFaqContextItem
    * @request GET:/admin/companies/{companyId}/faq/contexts/{contextId}/items/{faqItemId}
    * @secure
    */
-  export namespace GetFaqContextItemById {
+  export namespace GetFaqContextItem {
     export type RequestParams = { companyId: string; contextId: string; faqItemId: string };
     export type RequestQuery = {};
     export type RequestBody = never;
@@ -1772,11 +1554,11 @@ export namespace Admin {
   /**
    * @description Lists all company FAQ items which are associated to some company context
    * @tags Faq (Admin)
-   * @name ListCompanyFaqItems
+   * @name ListFaqItems
    * @request GET:/admin/companies/{companyId}/faq/items
    * @secure
    */
-  export namespace ListCompanyFaqItems {
+  export namespace ListFaqItems {
     export type RequestParams = { companyId: string };
     export type RequestQuery = {
       page?: number;
@@ -1806,11 +1588,11 @@ export namespace Admin {
   /**
    * @description Gets a company FAQ item by id
    * @tags Faq (Admin)
-   * @name GetFaqItemById
+   * @name GetFaqItem
    * @request GET:/admin/companies/{companyId}/faq/items/{faqItemId}
    * @secure
    */
-  export namespace GetFaqItemById {
+  export namespace GetFaqItem {
     export type RequestParams = { companyId: string; faqItemId: string };
     export type RequestQuery = {};
     export type RequestBody = never;
@@ -1830,6 +1612,29 @@ export namespace Admin {
     export type RequestBody = CreateFaqContextItemDto;
     export type RequestHeaders = {};
     export type ResponseBody = FaqItemsEntityDto;
+  }
+}
+
+export namespace Globals {
+  /**
+   * @description Lists system available currencies and its supported payment providers
+   * @tags Globals
+   * @name ListCurrencies
+   * @request GET:/globals/currencies
+   * @secure
+   */
+  export namespace ListCurrencies {
+    export type RequestParams = {};
+    export type RequestQuery = {
+      page?: number;
+      limit?: number;
+      search?: string;
+      sortBy?: string;
+      orderBy?: OrderByEnum;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = CurrencyEntityPaginatedDto;
   }
 }
 
@@ -1960,219 +1765,7 @@ export class HttpClient<SecurityDataType = unknown> {
  * @contact
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
-  /**
-   * No description
-   *
-   * @tags App
-   * @name GetNodeEnv
-   * @request GET:/
-   */
-  getNodeEnv = (params: RequestParams = {}) =>
-    this.request<void, any>({
-      path: `/`,
-      method: 'GET',
-      ...params,
-    });
-
-  health = {
-    /**
-     * No description
-     *
-     * @tags Util
-     * @name Check
-     * @request GET:/health
-     */
-    check: (params: RequestParams = {}) =>
-      this.request<
-        {
-          status?: string;
-          info?: Record<string, { status?: string }>;
-          error?: Record<string, { status?: string }>;
-          details?: Record<string, { status?: string }>;
-        },
-        {
-          status?: string;
-          info?: Record<string, { status?: string }>;
-          error?: Record<string, { status?: string }>;
-          details?: Record<string, { status?: string }>;
-        }
-      >({
-        path: `/health`,
-        method: 'GET',
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Util
-     * @name GetLiveness
-     * @request GET:/health/liveness
-     */
-    getLiveness: (params: RequestParams = {}) =>
-      this.request<void, any>({
-        path: `/health/liveness`,
-        method: 'GET',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Util
-     * @name GetReadiness
-     * @request GET:/health/readiness
-     */
-    getReadiness: (params: RequestParams = {}) =>
-      this.request<void, any>({
-        path: `/health/readiness`,
-        method: 'GET',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @name Index
-     * @request GET:/health/metrics
-     */
-    index: (params: RequestParams = {}) =>
-      this.request<void, any>({
-        path: `/health/metrics`,
-        method: 'GET',
-        ...params,
-      }),
-  };
-  migrations = {
-    /**
-     * No description
-     *
-     * @tags Util
-     * @name RunMigrations
-     * @request POST:/migrations/run
-     */
-    runMigrations: (params: RequestParams = {}) =>
-      this.request<void, any>({
-        path: `/migrations/run`,
-        method: 'POST',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Util
-     * @name RevertMigrations
-     * @request POST:/migrations/revert
-     */
-    revertMigrations: (params: RequestParams = {}) =>
-      this.request<void, any>({
-        path: `/migrations/revert`,
-        method: 'POST',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Util
-     * @name GetPendingMigrations
-     * @request GET:/migrations/pending
-     */
-    getPendingMigrations: (params: RequestParams = {}) =>
-      this.request<void, any>({
-        path: `/migrations/pending`,
-        method: 'GET',
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Util
-     * @name GetAllMigrations
-     * @request GET:/migrations/list
-     */
-    getAllMigrations: (params: RequestParams = {}) =>
-      this.request<void, any>({
-        path: `/migrations/list`,
-        method: 'GET',
-        ...params,
-      }),
-  };
-  globals = {
-    /**
-     * @description Gets currently blockchain operations estimated prices for each enabled chain and currencies
-     *
-     * @tags Globals
-     * @name GetGasPrice
-     * @request GET:/globals/blockchain/gas-price
-     * @secure
-     */
-    getGasPrice: (params: RequestParams = {}) =>
-      this.request<GasPriceResponseDto, any>({
-        path: `/globals/blockchain/gas-price`,
-        method: 'GET',
-        secure: true,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * @description Lists system available currencies and its supported payment providers
-     *
-     * @tags Globals
-     * @name ListCurrencies
-     * @request GET:/globals/currencies
-     * @secure
-     */
-    listCurrencies: (
-      query?: { page?: number; limit?: number; search?: string; sortBy?: string; orderBy?: OrderByEnum },
-      params: RequestParams = {},
-    ) =>
-      this.request<CurrencyEntityPaginatedDto, any>({
-        path: `/globals/currencies`,
-        method: 'GET',
-        query: query,
-        secure: true,
-        format: 'json',
-        ...params,
-      }),
-  };
   companies = {
-    /**
-     * No description
-     *
-     * @tags Blockchain Webhooks
-     * @name ReceiveBcsTransactionWebhook
-     * @request POST:/companies/{companyId}/webhooks/blockchain/transaction
-     * @secure
-     */
-    receiveBcsTransactionWebhook: (companyId: string, params: RequestParams = {}) =>
-      this.request<void, void>({
-        path: `/companies/${companyId}/webhooks/blockchain/transaction`,
-        method: 'POST',
-        secure: true,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Blockchain Webhooks
-     * @name ReceiveBcsEventLogWebhook
-     * @request POST:/companies/{companyId}/webhooks/blockchain/event
-     * @secure
-     */
-    receiveBcsEventLogWebhook: (companyId: string, params: RequestParams = {}) =>
-      this.request<void, void>({
-        path: `/companies/${companyId}/webhooks/blockchain/event`,
-        method: 'POST',
-        secure: true,
-        ...params,
-      }),
-
     /**
      * No description
      *
@@ -2225,11 +1818,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Orders
-     * @name GetOrder
+     * @name GetUserOrder
      * @request GET:/companies/{companyId}/orders/{orderId}
      * @secure
      */
-    getOrder: (companyId: string, orderId: string, params: RequestParams = {}) =>
+    getUserOrder: (companyId: string, orderId: string, params: RequestParams = {}) =>
       this.request<OrderEntityDto, void>({
         path: `/companies/${companyId}/orders/${orderId}`,
         method: 'GET',
@@ -2260,11 +1853,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Products
-     * @name FindAll
+     * @name ListProducts
      * @request GET:/companies/{companyId}/products
      * @secure
      */
-    findAll: (
+    listProducts: (
       companyId: string,
       query?: {
         page?: number;
@@ -2304,11 +1897,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @description Lists FAQ items (questions/answers) inside a context by name including global faq contexts and specific company faq context items
      *
      * @tags Faq
-     * @name GetFaqByContext
+     * @name ListFaq
      * @request GET:/companies/{companyId}/faq
      * @secure
      */
-    getFaqByContext: (
+    listFaq: (
       companyId: string,
       query?: {
         page?: number;
@@ -2396,11 +1989,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Products (Admin)
-     * @name Create
+     * @name CreateProduct
      * @request POST:/admin/companies/{companyId}/products
      * @secure
      */
-    create: (companyId: string, data: CreateProductDto, params: RequestParams = {}) =>
+    createProduct: (companyId: string, data: CreateProductDto, params: RequestParams = {}) =>
       this.request<ProductEntity, void>({
         path: `/admin/companies/${companyId}/products`,
         method: 'POST',
@@ -2415,11 +2008,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Products (Admin)
-     * @name FindAll
+     * @name FindProducts
      * @request GET:/admin/companies/{companyId}/products
      * @secure
      */
-    findAll: (
+    findProducts: (
       companyId: string,
       query?: {
         page?: number;
@@ -2444,27 +2037,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Products (Admin)
-     * @name FindBySlug
-     * @request GET:/admin/companies/{companyId}/products/find-by-slug/{slug}
-     * @secure
-     */
-    findBySlug: (companyId: string, slug: string, params: RequestParams = {}) =>
-      this.request<void, void>({
-        path: `/admin/companies/${companyId}/products/find-by-slug/${slug}`,
-        method: 'GET',
-        secure: true,
-        ...params,
-      }),
-
-    /**
-     * No description
-     *
-     * @tags Products (Admin)
-     * @name GetById
+     * @name GetProduct
      * @request GET:/admin/companies/{companyId}/products/{productId}
      * @secure
      */
-    getById: (productId: string, companyId: string, params: RequestParams = {}) =>
+    getProduct: (productId: string, companyId: string, params: RequestParams = {}) =>
       this.request<void, void>({
         path: `/admin/companies/${companyId}/products/${productId}`,
         method: 'GET',
@@ -2476,11 +2053,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Products (Admin)
-     * @name UpdateById
+     * @name UpdateProduct
      * @request PATCH:/admin/companies/{companyId}/products/{productId}
      * @secure
      */
-    updateById: (productId: string, companyId: string, data: UpdateProductDto, params: RequestParams = {}) =>
+    updateProduct: (productId: string, companyId: string, data: UpdateProductDto, params: RequestParams = {}) =>
       this.request<void, void>({
         path: `/admin/companies/${companyId}/products/${productId}`,
         method: 'PATCH',
@@ -2494,11 +2071,27 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Products (Admin)
-     * @name Publish
+     * @name GetProductBySlug
+     * @request GET:/admin/companies/{companyId}/products/get-by-slug/{slug}
+     * @secure
+     */
+    getProductBySlug: (companyId: string, slug: string, params: RequestParams = {}) =>
+      this.request<void, void>({
+        path: `/admin/companies/${companyId}/products/get-by-slug/${slug}`,
+        method: 'GET',
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Products (Admin)
+     * @name PublishProduct
      * @request PATCH:/admin/companies/{companyId}/products/{productId}/publish
      * @secure
      */
-    publish: (productId: string, companyId: string, params: RequestParams = {}) =>
+    publishProduct: (productId: string, companyId: string, params: RequestParams = {}) =>
       this.request<void, void>({
         path: `/admin/companies/${companyId}/products/${productId}/publish`,
         method: 'PATCH',
@@ -2617,13 +2210,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @description Create a company tag
      *
      * @tags Tags (Admin)
-     * @name Create2
+     * @name CreateTag
      * @request POST:/admin/companies/{companyId}/tags
-     * @originalName create
-     * @duplicate
      * @secure
      */
-    create2: (companyId: string, data: TagDto, params: RequestParams = {}) =>
+    createTag: (companyId: string, data: TagDto, params: RequestParams = {}) =>
       this.request<TagsEntityDto, void>({
         path: `/admin/companies/${companyId}/tags`,
         method: 'POST',
@@ -2638,13 +2229,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @description Get all company tags paginated
      *
      * @tags Tags (Admin)
-     * @name FindAll2
+     * @name ListTags
      * @request GET:/admin/companies/{companyId}/tags
-     * @originalName findAll
-     * @duplicate
      * @secure
      */
-    findAll2: (
+    listTags: (
       companyId: string,
       query?: { page?: number; limit?: number; search?: string; sortBy?: TagsSortBy; orderBy?: OrderByEnum },
       params: RequestParams = {},
@@ -2662,13 +2251,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @description Get some company tag by id
      *
      * @tags Tags (Admin)
-     * @name GetById2
+     * @name GetTag
      * @request GET:/admin/companies/{companyId}/tags/{id}
-     * @originalName getById
-     * @duplicate
      * @secure
      */
-    getById2: (id: string, companyId: string, params: RequestParams = {}) =>
+    getTag: (id: string, companyId: string, params: RequestParams = {}) =>
       this.request<TagsEntityDto, void>({
         path: `/admin/companies/${companyId}/tags/${id}`,
         method: 'GET',
@@ -2681,13 +2268,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @description Updates some company tag
      *
      * @tags Tags (Admin)
-     * @name UpdateById2
+     * @name UpdateTag
      * @request PATCH:/admin/companies/{companyId}/tags/{id}
-     * @originalName updateById
-     * @duplicate
      * @secure
      */
-    updateById2: (id: string, companyId: string, data: TagDto, params: RequestParams = {}) =>
+    updateTag: (id: string, companyId: string, data: TagDto, params: RequestParams = {}) =>
       this.request<TagsEntityDto, void>({
         path: `/admin/companies/${companyId}/tags/${id}`,
         method: 'PATCH',
@@ -2765,11 +2350,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @description Configures/Refresh configuration of Pagar.me payment provider in the company
      *
      * @tags Companies (Admin)
-     * @name CreatePagarMePaymentProvider
+     * @name ConfigurePagarMePaymentProvider
      * @request PATCH:/admin/companies/{companyId}/configurations/providers/pagar-me
      * @secure
      */
-    createPagarMePaymentProvider: (
+    configurePagarMePaymentProvider: (
       companyId: string,
       data: CreatePagarMePaymentProviderDto,
       params: RequestParams = {},
@@ -2788,11 +2373,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @description Configures/Refresh configuration of Paypal payment provider in the company
      *
      * @tags Companies (Admin)
-     * @name CreatePaypalPaymentProvider
+     * @name ConfigurePaypalPaymentProvider
      * @request PATCH:/admin/companies/{companyId}/configurations/providers/paypal
      * @secure
      */
-    createPaypalPaymentProvider: (
+    configurePaypalPaymentProvider: (
       companyId: string,
       data: CreatePaypalPaymentProviderDto,
       params: RequestParams = {},
@@ -2811,11 +2396,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @description Request a configuration of Stripe payment provider in the company (needs to be finished with oauth connection)
      *
      * @tags Companies (Admin)
-     * @name CreateStripePaymentProvider
+     * @name RequestStripePaymentProviderConfiguration
      * @request PATCH:/admin/companies/{companyId}/configurations/providers/stripe
      * @secure
      */
-    createStripePaymentProvider: (
+    requestStripePaymentProviderConfiguration: (
       companyId: string,
       data: CreateStripePaymentProviderDto,
       params: RequestParams = {},
@@ -2834,11 +2419,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @description Finish connection of Stripe payment provider configuration
      *
      * @tags Companies (Admin)
-     * @name SuccessCreateStripePaymentProvider
+     * @name FinishStripePaymentProviderConfiguration
      * @request PATCH:/admin/companies/{companyId}/configurations/providers/stripe/finish-connection
      * @secure
      */
-    successCreateStripePaymentProvider: (companyId: string, params: RequestParams = {}) =>
+    finishStripePaymentProviderConfiguration: (companyId: string, params: RequestParams = {}) =>
       this.request<void, void>({
         path: `/admin/companies/${companyId}/configurations/providers/stripe/finish-connection`,
         method: 'PATCH',
@@ -2850,11 +2435,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @description Refresh Stripe payment provider connection
      *
      * @tags Companies (Admin)
-     * @name RefreshStripePaymentProvider
+     * @name RefreshStripePaymentProviderConfiguration
      * @request PATCH:/admin/companies/{companyId}/configurations/providers/stripe/refresh-connection
      * @secure
      */
-    refreshStripePaymentProvider: (
+    refreshStripePaymentProviderConfiguration: (
       companyId: string,
       data: RefreshStripePaymentProviderDto,
       params: RequestParams = {},
@@ -2873,11 +2458,15 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @description Deletes some company payment provider configuration
      *
      * @tags Companies (Admin)
-     * @name DeletePaymentProvider
+     * @name DeletePaymentProviderConfiguration
      * @request DELETE:/admin/companies/{companyId}/configurations/providers/{provider}
      * @secure
      */
-    deletePaymentProvider: (companyId: string, provider: PaymentProviderEnum, params: RequestParams = {}) =>
+    deletePaymentProviderConfiguration: (
+      companyId: string,
+      provider: PaymentProviderEnum,
+      params: RequestParams = {},
+    ) =>
       this.request<void, void>({
         path: `/admin/companies/${companyId}/configurations/providers/${provider}`,
         method: 'DELETE',
@@ -2889,11 +2478,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @description Lists all company webhooks configurations
      *
      * @tags Companies Webhooks Configurations (Admin)
-     * @name ListCompanyWebhooksConfigurations
+     * @name ListWebhooksConfigurations
      * @request GET:/admin/companies/{companyId}/webhooks-configurations
      * @secure
      */
-    listCompanyWebhooksConfigurations: (
+    listWebhooksConfigurations: (
       companyId: string,
       query?: { page?: number; limit?: number; search?: string; sortBy?: string; orderBy?: OrderByEnum },
       params: RequestParams = {},
@@ -2911,11 +2500,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @description Creates a new company webhooks configuration
      *
      * @tags Companies Webhooks Configurations (Admin)
-     * @name CreateCompanyWebhooksConfiguration
+     * @name CreateWebhooksConfiguration
      * @request POST:/admin/companies/{companyId}/webhooks-configurations
      * @secure
      */
-    createCompanyWebhooksConfiguration: (
+    createWebhooksConfiguration: (
       companyId: string,
       data: CreateOrUpdateWebhooksConfigurationDto,
       params: RequestParams = {},
@@ -2934,11 +2523,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @description Gets some company webhooks configuration
      *
      * @tags Companies Webhooks Configurations (Admin)
-     * @name GetCompanyWebhookConfiguration
+     * @name GetWebhookConfiguration
      * @request GET:/admin/companies/{companyId}/webhooks-configurations/{configurationId}
      * @secure
      */
-    getCompanyWebhookConfiguration: (companyId: string, configurationId: string, params: RequestParams = {}) =>
+    getWebhookConfiguration: (companyId: string, configurationId: string, params: RequestParams = {}) =>
       this.request<WebhooksConfigurationEntityDto, void>({
         path: `/admin/companies/${companyId}/webhooks-configurations/${configurationId}`,
         method: 'GET',
@@ -2951,11 +2540,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @description Updates some company webhooks configuration
      *
      * @tags Companies Webhooks Configurations (Admin)
-     * @name UpdateCompanyWebhooksConfiguration
+     * @name UpdateWebhooksConfiguration
      * @request PATCH:/admin/companies/{companyId}/webhooks-configurations/{configurationId}
      * @secure
      */
-    updateCompanyWebhooksConfiguration: (
+    updateWebhooksConfiguration: (
       companyId: string,
       configurationId: string,
       data: CreateOrUpdateWebhooksConfigurationDto,
@@ -2975,11 +2564,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @description Enables some company webhooks configuration
      *
      * @tags Companies Webhooks Configurations (Admin)
-     * @name EnableCompanyWebhooksConfiguration
+     * @name EnableWebhooksConfiguration
      * @request PATCH:/admin/companies/{companyId}/webhooks-configurations/{configurationId}/enable
      * @secure
      */
-    enableCompanyWebhooksConfiguration: (companyId: string, configurationId: string, params: RequestParams = {}) =>
+    enableWebhooksConfiguration: (companyId: string, configurationId: string, params: RequestParams = {}) =>
       this.request<void, void>({
         path: `/admin/companies/${companyId}/webhooks-configurations/${configurationId}/enable`,
         method: 'PATCH',
@@ -2991,11 +2580,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @description Disables some company webhooks configuration
      *
      * @tags Companies Webhooks Configurations (Admin)
-     * @name DisableCompanyWebhooksConfiguration
+     * @name DisableWebhooksConfiguration
      * @request PATCH:/admin/companies/{companyId}/webhooks-configurations/{configurationId}/disable
      * @secure
      */
-    disableCompanyWebhooksConfiguration: (companyId: string, configurationId: string, params: RequestParams = {}) =>
+    disableWebhooksConfiguration: (companyId: string, configurationId: string, params: RequestParams = {}) =>
       this.request<void, void>({
         path: `/admin/companies/${companyId}/webhooks-configurations/${configurationId}/disable`,
         method: 'PATCH',
@@ -3007,11 +2596,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @description Lists all webhooks sent using some webhooks configuration of company
      *
      * @tags Companies Webhooks Configurations (Admin)
-     * @name ListCompanyWebhooksConfigurationWebhooks
+     * @name ListWebhooksConfigurationWebhooks
      * @request GET:/admin/companies/{companyId}/webhooks-configurations/{configurationId}/webhooks
      * @secure
      */
-    listCompanyWebhooksConfigurationWebhooks: (
+    listWebhooksConfigurationWebhooks: (
       companyId: string,
       configurationId: string,
       query?: { page?: number; limit?: number; search?: string; sortBy?: string; orderBy?: OrderByEnum },
@@ -3030,11 +2619,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @description Gets some company webhooks configuration sent webhook
      *
      * @tags Companies Webhooks Configurations (Admin)
-     * @name GetCompanyWebhookConfigurationWebhook
+     * @name GetWebhookConfigurationWebhook
      * @request GET:/admin/companies/{companyId}/webhooks-configurations/{configurationId}/webhooks/{webhookId}
      * @secure
      */
-    getCompanyWebhookConfigurationWebhook: (
+    getWebhookConfigurationWebhook: (
       companyId: string,
       configurationId: string,
       webhookId: string,
@@ -3052,11 +2641,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @description Creates a new request to upload some asset (image or video) in our service. You must use this endpoint response to upload assets using the specific provider apis (ex: Cloudinary)
      *
      * @tags Assets (Admin)
-     * @name RequestUpload
+     * @name RequestAssetUpload
      * @request POST:/admin/companies/{companyId}/assets
      * @secure
      */
-    requestUpload: (companyId: string, data: RequestAssetUploadDto, params: RequestParams = {}) =>
+    requestAssetUpload: (companyId: string, data: RequestAssetUploadDto, params: RequestParams = {}) =>
       this.request<AssetEntityWithSignatureDto, void>({
         path: `/admin/companies/${companyId}/assets`,
         method: 'POST',
@@ -3071,11 +2660,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @description Lists all company FAQ contexts
      *
      * @tags Faq (Admin)
-     * @name ListCompanyFaqContexts
+     * @name ListFaqContexts
      * @request GET:/admin/companies/{companyId}/faq/contexts
      * @secure
      */
-    listCompanyFaqContexts: (
+    listFaqContexts: (
       companyId: string,
       query?: { page?: number; limit?: number; search?: string; sortBy?: string; orderBy?: OrderByEnum },
       params: RequestParams = {},
@@ -3093,13 +2682,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @description Creates a new FAQ context for a company
      *
      * @tags Faq (Admin)
-     * @name Create3
+     * @name CreateFaqContext
      * @request POST:/admin/companies/{companyId}/faq/contexts
-     * @originalName create
-     * @duplicate
      * @secure
      */
-    create3: (companyId: string, data: CreateFaqContextDto, params: RequestParams = {}) =>
+    createFaqContext: (companyId: string, data: CreateFaqContextDto, params: RequestParams = {}) =>
       this.request<FaqContextEntityDto, void>({
         path: `/admin/companies/${companyId}/faq/contexts`,
         method: 'POST',
@@ -3114,11 +2701,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @description Gets a company FAQ context
      *
      * @tags Faq (Admin)
-     * @name GetContextById
+     * @name GetFaqContext
      * @request GET:/admin/companies/{companyId}/faq/contexts/{contextId}
      * @secure
      */
-    getContextById: (companyId: string, contextId: string, params: RequestParams = {}) =>
+    getFaqContext: (companyId: string, contextId: string, params: RequestParams = {}) =>
       this.request<FaqContextEntityDto, void>({
         path: `/admin/companies/${companyId}/faq/contexts/${contextId}`,
         method: 'GET',
@@ -3131,11 +2718,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @description Updates some company FAQ context
      *
      * @tags Faq (Admin)
-     * @name Update
+     * @name UpdateFaqContext
      * @request PATCH:/admin/companies/{companyId}/faq/contexts/{contextId}
      * @secure
      */
-    update: (companyId: string, contextId: string, data: CreateFaqContextDto, params: RequestParams = {}) =>
+    updateFaqContext: (companyId: string, contextId: string, data: CreateFaqContextDto, params: RequestParams = {}) =>
       this.request<FaqContextEntityDto, void>({
         path: `/admin/companies/${companyId}/faq/contexts/${contextId}`,
         method: 'PATCH',
@@ -3150,11 +2737,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @description Lists all FAQ items inside some company context
      *
      * @tags Faq (Admin)
-     * @name ListCompanyFaqContextsItems
+     * @name ListFaqContextItems
      * @request GET:/admin/companies/{companyId}/faq/contexts/{contextId}/items
      * @secure
      */
-    listCompanyFaqContextsItems: (
+    listFaqContextItems: (
       companyId: string,
       contextId: string,
       query?: { page?: number; limit?: number; search?: string; sortBy?: string; orderBy?: OrderByEnum },
@@ -3173,11 +2760,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @description Gets company context FAQ item by id
      *
      * @tags Faq (Admin)
-     * @name GetFaqContextItemById
+     * @name GetFaqContextItem
      * @request GET:/admin/companies/{companyId}/faq/contexts/{contextId}/items/{faqItemId}
      * @secure
      */
-    getFaqContextItemById: (companyId: string, contextId: string, faqItemId: string, params: RequestParams = {}) =>
+    getFaqContextItem: (companyId: string, contextId: string, faqItemId: string, params: RequestParams = {}) =>
       this.request<FaqItemsEntityDto, void>({
         path: `/admin/companies/${companyId}/faq/contexts/${contextId}/items/${faqItemId}`,
         method: 'GET',
@@ -3190,11 +2777,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @description Lists all company FAQ items which are associated to some company context
      *
      * @tags Faq (Admin)
-     * @name ListCompanyFaqItems
+     * @name ListFaqItems
      * @request GET:/admin/companies/{companyId}/faq/items
      * @secure
      */
-    listCompanyFaqItems: (
+    listFaqItems: (
       companyId: string,
       query?: { page?: number; limit?: number; search?: string; sortBy?: string; orderBy?: OrderByEnum },
       params: RequestParams = {},
@@ -3231,11 +2818,11 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @description Gets a company FAQ item by id
      *
      * @tags Faq (Admin)
-     * @name GetFaqItemById
+     * @name GetFaqItem
      * @request GET:/admin/companies/{companyId}/faq/items/{faqItemId}
      * @secure
      */
-    getFaqItemById: (companyId: string, faqItemId: string, params: RequestParams = {}) =>
+    getFaqItem: (companyId: string, faqItemId: string, params: RequestParams = {}) =>
       this.request<FaqItemsEntityDto, void>({
         path: `/admin/companies/${companyId}/faq/items/${faqItemId}`,
         method: 'GET',
@@ -3259,6 +2846,28 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         body: data,
         secure: true,
         type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+  };
+  globals = {
+    /**
+     * @description Lists system available currencies and its supported payment providers
+     *
+     * @tags Globals
+     * @name ListCurrencies
+     * @request GET:/globals/currencies
+     * @secure
+     */
+    listCurrencies: (
+      query?: { page?: number; limit?: number; search?: string; sortBy?: string; orderBy?: OrderByEnum },
+      params: RequestParams = {},
+    ) =>
+      this.request<CurrencyEntityPaginatedDto, any>({
+        path: `/globals/currencies`,
+        method: 'GET',
+        query: query,
+        secure: true,
         format: 'json',
         ...params,
       }),

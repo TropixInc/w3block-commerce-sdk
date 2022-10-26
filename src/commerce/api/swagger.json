@@ -1,410 +1,6 @@
 {
   "openapi": "3.0.0",
   "paths": {
-    "/": {
-      "get": {
-        "operationId": "getNodeEnv",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "App"
-        ]
-      }
-    },
-    "/health": {
-      "get": {
-        "operationId": "check",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "The Health Check is successful",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "ok"
-                    },
-                    "info": {
-                      "type": "object",
-                      "example": {
-                        "database": {
-                          "status": "up"
-                        }
-                      },
-                      "additionalProperties": {
-                        "type": "object",
-                        "properties": {
-                          "status": {
-                            "type": "string"
-                          }
-                        },
-                        "additionalProperties": {
-                          "type": "string"
-                        }
-                      },
-                      "nullable": true
-                    },
-                    "error": {
-                      "type": "object",
-                      "example": {},
-                      "additionalProperties": {
-                        "type": "object",
-                        "properties": {
-                          "status": {
-                            "type": "string"
-                          }
-                        },
-                        "additionalProperties": {
-                          "type": "string"
-                        }
-                      },
-                      "nullable": true
-                    },
-                    "details": {
-                      "type": "object",
-                      "example": {
-                        "database": {
-                          "status": "up"
-                        }
-                      },
-                      "additionalProperties": {
-                        "type": "object",
-                        "properties": {
-                          "status": {
-                            "type": "string"
-                          }
-                        },
-                        "additionalProperties": {
-                          "type": "string"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "The Health Check is not successful",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "status": {
-                      "type": "string",
-                      "example": "error"
-                    },
-                    "info": {
-                      "type": "object",
-                      "example": {
-                        "database": {
-                          "status": "up"
-                        }
-                      },
-                      "additionalProperties": {
-                        "type": "object",
-                        "properties": {
-                          "status": {
-                            "type": "string"
-                          }
-                        },
-                        "additionalProperties": {
-                          "type": "string"
-                        }
-                      },
-                      "nullable": true
-                    },
-                    "error": {
-                      "type": "object",
-                      "example": {
-                        "redis": {
-                          "status": "down",
-                          "message": "Could not connect"
-                        }
-                      },
-                      "additionalProperties": {
-                        "type": "object",
-                        "properties": {
-                          "status": {
-                            "type": "string"
-                          }
-                        },
-                        "additionalProperties": {
-                          "type": "string"
-                        }
-                      },
-                      "nullable": true
-                    },
-                    "details": {
-                      "type": "object",
-                      "example": {
-                        "database": {
-                          "status": "up"
-                        },
-                        "redis": {
-                          "status": "down",
-                          "message": "Could not connect"
-                        }
-                      },
-                      "additionalProperties": {
-                        "type": "object",
-                        "properties": {
-                          "status": {
-                            "type": "string"
-                          }
-                        },
-                        "additionalProperties": {
-                          "type": "string"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Util"
-        ]
-      }
-    },
-    "/health/liveness": {
-      "get": {
-        "operationId": "getLiveness",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "Util"
-        ]
-      }
-    },
-    "/health/readiness": {
-      "get": {
-        "operationId": "getReadiness",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "Util"
-        ]
-      }
-    },
-    "/migrations/run": {
-      "post": {
-        "operationId": "runMigrations",
-        "parameters": [],
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "Util"
-        ]
-      }
-    },
-    "/migrations/revert": {
-      "post": {
-        "operationId": "revertMigrations",
-        "parameters": [],
-        "responses": {
-          "201": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "Util"
-        ]
-      }
-    },
-    "/migrations/pending": {
-      "get": {
-        "operationId": "getPendingMigrations",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "Util"
-        ]
-      }
-    },
-    "/migrations/list": {
-      "get": {
-        "operationId": "getAllMigrations",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        },
-        "tags": [
-          "Util"
-        ]
-      }
-    },
-    "/health/metrics": {
-      "get": {
-        "operationId": "index",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": ""
-          }
-        }
-      }
-    },
-    "/globals/blockchain/gas-price": {
-      "get": {
-        "operationId": "getGasPrice",
-        "summary": "",
-        "description": "Gets currently blockchain operations estimated prices for each enabled chain and currencies",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "Gas price was successfully got",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GasPriceResponseDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Globals"
-        ],
-        "security": [
-          {
-            "bearer": []
-          },
-          {
-            "x-w3block-api-key": []
-          },
-          {
-            "x-w3block-id": []
-          },
-          {
-            "x-w3block-secret": []
-          }
-        ]
-      }
-    },
-    "/companies/{companyId}/webhooks/blockchain/transaction": {
-      "post": {
-        "operationId": "receiveBcsTransactionWebhook",
-        "parameters": [
-          {
-            "name": "companyId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "x-pixchain-signature",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": ""
-          },
-          "401": {
-            "description": "Unauthorized - Invalid Pixchain signature"
-          }
-        },
-        "tags": [
-          "Blockchain Webhooks"
-        ],
-        "security": [
-          {
-            "bearer": []
-          },
-          {
-            "x-w3block-api-key": []
-          },
-          {
-            "x-w3block-id": []
-          },
-          {
-            "x-w3block-secret": []
-          }
-        ]
-      }
-    },
-    "/companies/{companyId}/webhooks/blockchain/event": {
-      "post": {
-        "operationId": "receiveBcsEventLogWebhook",
-        "parameters": [
-          {
-            "name": "companyId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "x-pixchain-signature",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": ""
-          },
-          "401": {
-            "description": "Unauthorized - Invalid Pixchain signature"
-          }
-        },
-        "tags": [
-          "Blockchain Webhooks"
-        ],
-        "security": [
-          {
-            "bearer": []
-          },
-          {
-            "x-w3block-api-key": []
-          },
-          {
-            "x-w3block-id": []
-          },
-          {
-            "x-w3block-secret": []
-          }
-        ]
-      }
-    },
     "/companies/{companyId}/orders": {
       "get": {
         "operationId": "listUserOrders",
@@ -560,7 +156,7 @@
     },
     "/companies/{companyId}/orders/{orderId}": {
       "get": {
-        "operationId": "getOrder",
+        "operationId": "getUserOrder",
         "parameters": [
           {
             "name": "companyId",
@@ -859,7 +455,7 @@
     },
     "/companies/{companyId}/products": {
       "get": {
-        "operationId": "findAll",
+        "operationId": "listProducts",
         "parameters": [
           {
             "name": "companyId",
@@ -995,7 +591,7 @@
     },
     "/admin/companies/{companyId}/products": {
       "post": {
-        "operationId": "create",
+        "operationId": "createProduct",
         "parameters": [
           {
             "name": "companyId",
@@ -1050,7 +646,7 @@
         ]
       },
       "get": {
-        "operationId": "findAll",
+        "operationId": "findProducts",
         "parameters": [
           {
             "name": "companyId",
@@ -1151,57 +747,9 @@
         ]
       }
     },
-    "/admin/companies/{companyId}/products/find-by-slug/{slug}": {
-      "get": {
-        "operationId": "findBySlug",
-        "parameters": [
-          {
-            "name": "companyId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "slug",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": ""
-          },
-          "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
-          }
-        },
-        "tags": [
-          "Products (Admin)"
-        ],
-        "security": [
-          {
-            "bearer": []
-          },
-          {
-            "x-w3block-api-key": []
-          },
-          {
-            "x-w3block-id": []
-          },
-          {
-            "x-w3block-secret": []
-          }
-        ]
-      }
-    },
     "/admin/companies/{companyId}/products/{productId}": {
       "get": {
-        "operationId": "getById",
+        "operationId": "getProduct",
         "parameters": [
           {
             "name": "productId",
@@ -1247,7 +795,7 @@
         ]
       },
       "patch": {
-        "operationId": "updateById",
+        "operationId": "updateProduct",
         "parameters": [
           {
             "name": "productId",
@@ -1303,9 +851,57 @@
         ]
       }
     },
+    "/admin/companies/{companyId}/products/get-by-slug/{slug}": {
+      "get": {
+        "operationId": "getProductBySlug",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "slug",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Products (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
     "/admin/companies/{companyId}/products/{productId}/publish": {
       "patch": {
-        "operationId": "publish",
+        "operationId": "publishProduct",
         "parameters": [
           {
             "name": "productId",
@@ -1754,7 +1350,7 @@
     },
     "/admin/companies/{companyId}/tags": {
       "post": {
-        "operationId": "create",
+        "operationId": "createTag",
         "summary": "",
         "description": "Create a company tag",
         "parameters": [
@@ -1811,7 +1407,7 @@
         ]
       },
       "get": {
-        "operationId": "findAll",
+        "operationId": "listTags",
         "summary": "",
         "description": "Get all company tags paginated",
         "parameters": [
@@ -1903,7 +1499,7 @@
     },
     "/admin/companies/{companyId}/tags/{id}": {
       "get": {
-        "operationId": "getById",
+        "operationId": "getTag",
         "summary": "",
         "description": "Get some company tag by id",
         "parameters": [
@@ -1958,7 +1554,7 @@
         ]
       },
       "patch": {
-        "operationId": "updateById",
+        "operationId": "updateTag",
         "summary": "",
         "description": "Updates some company tag",
         "parameters": [
@@ -2191,7 +1787,7 @@
     },
     "/admin/companies/{companyId}/configurations/providers/pagar-me": {
       "patch": {
-        "operationId": "createPagarMePaymentProvider",
+        "operationId": "configurePagarMePaymentProvider",
         "summary": "",
         "description": "Configures/Refresh configuration of Pagar.me payment provider in the company",
         "parameters": [
@@ -2250,7 +1846,7 @@
     },
     "/admin/companies/{companyId}/configurations/providers/paypal": {
       "patch": {
-        "operationId": "createPaypalPaymentProvider",
+        "operationId": "configurePaypalPaymentProvider",
         "summary": "",
         "description": "Configures/Refresh configuration of Paypal payment provider in the company",
         "parameters": [
@@ -2309,7 +1905,7 @@
     },
     "/admin/companies/{companyId}/configurations/providers/stripe": {
       "patch": {
-        "operationId": "createStripePaymentProvider",
+        "operationId": "requestStripePaymentProviderConfiguration",
         "summary": "",
         "description": "Request a configuration of Stripe payment provider in the company (needs to be finished with oauth connection)",
         "parameters": [
@@ -2368,7 +1964,7 @@
     },
     "/admin/companies/{companyId}/configurations/providers/stripe/finish-connection": {
       "patch": {
-        "operationId": "successCreateStripePaymentProvider",
+        "operationId": "finishStripePaymentProviderConfiguration",
         "summary": "",
         "description": "Finish connection of Stripe payment provider configuration",
         "parameters": [
@@ -2410,7 +2006,7 @@
     },
     "/admin/companies/{companyId}/configurations/providers/stripe/refresh-connection": {
       "patch": {
-        "operationId": "refreshStripePaymentProvider",
+        "operationId": "refreshStripePaymentProviderConfiguration",
         "summary": "",
         "description": "Refresh Stripe payment provider connection",
         "parameters": [
@@ -2469,7 +2065,7 @@
     },
     "/admin/companies/{companyId}/configurations/providers/{provider}": {
       "delete": {
-        "operationId": "deletePaymentProvider",
+        "operationId": "deletePaymentProviderConfiguration",
         "summary": "",
         "description": "Deletes some company payment provider configuration",
         "parameters": [
@@ -2520,7 +2116,7 @@
     },
     "/admin/companies/{companyId}/webhooks-configurations": {
       "get": {
-        "operationId": "listCompanyWebhooksConfigurations",
+        "operationId": "listWebhooksConfigurations",
         "summary": "",
         "description": "Lists all company webhooks configurations",
         "parameters": [
@@ -2609,7 +2205,7 @@
         ]
       },
       "post": {
-        "operationId": "createCompanyWebhooksConfiguration",
+        "operationId": "createWebhooksConfiguration",
         "summary": "",
         "description": "Creates a new company webhooks configuration",
         "parameters": [
@@ -2668,7 +2264,7 @@
     },
     "/admin/companies/{companyId}/webhooks-configurations/{configurationId}": {
       "get": {
-        "operationId": "getCompanyWebhookConfiguration",
+        "operationId": "getWebhookConfiguration",
         "summary": "",
         "description": "Gets some company webhooks configuration",
         "parameters": [
@@ -2723,7 +2319,7 @@
         ]
       },
       "patch": {
-        "operationId": "updateCompanyWebhooksConfiguration",
+        "operationId": "updateWebhooksConfiguration",
         "summary": "",
         "description": "Updates some company webhooks configuration",
         "parameters": [
@@ -2790,7 +2386,7 @@
     },
     "/admin/companies/{companyId}/webhooks-configurations/{configurationId}/enable": {
       "patch": {
-        "operationId": "enableCompanyWebhooksConfiguration",
+        "operationId": "enableWebhooksConfiguration",
         "summary": "",
         "description": "Enables some company webhooks configuration",
         "parameters": [
@@ -2840,7 +2436,7 @@
     },
     "/admin/companies/{companyId}/webhooks-configurations/{configurationId}/disable": {
       "patch": {
-        "operationId": "disableCompanyWebhooksConfiguration",
+        "operationId": "disableWebhooksConfiguration",
         "summary": "",
         "description": "Disables some company webhooks configuration",
         "parameters": [
@@ -2890,7 +2486,7 @@
     },
     "/admin/companies/{companyId}/webhooks-configurations/{configurationId}/webhooks": {
       "get": {
-        "operationId": "listCompanyWebhooksConfigurationWebhooks",
+        "operationId": "listWebhooksConfigurationWebhooks",
         "summary": "",
         "description": "Lists all webhooks sent using some webhooks configuration of company",
         "parameters": [
@@ -2989,7 +2585,7 @@
     },
     "/admin/companies/{companyId}/webhooks-configurations/{configurationId}/webhooks/{webhookId}": {
       "get": {
-        "operationId": "getCompanyWebhookConfigurationWebhook",
+        "operationId": "getWebhookConfigurationWebhook",
         "summary": "",
         "description": "Gets some company webhooks configuration sent webhook",
         "parameters": [
@@ -3054,7 +2650,7 @@
     },
     "/admin/companies/{companyId}/assets": {
       "post": {
-        "operationId": "requestUpload",
+        "operationId": "requestAssetUpload",
         "summary": "",
         "description": "Creates a new request to upload some asset (image or video) in our service. You must use this endpoint response to upload assets using the specific provider apis (ex: Cloudinary)",
         "parameters": [
@@ -3113,7 +2709,7 @@
     },
     "/companies/{companyId}/faq": {
       "get": {
-        "operationId": "getFaqByContext",
+        "operationId": "listFaq",
         "summary": "",
         "description": "Lists FAQ items (questions/answers) inside a context by name including global faq contexts and specific company faq context items",
         "parameters": [
@@ -3219,7 +2815,7 @@
     },
     "/admin/companies/{companyId}/faq/contexts": {
       "get": {
-        "operationId": "listCompanyFaqContexts",
+        "operationId": "listFaqContexts",
         "summary": "",
         "description": "Lists all company FAQ contexts",
         "parameters": [
@@ -3308,7 +2904,7 @@
         ]
       },
       "post": {
-        "operationId": "create",
+        "operationId": "createFaqContext",
         "summary": "",
         "description": "Creates a new FAQ context for a company",
         "parameters": [
@@ -3367,7 +2963,7 @@
     },
     "/admin/companies/{companyId}/faq/contexts/{contextId}": {
       "get": {
-        "operationId": "getContextById",
+        "operationId": "getFaqContext",
         "summary": "",
         "description": "Gets a company FAQ context",
         "parameters": [
@@ -3422,7 +3018,7 @@
         ]
       },
       "patch": {
-        "operationId": "update",
+        "operationId": "updateFaqContext",
         "summary": "",
         "description": "Updates some company FAQ context",
         "parameters": [
@@ -3489,7 +3085,7 @@
     },
     "/admin/companies/{companyId}/faq/contexts/{contextId}/items": {
       "get": {
-        "operationId": "listCompanyFaqContextsItems",
+        "operationId": "listFaqContextItems",
         "summary": "",
         "description": "Lists all FAQ items inside some company context",
         "parameters": [
@@ -3588,7 +3184,7 @@
     },
     "/admin/companies/{companyId}/faq/contexts/{contextId}/items/{faqItemId}": {
       "get": {
-        "operationId": "getFaqContextItemById",
+        "operationId": "getFaqContextItem",
         "summary": "",
         "description": "Gets company context FAQ item by id",
         "parameters": [
@@ -3653,7 +3249,7 @@
     },
     "/admin/companies/{companyId}/faq/items": {
       "get": {
-        "operationId": "listCompanyFaqItems",
+        "operationId": "listFaqItems",
         "summary": "",
         "description": "Lists all company FAQ items which are associated to some company context",
         "parameters": [
@@ -3801,7 +3397,7 @@
     },
     "/admin/companies/{companyId}/faq/items/{faqItemId}": {
       "get": {
-        "operationId": "getFaqItemById",
+        "operationId": "getFaqItem",
         "summary": "",
         "description": "Gets a company FAQ item by id",
         "parameters": [
@@ -3966,88 +3562,6 @@
       }
     },
     "schemas": {
-      "CurrencyGasPriceDto": {
-        "type": "object",
-        "properties": {
-          "currency": {
-            "type": "string",
-            "example": "USD",
-            "description": "Currency name"
-          },
-          "amount": {
-            "type": "string",
-            "example": "0.0002",
-            "description": "current gas price on the chain/currency"
-          }
-        },
-        "required": [
-          "currency",
-          "amount"
-        ]
-      },
-      "GasPriceChainItemsDto": {
-        "type": "object",
-        "properties": {
-          "1": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CurrencyGasPriceDto"
-            }
-          },
-          "3": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CurrencyGasPriceDto"
-            }
-          },
-          "4": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CurrencyGasPriceDto"
-            }
-          },
-          "42": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CurrencyGasPriceDto"
-            }
-          },
-          "137": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CurrencyGasPriceDto"
-            }
-          },
-          "1337": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CurrencyGasPriceDto"
-            }
-          },
-          "80001": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CurrencyGasPriceDto"
-            }
-          }
-        }
-      },
-      "GasPriceResponseDto": {
-        "type": "object",
-        "properties": {
-          "transfer": {
-            "description": "Gas prices for transfer transaction (price per each NFT)",
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/GasPriceChainItemsDto"
-              }
-            ]
-          }
-        },
-        "required": [
-          "transfer"
-        ]
-      },
       "OrderByEnum": {
         "type": "string",
         "enum": [
