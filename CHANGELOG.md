@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### 0.0.4 (2023-05-25)
+
+
+### Features
+
+* **api:** swagger new version generated ([46c7d8e](https://github.com/TropixInc/w3block-commerce-sdk/commit/46c7d8e7a10cfa3db080ed1428ca57ecb579d81a))
+
+
+### Bug Fixes
+
+* **sdk token:** fix sdk token sync on instantiation ([1668732](https://github.com/TropixInc/w3block-commerce-sdk/commit/16687321c4e1c6184b00943282481463349d109e))
+
 ### 0.0.3 (2022-10-26)
 
 
