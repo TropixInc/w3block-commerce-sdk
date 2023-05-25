@@ -25,6 +25,10 @@ export class W3blockCommerceSDK {
     this.options.idSdk.emitter.on('authChanged', (event) => {
       this.setAuthToken(event.authToken);
     });
+    const currentAuthToken = this.options.idSdk.getAuthToken();
+    if (currentAuthToken) {
+      this.setAuthToken(currentAuthToken);
+    }
 
     this.api = new Api<ApiSecurityDataType>({
       baseURL: options.baseURL,
