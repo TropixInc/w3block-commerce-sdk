@@ -8,6 +8,11 @@
  * ---------------------------------------------------------------
  */
 
+export enum OrderSortByEnum {
+  CreatedAt = 'createdAt',
+  UpdatedAt = 'updatedAt',
+}
+
 export enum OrderByEnum {
   ASC = 'ASC',
   DESC = 'DESC',
@@ -21,6 +26,7 @@ export enum OrderStatusEnum {
   Concluded = 'concluded',
   Failed = 'failed',
   Cancelled = 'cancelled',
+  PartiallyCancelled = 'partially_cancelled',
   Expired = 'expired',
 }
 
@@ -73,22 +79,31 @@ export enum OrderStatus {
   Concluded = 'concluded',
   Failed = 'failed',
   Cancelled = 'cancelled',
+  PartiallyCancelled = 'partially_cancelled',
   Expired = 'expired',
 }
 
 export enum PaymentProvider {
   PagarMe = 'pagar_me',
   Paypal = 'paypal',
+  Transfer = 'transfer',
   Stripe = 'stripe',
+  Asaas = 'asaas',
+  Crypto = 'crypto',
+  Free = 'free',
 }
 
-export enum PaymentMethod {
+export enum PaymentMethodEnum {
   CreditCard = 'credit_card',
+  DebitCard = 'debit_card',
   Pix = 'pix',
   Crypto = 'crypto',
+  Transfer = 'transfer',
+  Billet = 'billet',
 }
 
 export interface OrderEntityDto {
+  /** @format uuid */
   id: string;
 
   /** @format date-time */
@@ -96,13 +111,21 @@ export interface OrderEntityDto {
 
   /** @format date-time */
   updatedAt?: string;
+
+  /** @format uuid */
   companyId: string;
   company?: CompanyEntity;
+
+  /** @format uuid */
   userId: string;
   user?: UserEntity;
   destinationWalletAddress: string;
+
+  /** @format uuid */
   addressId: string;
   address?: AddressEntity;
+
+  /** @format uuid */
   currencyId: string;
   currency?: CurrencyEntity;
   currencyAmount: string;
@@ -118,7 +141,7 @@ export interface OrderEntityDto {
   providerTransactionId?: object;
 
   /** @example credit_card */
-  paymentMethod?: PaymentMethod;
+  paymentMethod?: PaymentMethodEnum;
 
   /** @example {"paymentUrl":"https://example.com/order/1/pay"} */
   paymentInfo: object;
@@ -130,7 +153,7 @@ export interface OrderEntityDto {
   expiresIn?: string;
   gasFee: string;
   clientServiceFee: string;
-  serviceFee: string;
+  totalAmount: string;
 }
 
 export interface OrderEntityPaginatedDto {
@@ -140,14 +163,47 @@ export interface OrderEntityPaginatedDto {
 }
 
 export interface OrderProductDto {
-  /** @example 3db843f4-1ee6-4f6e-a86d-b0aee938bdde */
+  /**
+   * @format uuid
+   * @example 3db843f4-1ee6-4f6e-a86d-b0aee938bdde
+   */
   productId: string;
 
-  /** @example 3062cdc2-2bd8-4143-8a04-90fc1e607794 */
+  /**
+   * @format uuid
+   * @example 3062cdc2-2bd8-4143-8a04-90fc1e607794
+   */
   productTokenId?: string;
 
   /** @example 100 */
   expectedPrice: string;
+}
+
+export interface UtmParamsDto {
+  /** @example google */
+  utm_source?: string;
+
+  /** @example cpc */
+  utm_medium?: string;
+
+  /** @example super_sales */
+  utm_campaign?: string;
+
+  /** @example nft */
+  utm_term?: string;
+
+  /** @example header_banner_link */
+  utm_content?: string;
+}
+
+export enum PaymentProviderEnum {
+  PagarMe = 'pagar_me',
+  Paypal = 'paypal',
+  Transfer = 'transfer',
+  Stripe = 'stripe',
+  Asaas = 'asaas',
+  Crypto = 'crypto',
+  Free = 'free',
 }
 
 export interface CreateOrderDto {
@@ -163,17 +219,33 @@ export interface CreateOrderDto {
   destinationWalletAddress?: string;
 
   /** @example ===812hgsahbncva */
-  signedGasFee: string;
+  signedGasFee?: string;
 
   /** @example https://domain.com */
   successUrl?: string;
+
+  /** @example pix */
+  paymentMethod?: PaymentMethodEnum;
+
+  /** @example stripe */
+  paymentProvider?: PaymentProviderEnum;
+
+  /** @example {"ssn":"659.315.680-93"} */
+  providerInputs?: object;
+  utmParams?: UtmParamsDto;
 }
 
 export interface OrderProductPreviewDto {
-  /** @example 3db843f4-1ee6-4f6e-a86d-b0aee938bdde */
+  /**
+   * @format uuid
+   * @example 3db843f4-1ee6-4f6e-a86d-b0aee938bdde
+   */
   productId: string;
 
-  /** @example 3062cdc2-2bd8-4143-8a04-90fc1e607794 */
+  /**
+   * @format uuid
+   * @example 3062cdc2-2bd8-4143-8a04-90fc1e607794
+   */
   productTokenId?: string;
 }
 
@@ -182,6 +254,58 @@ export interface OrderPreviewDto {
 
   /** @example 65fe1119-6ec0-4b78-8d30-cb989914bdcb */
   currencyId: string;
+
+  /** @example true */
+  acceptIncompleteCart?: object;
+}
+
+export interface CreateOrderDocumentDto {
+  /** @format uuid */
+  assetId: string;
+}
+
+export interface CompanyEntityDto {
+  /** @format uuid */
+  id: string;
+
+  /** @format date-time */
+  createdAt?: string;
+
+  /** @format date-time */
+  updatedAt?: string;
+  name?: string;
+}
+
+export type OrderEntity = object;
+
+export type AssetEntity = object;
+
+export interface OrderDocumentEntityDto {
+  /** @format uuid */
+  id: string;
+
+  /** @format date-time */
+  createdAt?: string;
+
+  /** @format date-time */
+  updatedAt?: string;
+
+  /** @format uuid */
+  orderId: string;
+  order: OrderEntity;
+
+  /** @format uuid */
+  companyId: string;
+
+  /** @format uuid */
+  assetId: string;
+  asset: AssetEntity;
+}
+
+export interface OrderDocumentsEntityPaginatedDto {
+  items: OrderDocumentEntityDto[];
+  meta: PaginationMetaDto;
+  links?: PaginationLinksDto;
 }
 
 export enum ProductSortBy {
@@ -215,6 +339,17 @@ export interface ProductDraftDto {
   range?: string;
 }
 
+export interface ProductRequirementDto {
+  /** @format uuid */
+  companyId: string;
+
+  /** @format uuid */
+  keyCollectionId: string;
+
+  /** @format uuid */
+  productId: string;
+}
+
 export enum ProductDistributionType {
   Random = 'random',
   Fixed = 'fixed',
@@ -230,10 +365,10 @@ export interface CreateProductDto {
   /** @example ["7ca74ed3-93ff-4df9-b8a0-8308c590174b"] */
   tags: any[][];
 
-  /** @example W3 */
+  /** @example W3Block Product */
   name: string;
 
-  /** @example block */
+  /** @example My Description */
   description: string;
   images?: ImageDto[];
   prices: ProductPriceDto[];
@@ -257,6 +392,13 @@ export interface CreateProductDto {
   endSaleAt?: string;
   draftData: ProductDraftDto;
   slug?: string;
+
+  /** @example <b>block</b> */
+  htmlContent?: object;
+
+  /** @example true */
+  onDemandMintEnabled?: boolean;
+  requirements?: ProductRequirementDto;
 }
 
 export type ProductEntity = object;
@@ -264,17 +406,20 @@ export type ProductEntity = object;
 export enum ProductStatus {
   Draft = 'draft',
   Publishing = 'publishing',
+  Updating = 'updating',
   Published = 'published',
+  Cancelled = 'cancelled',
+  Sold = 'sold',
 }
 
 export interface UpdateProductDto {
   /** @example ["7ca74ed3-93ff-4df9-b8a0-8308c590174b"] */
   tags?: any[][];
 
-  /** @example W3 */
+  /** @example W3Block Product */
   name?: string;
 
-  /** @example block */
+  /** @example My Description */
   description?: string;
   images?: ImageDto[];
   prices?: ProductPriceDto[];
@@ -298,6 +443,13 @@ export interface UpdateProductDto {
   endSaleAt?: string;
   draftData?: ProductDraftDto;
   slug?: string;
+
+  /** @example <b>block</b> */
+  htmlContent?: object;
+
+  /** @example true */
+  onDemandMintEnabled?: boolean;
+  requirements?: ProductRequirementDto;
 }
 
 export enum ProductOrderRuleSortBy {
@@ -322,7 +474,7 @@ export interface CreateProductOrderRuleDto {
   purchaseLimit?: number;
 
   /** @format uuid */
-  whitelistId: string;
+  whitelistId?: string;
 }
 
 export interface UpdateProductOrderRuleDto {
@@ -345,10 +497,152 @@ export interface UpdateProductOrderRuleDto {
   whitelistId?: string;
 }
 
-export enum PaymentProviderEnum {
-  PagarMe = 'pagar_me',
-  Paypal = 'paypal',
-  Stripe = 'stripe',
+export interface ResaleProductDto {
+  /** @example My Product */
+  name: string;
+
+  /** @example A beautiful product */
+  description: string;
+  images?: ImageDto[];
+  prices: ProductPriceDto[];
+
+  /** @example 0xDAA50a02340cBcFA1a6F4c02765430Ffe411b125 */
+  contractAddress: string;
+
+  /** @example 80001 */
+  chainId: 1 | 3 | 4 | 42 | 1337 | 80001 | 137;
+  tokenId: string;
+}
+
+export interface CompanyWithEnabledStateResponseDto {
+  /** @format uuid */
+  id: string;
+
+  /** @format date-time */
+  createdAt?: string;
+
+  /** @format date-time */
+  updatedAt?: string;
+  name?: string;
+
+  /** @example true */
+  enabled: boolean;
+}
+
+export interface DeliverDelayDto {
+  /** @example credit_card */
+  paymentMethod: PaymentMethodEnum;
+
+  /** @example 259200000 */
+  delay: number;
+}
+
+export interface CompanyConfigurationEntityDto {
+  /** @format uuid */
+  id: string;
+
+  /** @format date-time */
+  createdAt?: string;
+
+  /** @format date-time */
+  updatedAt?: string;
+
+  /** @format uuid */
+  companyId: string;
+  company?: CompanyEntityDto;
+  deliveryDelays?: DeliverDelayDto[];
+  logo?: string;
+  operatorWalletAddress?: string;
+  paymentProviders?: any[][];
+  clientServiceFeePercentage: number;
+  companyServiceFeePercentage: number;
+  resaleFeePercentage: number;
+  disableGasBilling: boolean;
+}
+
+export interface UpdateCompanyConfigurationsDto {
+  /** @example https://w3block.io/images/1.png */
+  logo?: string;
+  deliverDelays?: DeliverDelayDto[];
+
+  /** @example 0 */
+  resaleFeePercentage: number;
+}
+
+export interface SetCompanyPaymentProviderSelectionDto {
+  /**
+   * @format uuid
+   * @example 65fe1119-6ec0-4b78-8d30-cb989914bdcb
+   */
+  currencyId: string;
+
+  /** @example stripe */
+  paymentProvider: PaymentProviderEnum;
+
+  /** @example pix */
+  paymentMethod?: PaymentMethodEnum;
+}
+
+export interface CreatePagarMePaymentProviderDto {
+  secretKey: string;
+  checkoutExpireTime?: number;
+  successUrl?: string;
+}
+
+export interface CreatePaypalPaymentProviderDto {
+  secret: string;
+
+  /** @format uuid */
+  clientId: string;
+  url: string;
+  checkoutExpireTime?: number;
+  successUrl?: string;
+}
+
+export enum TransferTypeEnum {
+  Pix = 'pix',
+  BankTransfer = 'bank_transfer',
+}
+
+export interface CreateTransferPaymentProviderDto {
+  checkoutExpireTime?: number;
+  successUrl?: string;
+  type: TransferTypeEnum;
+  pixKey?: string;
+  bankCode?: string;
+  bankAgency?: string;
+  bankAccount?: string;
+}
+
+export interface CreateStripePaymentProviderDto {
+  successConnectUrl: string;
+  refreshConnectUrl: string;
+  withoutConnect?: boolean;
+  checkoutExpireTime?: number;
+  successUrl?: string;
+}
+
+export interface StripeConnectAccountResponseDto {
+  url: string;
+}
+
+export interface ConnectOrRefreshStripePaymentProviderDto {
+  successConnectUrl: string;
+  refreshConnectUrl: string;
+}
+
+export interface CreateAsaasPaymentProviderDto {
+  apiKey: string;
+  checkoutExpireTime?: number;
+}
+
+export interface SuperAdminCompanySetInfoDto {
+  /** @example 10 */
+  clientServiceFeePercentage: number;
+
+  /** @example 10 */
+  companyServiceFeePercentage: number;
+  disableGasBilling: boolean;
 }
 
 export interface CurrencyPaymentProviderEntityDto {
@@ -377,6 +671,15 @@ export interface CurrencyEntityDto {
   updatedAt?: string;
   name: string;
   crypto?: boolean;
+
+  /** @example $ */
+  symbol: string;
+
+  /** @example USD */
+  code: string;
+
+  /** @example 0x7dd80541ad31078244d9f2b73026a025e70b5484 */
+  erc20contractAddress?: string;
   paymentProviders?: CurrencyPaymentProviderEntityDto[];
 }
 
@@ -414,7 +717,7 @@ export interface NestedTagsEntityDto {
   hide?: boolean;
 }
 
-export interface TagsEntityDto {
+export interface TagEntityDto {
   /** @format uuid */
   id: string;
 
@@ -438,131 +741,9 @@ export enum TagsSortBy {
 }
 
 export interface TagsEntityPaginated {
-  items: TagsEntityDto[];
+  items: TagEntityDto[];
   meta: PaginationMetaDto;
   links?: PaginationLinksDto;
-}
-
-export interface CompanyEntityDto {
-  /** @format uuid */
-  id: string;
-
-  /** @format date-time */
-  createdAt?: string;
-
-  /** @format date-time */
-  updatedAt?: string;
-  name?: string;
-}
-
-export interface ImageResponseDto {
-  /** @format uuid */
-  assetId: string;
-
-  /** @example https://dummyimage.com/200x200/fff/000 */
-  thumb: string;
-
-  /** @example https://dummyimage.com/600x400/fff/000 */
-  original: string;
-}
-
-export interface BannerResponseDto {
-  /** @example Banner description */
-  text?: string;
-
-  /** @example Click */
-  buttonText?: string;
-
-  /** @example https://w3block.io */
-  buttonLink?: string;
-  image: ImageResponseDto;
-}
-
-export interface DeliverDelayDto {
-  /** @example credit_card */
-  paymentMethod: PaymentMethod;
-
-  /** @example 259200000 */
-  delay: number;
-}
-
-export interface CompanyConfigurationEntityDto {
-  /** @format uuid */
-  id: string;
-
-  /** @format date-time */
-  createdAt?: string;
-
-  /** @format date-time */
-  updatedAt?: string;
-
-  /** @format uuid */
-  companyId: string;
-  company?: CompanyEntityDto;
-  banners?: BannerResponseDto[];
-  deliveryDelays?: DeliverDelayDto[];
-  domain?: string;
-  logo?: string;
-  operatorWalletAddress?: string;
-  paymentProviders?: any[][];
-  clientServiceFeePercentage: number;
-  companyServiceFeePercentage: number;
-}
-
-export interface BannerDto {
-  /** @example Banner description */
-  text?: string;
-
-  /** @example Click */
-  buttonText?: string;
-
-  /** @example https://w3block.io */
-  buttonLink?: string;
-  image: ImageDto;
-}
-
-export interface UpdateCompanyConfigurationsDto {
-  /** @example https://w3block.io/images/1.png */
-  logo?: string;
-  banners?: BannerDto[];
-  deliverDelays?: DeliverDelayDto[];
-}
-
-export interface SetCompanyCurrencyPaymentProviderDto {
-  /** @example pagar_me */
-  paymentProvider: PaymentProviderEnum;
-}
-
-export interface CreatePagarMePaymentProviderDto {
-  secretKey: string;
-  checkoutExpireTime?: number;
-  successUrl?: string;
-}
-
-export interface CreatePaypalPaymentProviderDto {
-  secret: string;
-
-  /** @format uuid */
-  clientId: string;
-  url: string;
-  checkoutExpireTime?: number;
-  successUrl?: string;
-}
-
-export interface CreateStripePaymentProviderDto {
-  successConnectUrl: string;
-  refreshConnectUrl: string;
-  checkoutExpireTime?: number;
-  successUrl?: string;
-}
-
-export interface StripeConnectAccountResponseDto {
-  url: string;
-}
-
-export interface RefreshStripePaymentProviderDto {
-  successConnectUrl: string;
-  refreshConnectUrl: string;
 }
 
 export interface WebhooksConfigurationEntityDto {
@@ -657,11 +838,43 @@ export interface WebhookEntityPaginatedDto {
 export enum AssetTypeEnum {
   Image = 'image',
   Video = 'video',
+  Document = 'document',
+}
+
+export enum AssetTargetEnum {
+  Product = 'product',
+  OrderDocument = 'order_document',
+  Refund = 'refund',
+  StorefrontPage = 'storefront_page',
+  StorefrontTheme = 'storefront_theme',
 }
 
 export interface RequestAssetUploadDto {
   /** @example image */
   type: AssetTypeEnum;
+
+  /** @example product */
+  target: AssetTargetEnum;
+}
+
+export interface CloudinaryProviderUploadParamsDto {
+  /** @example 000000000000 */
+  apiKey: string;
+
+  /** @example 1666215568 */
+  timestamp: number;
+
+  /** @example commerce/3fa85f64-5717-4562-b3fc-2c963f66afa6 */
+  publicId: string;
+
+  /** @example bfd09f95f331f558cbd1320e67aa8d488770583e */
+  signature: string;
+
+  /** @example filename_override=false&public_id=commerce/3fa85f64-5717-4562-b3fc-2c963f66afa6&timestamp=1666215568&unique_filename=true */
+  signedParams: string;
+
+  /** @example {"filename_override":"false","public_id":"commerce/3fa85f64-5717-4562-b3fc-2c963f66afa6","timestamp":"1666215568","unique_filename":"true"} */
+  queryParams: object;
 }
 
 export enum AssetStatusEnum {
@@ -676,7 +889,7 @@ export enum AssetProviderEnum {
   Cloudinary = 'cloudinary',
 }
 
-export interface AssetEntityWithSignatureDto {
+export interface AssetEntityWithProviderUploadParamsDto {
   /** @format uuid */
   id: string;
 
@@ -702,14 +915,9 @@ export interface AssetEntityWithSignatureDto {
   /** @example https://dummyimage.com/200x200/fff/000 */
   directLink?: string;
 
-  /** @example bfd09f95f331f558cbd1320e67aa8d488770583e */
-  signature: string;
-
-  /** @example 1666215568 */
-  timestamp: number;
-
-  /** @example filename_override=false&public_id=commerce/3fa85f64-5717-4562-b3fc-2c963f66afa6&timestamp=1666215568&unique_filename=true */
-  params: string;
+  /** @example product */
+  target?: AssetTargetEnum | null;
+  providerUploadParams: CloudinaryProviderUploadParamsDto;
 }
 
 export interface I18NItemDto {
@@ -802,7 +1010,7 @@ export namespace Companies {
       page?: number;
       limit?: number;
       search?: string;
-      sortBy?: string;
+      sortBy?: OrderSortByEnum;
       orderBy?: OrderByEnum;
       status?: OrderStatusEnum;
     };
@@ -833,7 +1041,7 @@ export namespace Companies {
    */
   export namespace GetUserOrder {
     export type RequestParams = { companyId: string; orderId: string };
-    export type RequestQuery = {};
+    export type RequestQuery = { fetchNewestStatus?: boolean };
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = OrderEntityDto;
@@ -868,7 +1076,22 @@ export namespace Companies {
       sortBy?: ProductSortBy;
       orderBy?: OrderByEnum;
       includeMetadata?: boolean;
+      tagIds?: string[];
     };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags Products
+   * @name GetProduct
+   * @request GET:/companies/{companyId}/products/{productId}
+   * @secure
+   */
+  export namespace GetProduct {
+    export type RequestParams = { companyId: string; productId: string };
+    export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = void;
@@ -881,6 +1104,70 @@ export namespace Companies {
    * @secure
    */
   export namespace CanPurchaseProduct {
+    export type RequestParams = { companyId: string; productId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags Products
+   * @name GetProductBySlug
+   * @request GET:/companies/{companyId}/products/get-by-slug/{slug}
+   * @secure
+   */
+  export namespace GetProductBySlug {
+    export type RequestParams = { companyId: string; slug: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * @description Lists users product resales
+   * @tags Products Resale
+   * @name ListUserResaleProducts
+   * @request GET:/companies/{companyId}/products-resale
+   * @secure
+   */
+  export namespace ListUserResaleProducts {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = {
+      page?: number;
+      limit?: number;
+      search?: string;
+      sortBy?: ProductSortBy;
+      orderBy?: OrderByEnum;
+      includeMetadata?: boolean;
+      tagIds?: string[];
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ProductEntity;
+  }
+  /**
+   * @description Add some user token for resale inside a company marketplace
+   * @tags Products Resale
+   * @name AddProductForResale
+   * @request POST:/companies/{companyId}/products-resale
+   * @secure
+   */
+  export namespace AddProductForResale {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = {};
+    export type RequestBody = ResaleProductDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = ProductEntity;
+  }
+  /**
+   * @description Cancels some user token from resale inside a company marketplace
+   * @tags Products Resale
+   * @name CancelProductResaleById
+   * @request PATCH:/companies/{companyId}/products-resale/{productId}/cancel
+   * @secure
+   */
+  export namespace CancelProductResaleById {
     export type RequestParams = { companyId: string; productId: string };
     export type RequestQuery = {};
     export type RequestBody = never;
@@ -913,7 +1200,7 @@ export namespace Companies {
 
 export namespace Admin {
   /**
-   * No description
+   * @description List orders
    * @tags Orders (Admin)
    * @name ListOrders
    * @request GET:/admin/companies/{companyId}/orders
@@ -925,7 +1212,7 @@ export namespace Admin {
       page?: number;
       limit?: number;
       search?: string;
-      sortBy?: string;
+      sortBy?: OrderSortByEnum;
       orderBy?: OrderByEnum;
       status?: OrderStatusEnum;
     };
@@ -934,7 +1221,7 @@ export namespace Admin {
     export type ResponseBody = OrderEntityPaginatedDto;
   }
   /**
-   * No description
+   * @description Cancel an order
    * @tags Orders (Admin)
    * @name CancelOrder
    * @request PATCH:/admin/companies/{companyId}/orders/{orderId}/cancel
@@ -948,7 +1235,7 @@ export namespace Admin {
     export type ResponseBody = void;
   }
   /**
-   * No description
+   * @description Force delivery of order token
    * @tags Orders (Admin)
    * @name ForceOrderDeliver
    * @request PATCH:/admin/companies/{companyId}/orders/{orderId}/force-deliver
@@ -956,6 +1243,68 @@ export namespace Admin {
    */
   export namespace ForceOrderDeliver {
     export type RequestParams = { companyId: string; orderId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * @description Approves an order manually. This order should be created using transfer payment provider
+   * @tags Orders (Admin)
+   * @name ApproveOrderManually
+   * @request PATCH:/admin/companies/{companyId}/orders/{orderId}/approve-payment
+   * @secure
+   */
+  export namespace ApproveOrderManually {
+    export type RequestParams = { companyId: string; orderId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * @description Creates an order document
+   * @tags Order Documents (Admin)
+   * @name CreateOrderDocument
+   * @request POST:/admin/companies/{companyId}/orders/{orderId}/order-documents
+   * @secure
+   */
+  export namespace CreateOrderDocument {
+    export type RequestParams = { companyId: string; orderId: string };
+    export type RequestQuery = {};
+    export type RequestBody = CreateOrderDocumentDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = OrderDocumentEntityDto;
+  }
+  /**
+   * @description Lists order documents from order
+   * @tags Order Documents (Admin)
+   * @name ListOrderDocuments
+   * @request GET:/admin/companies/{companyId}/orders/{orderId}/order-documents
+   * @secure
+   */
+  export namespace ListOrderDocuments {
+    export type RequestParams = { companyId: string; orderId: string };
+    export type RequestQuery = {
+      page?: number;
+      limit?: number;
+      search?: string;
+      sortBy?: string;
+      orderBy?: OrderByEnum;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = OrderDocumentsEntityPaginatedDto;
+  }
+  /**
+   * @description Deletes an order document from order
+   * @tags Order Documents (Admin)
+   * @name RemoveOrderDocuments
+   * @request DELETE:/admin/companies/{companyId}/orders/{orderId}/order-documents/{id}
+   * @secure
+   */
+  export namespace RemoveOrderDocuments {
+    export type RequestParams = { companyId: string; orderId: string; id: string };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -991,6 +1340,7 @@ export namespace Admin {
       sortBy?: ProductSortBy;
       orderBy?: OrderByEnum;
       includeMetadata?: boolean;
+      tagIds?: string[];
       status?: ProductStatus;
     };
     export type RequestBody = never;
@@ -1048,6 +1398,20 @@ export namespace Admin {
    */
   export namespace PublishProduct {
     export type RequestParams = { productId: string; companyId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * @description Cancels some product to be on sale inside a company
+   * @tags Products (Admin)
+   * @name CancelProductResaleById
+   * @request PATCH:/admin/companies/{companyId}/products/{productId}/cancel
+   * @secure
+   */
+  export namespace CancelProductResaleById {
+    export type RequestParams = { companyId: string; productId: string };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -1130,66 +1494,18 @@ export namespace Admin {
     export type ResponseBody = void;
   }
   /**
-   * @description Create a company tag
-   * @tags Tags (Admin)
-   * @name CreateTag
-   * @request POST:/admin/companies/{companyId}/tags
+   * @description Gets company with its commerce state
+   * @tags Companies (Admin)
+   * @name GetCompanyWithEnabledState
+   * @request GET:/admin/companies/{companyId}/is-enabled
    * @secure
    */
-  export namespace CreateTag {
+  export namespace GetCompanyWithEnabledState {
     export type RequestParams = { companyId: string };
-    export type RequestQuery = {};
-    export type RequestBody = TagDto;
-    export type RequestHeaders = {};
-    export type ResponseBody = TagsEntityDto;
-  }
-  /**
-   * @description Get all company tags paginated
-   * @tags Tags (Admin)
-   * @name ListTags
-   * @request GET:/admin/companies/{companyId}/tags
-   * @secure
-   */
-  export namespace ListTags {
-    export type RequestParams = { companyId: string };
-    export type RequestQuery = {
-      page?: number;
-      limit?: number;
-      search?: string;
-      sortBy?: TagsSortBy;
-      orderBy?: OrderByEnum;
-    };
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = TagsEntityPaginated;
-  }
-  /**
-   * @description Get some company tag by id
-   * @tags Tags (Admin)
-   * @name GetTag
-   * @request GET:/admin/companies/{companyId}/tags/{id}
-   * @secure
-   */
-  export namespace GetTag {
-    export type RequestParams = { id: string; companyId: string };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
-    export type ResponseBody = TagsEntityDto;
-  }
-  /**
-   * @description Updates some company tag
-   * @tags Tags (Admin)
-   * @name UpdateTag
-   * @request PATCH:/admin/companies/{companyId}/tags/{id}
-   * @secure
-   */
-  export namespace UpdateTag {
-    export type RequestParams = { id: string; companyId: string };
-    export type RequestQuery = {};
-    export type RequestBody = TagDto;
-    export type RequestHeaders = {};
-    export type ResponseBody = TagsEntityDto;
+    export type ResponseBody = CompanyWithEnabledStateResponseDto;
   }
   /**
    * @description Gets company configurations
@@ -1220,16 +1536,16 @@ export namespace Admin {
     export type ResponseBody = CompanyConfigurationEntityDto;
   }
   /**
-   * @description Set a company payment provider to be used in some currency purchases
+   * @description Set a some company configured payment provider to be available for use in some purchasing occasion
    * @tags Companies (Admin)
-   * @name SetCompanyCurrencyPaymentProvider
-   * @request PATCH:/admin/companies/{companyId}/configurations/currencies/{currencyId}
+   * @name SetCompanyPaymentProviderSelection
+   * @request POST:/admin/companies/{companyId}/configurations/providers-selections
    * @secure
    */
-  export namespace SetCompanyCurrencyPaymentProvider {
-    export type RequestParams = { companyId: string; currencyId: string };
+  export namespace SetCompanyPaymentProviderSelection {
+    export type RequestParams = { companyId: string };
     export type RequestQuery = {};
-    export type RequestBody = SetCompanyCurrencyPaymentProviderDto;
+    export type RequestBody = SetCompanyPaymentProviderSelectionDto;
     export type RequestHeaders = {};
     export type ResponseBody = void;
   }
@@ -1258,6 +1574,20 @@ export namespace Admin {
     export type RequestParams = { companyId: string };
     export type RequestQuery = {};
     export type RequestBody = CreatePaypalPaymentProviderDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = CompanyConfigurationEntityDto;
+  }
+  /**
+   * @description Creates configuration of transfer payment provider in the company
+   * @tags Companies (Admin)
+   * @name CreateTransferPaymentProvider
+   * @request PATCH:/admin/companies/{companyId}/configurations/providers/transfer
+   * @secure
+   */
+  export namespace CreateTransferPaymentProvider {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = {};
+    export type RequestBody = CreateTransferPaymentProviderDto;
     export type RequestHeaders = {};
     export type ResponseBody = CompanyConfigurationEntityDto;
   }
@@ -1299,9 +1629,23 @@ export namespace Admin {
   export namespace RefreshStripePaymentProviderConfiguration {
     export type RequestParams = { companyId: string };
     export type RequestQuery = {};
-    export type RequestBody = RefreshStripePaymentProviderDto;
+    export type RequestBody = ConnectOrRefreshStripePaymentProviderDto;
     export type RequestHeaders = {};
     export type ResponseBody = StripeConnectAccountResponseDto;
+  }
+  /**
+   * @description Configures/Refresh configuration of ASAAS payment provider in the company
+   * @tags Companies (Admin)
+   * @name ConfigureAsaasPaymentProvider
+   * @request PATCH:/admin/companies/{companyId}/configurations/providers/asaas
+   * @secure
+   */
+  export namespace ConfigureAsaasPaymentProvider {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = {};
+    export type RequestBody = CreateAsaasPaymentProviderDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = CompanyConfigurationEntityDto;
   }
   /**
    * @description Deletes some company payment provider configuration
@@ -1316,6 +1660,68 @@ export namespace Admin {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = void;
+  }
+  /**
+   * @description Create a company tag
+   * @tags Tags (Admin)
+   * @name CreateTag
+   * @request POST:/admin/companies/{companyId}/tags
+   * @secure
+   */
+  export namespace CreateTag {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = {};
+    export type RequestBody = TagDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = TagEntityDto;
+  }
+  /**
+   * @description Get all company tags paginated
+   * @tags Tags (Admin)
+   * @name ListTags
+   * @request GET:/admin/companies/{companyId}/tags
+   * @secure
+   */
+  export namespace ListTags {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = {
+      page?: number;
+      limit?: number;
+      search?: string;
+      sortBy?: TagsSortBy;
+      orderBy?: OrderByEnum;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = TagsEntityPaginated;
+  }
+  /**
+   * @description Get some company tag by id
+   * @tags Tags (Admin)
+   * @name GetTag
+   * @request GET:/admin/companies/{companyId}/tags/{id}
+   * @secure
+   */
+  export namespace GetTag {
+    export type RequestParams = { id: string; companyId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = TagEntityDto;
+  }
+  /**
+   * @description Updates some company tag
+   * @tags Tags (Admin)
+   * @name UpdateTag
+   * @request PATCH:/admin/companies/{companyId}/tags/{id}
+   * @secure
+   */
+  export namespace UpdateTag {
+    export type RequestParams = { id: string; companyId: string };
+    export type RequestQuery = {};
+    export type RequestBody = TagDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = TagEntityDto;
   }
   /**
    * @description Lists all company webhooks configurations
@@ -1453,7 +1859,7 @@ export namespace Admin {
     export type RequestQuery = {};
     export type RequestBody = RequestAssetUploadDto;
     export type RequestHeaders = {};
-    export type ResponseBody = AssetEntityWithSignatureDto;
+    export type ResponseBody = AssetEntityWithProviderUploadParamsDto;
   }
   /**
    * @description Lists all company FAQ contexts
@@ -1615,6 +2021,37 @@ export namespace Admin {
   }
 }
 
+export namespace SuperAdmin {
+  /**
+   * @description Enables/Setup company on commerce services
+   * @tags Companies (Super Admin)
+   * @name CreateAndEnableCommerceCompany
+   * @request PATCH:/super-admin/companies/{companyId}/enable
+   * @secure
+   */
+  export namespace CreateAndEnableCommerceCompany {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = {};
+    export type RequestBody = SuperAdminCompanySetInfoDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * @description Updates company super admin properties
+   * @tags Companies (Super Admin)
+   * @name SuperAdminUpdateCompany
+   * @request PATCH:/super-admin/companies/{companyId}
+   * @secure
+   */
+  export namespace SuperAdminUpdateCompany {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = {};
+    export type RequestBody = SuperAdminCompanySetInfoDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = CompanyConfigurationEntityDto;
+  }
+}
+
 export namespace Globals {
   /**
    * @description Lists system available currencies and its supported payment providers
@@ -1681,7 +2118,7 @@ export class HttpClient<SecurityDataType = unknown> {
   private format?: ResponseType;
 
   constructor({ securityWorker, secure, format, ...axiosConfig }: ApiConfig<SecurityDataType> = {}) {
-    this.instance = axios.create({ ...axiosConfig, baseURL: axiosConfig.baseURL || 'https://commerce.stg.pixway.io' });
+    this.instance = axios.create({ ...axiosConfig, baseURL: axiosConfig.baseURL || 'https://commerce.stg.w3block.io' });
     this.secure = secure;
     this.format = format;
     this.securityWorker = securityWorker;
@@ -1760,8 +2197,8 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title commerce-backend
- * @version 1.0.0
- * @baseUrl https://commerce.stg.pixway.io
+ * @version 2.14.1
+ * @baseUrl https://commerce.stg.w3block.io
  * @contact
  */
 export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDataType> {
@@ -1780,7 +2217,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         page?: number;
         limit?: number;
         search?: string;
-        sortBy?: string;
+        sortBy?: OrderSortByEnum;
         orderBy?: OrderByEnum;
         status?: OrderStatusEnum;
       },
@@ -1822,10 +2259,16 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/companies/{companyId}/orders/{orderId}
      * @secure
      */
-    getUserOrder: (companyId: string, orderId: string, params: RequestParams = {}) =>
+    getUserOrder: (
+      companyId: string,
+      orderId: string,
+      query?: { fetchNewestStatus?: boolean },
+      params: RequestParams = {},
+    ) =>
       this.request<OrderEntityDto, void>({
         path: `/companies/${companyId}/orders/${orderId}`,
         method: 'GET',
+        query: query,
         secure: true,
         format: 'json',
         ...params,
@@ -1866,6 +2309,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         sortBy?: ProductSortBy;
         orderBy?: OrderByEnum;
         includeMetadata?: boolean;
+        tagIds?: string[];
       },
       params: RequestParams = {},
     ) =>
@@ -1873,6 +2317,22 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/companies/${companyId}/products`,
         method: 'GET',
         query: query,
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Products
+     * @name GetProduct
+     * @request GET:/companies/{companyId}/products/{productId}
+     * @secure
+     */
+    getProduct: (companyId: string, productId: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/companies/${companyId}/products/${productId}`,
+        method: 'GET',
         secure: true,
         ...params,
       }),
@@ -1889,6 +2349,87 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<void, any>({
         path: `/companies/${companyId}/products/${productId}/can-purchase`,
         method: 'GET',
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Products
+     * @name GetProductBySlug
+     * @request GET:/companies/{companyId}/products/get-by-slug/{slug}
+     * @secure
+     */
+    getProductBySlug: (companyId: string, slug: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/companies/${companyId}/products/get-by-slug/${slug}`,
+        method: 'GET',
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * @description Lists users product resales
+     *
+     * @tags Products Resale
+     * @name ListUserResaleProducts
+     * @request GET:/companies/{companyId}/products-resale
+     * @secure
+     */
+    listUserResaleProducts: (
+      companyId: string,
+      query?: {
+        page?: number;
+        limit?: number;
+        search?: string;
+        sortBy?: ProductSortBy;
+        orderBy?: OrderByEnum;
+        includeMetadata?: boolean;
+        tagIds?: string[];
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<ProductEntity, void>({
+        path: `/companies/${companyId}/products-resale`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Add some user token for resale inside a company marketplace
+     *
+     * @tags Products Resale
+     * @name AddProductForResale
+     * @request POST:/companies/{companyId}/products-resale
+     * @secure
+     */
+    addProductForResale: (companyId: string, data: ResaleProductDto, params: RequestParams = {}) =>
+      this.request<ProductEntity, void>({
+        path: `/companies/${companyId}/products-resale`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Cancels some user token from resale inside a company marketplace
+     *
+     * @tags Products Resale
+     * @name CancelProductResaleById
+     * @request PATCH:/companies/{companyId}/products-resale/{productId}/cancel
+     * @secure
+     */
+    cancelProductResaleById: (companyId: string, productId: string, params: RequestParams = {}) =>
+      this.request<void, void>({
+        path: `/companies/${companyId}/products-resale/${productId}/cancel`,
+        method: 'PATCH',
         secure: true,
         ...params,
       }),
@@ -1925,7 +2466,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
   };
   admin = {
     /**
-     * No description
+     * @description List orders
      *
      * @tags Orders (Admin)
      * @name ListOrders
@@ -1938,7 +2479,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         page?: number;
         limit?: number;
         search?: string;
-        sortBy?: string;
+        sortBy?: OrderSortByEnum;
         orderBy?: OrderByEnum;
         status?: OrderStatusEnum;
       },
@@ -1954,7 +2495,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
-     * No description
+     * @description Cancel an order
      *
      * @tags Orders (Admin)
      * @name CancelOrder
@@ -1970,7 +2511,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
-     * No description
+     * @description Force delivery of order token
      *
      * @tags Orders (Admin)
      * @name ForceOrderDeliver
@@ -1981,6 +2522,85 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<void, void>({
         path: `/admin/companies/${companyId}/orders/${orderId}/force-deliver`,
         method: 'PATCH',
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * @description Approves an order manually. This order should be created using transfer payment provider
+     *
+     * @tags Orders (Admin)
+     * @name ApproveOrderManually
+     * @request PATCH:/admin/companies/{companyId}/orders/{orderId}/approve-payment
+     * @secure
+     */
+    approveOrderManually: (companyId: string, orderId: string, params: RequestParams = {}) =>
+      this.request<void, void>({
+        path: `/admin/companies/${companyId}/orders/${orderId}/approve-payment`,
+        method: 'PATCH',
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * @description Creates an order document
+     *
+     * @tags Order Documents (Admin)
+     * @name CreateOrderDocument
+     * @request POST:/admin/companies/{companyId}/orders/{orderId}/order-documents
+     * @secure
+     */
+    createOrderDocument: (
+      companyId: string,
+      orderId: string,
+      data: CreateOrderDocumentDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<OrderDocumentEntityDto, void>({
+        path: `/admin/companies/${companyId}/orders/${orderId}/order-documents`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Lists order documents from order
+     *
+     * @tags Order Documents (Admin)
+     * @name ListOrderDocuments
+     * @request GET:/admin/companies/{companyId}/orders/{orderId}/order-documents
+     * @secure
+     */
+    listOrderDocuments: (
+      companyId: string,
+      orderId: string,
+      query?: { page?: number; limit?: number; search?: string; sortBy?: string; orderBy?: OrderByEnum },
+      params: RequestParams = {},
+    ) =>
+      this.request<OrderDocumentsEntityPaginatedDto, void>({
+        path: `/admin/companies/${companyId}/orders/${orderId}/order-documents`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Deletes an order document from order
+     *
+     * @tags Order Documents (Admin)
+     * @name RemoveOrderDocuments
+     * @request DELETE:/admin/companies/{companyId}/orders/{orderId}/order-documents/{id}
+     * @secure
+     */
+    removeOrderDocuments: (companyId: string, orderId: string, id: string, params: RequestParams = {}) =>
+      this.request<void, void>({
+        path: `/admin/companies/${companyId}/orders/${orderId}/order-documents/${id}`,
+        method: 'DELETE',
         secure: true,
         ...params,
       }),
@@ -2021,6 +2641,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         sortBy?: ProductSortBy;
         orderBy?: OrderByEnum;
         includeMetadata?: boolean;
+        tagIds?: string[];
         status?: ProductStatus;
       },
       params: RequestParams = {},
@@ -2094,6 +2715,22 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     publishProduct: (productId: string, companyId: string, params: RequestParams = {}) =>
       this.request<void, void>({
         path: `/admin/companies/${companyId}/products/${productId}/publish`,
+        method: 'PATCH',
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * @description Cancels some product to be on sale inside a company
+     *
+     * @tags Products (Admin)
+     * @name CancelProductResaleById
+     * @request PATCH:/admin/companies/{companyId}/products/{productId}/cancel
+     * @secure
+     */
+    cancelProductResaleById: (companyId: string, productId: string, params: RequestParams = {}) =>
+      this.request<void, void>({
+        path: `/admin/companies/${companyId}/products/${productId}/cancel`,
         method: 'PATCH',
         secure: true,
         ...params,
@@ -2207,78 +2844,18 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
-     * @description Create a company tag
+     * @description Gets company with its commerce state
      *
-     * @tags Tags (Admin)
-     * @name CreateTag
-     * @request POST:/admin/companies/{companyId}/tags
+     * @tags Companies (Admin)
+     * @name GetCompanyWithEnabledState
+     * @request GET:/admin/companies/{companyId}/is-enabled
      * @secure
      */
-    createTag: (companyId: string, data: TagDto, params: RequestParams = {}) =>
-      this.request<TagsEntityDto, void>({
-        path: `/admin/companies/${companyId}/tags`,
-        method: 'POST',
-        body: data,
-        secure: true,
-        type: ContentType.Json,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * @description Get all company tags paginated
-     *
-     * @tags Tags (Admin)
-     * @name ListTags
-     * @request GET:/admin/companies/{companyId}/tags
-     * @secure
-     */
-    listTags: (
-      companyId: string,
-      query?: { page?: number; limit?: number; search?: string; sortBy?: TagsSortBy; orderBy?: OrderByEnum },
-      params: RequestParams = {},
-    ) =>
-      this.request<TagsEntityPaginated, void>({
-        path: `/admin/companies/${companyId}/tags`,
-        method: 'GET',
-        query: query,
-        secure: true,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * @description Get some company tag by id
-     *
-     * @tags Tags (Admin)
-     * @name GetTag
-     * @request GET:/admin/companies/{companyId}/tags/{id}
-     * @secure
-     */
-    getTag: (id: string, companyId: string, params: RequestParams = {}) =>
-      this.request<TagsEntityDto, void>({
-        path: `/admin/companies/${companyId}/tags/${id}`,
+    getCompanyWithEnabledState: (companyId: string, params: RequestParams = {}) =>
+      this.request<CompanyWithEnabledStateResponseDto, void>({
+        path: `/admin/companies/${companyId}/is-enabled`,
         method: 'GET',
         secure: true,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * @description Updates some company tag
-     *
-     * @tags Tags (Admin)
-     * @name UpdateTag
-     * @request PATCH:/admin/companies/{companyId}/tags/{id}
-     * @secure
-     */
-    updateTag: (id: string, companyId: string, data: TagDto, params: RequestParams = {}) =>
-      this.request<TagsEntityDto, void>({
-        path: `/admin/companies/${companyId}/tags/${id}`,
-        method: 'PATCH',
-        body: data,
-        secure: true,
-        type: ContentType.Json,
         format: 'json',
         ...params,
       }),
@@ -2324,22 +2901,21 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
-     * @description Set a company payment provider to be used in some currency purchases
+     * @description Set a some company configured payment provider to be available for use in some purchasing occasion
      *
      * @tags Companies (Admin)
-     * @name SetCompanyCurrencyPaymentProvider
-     * @request PATCH:/admin/companies/{companyId}/configurations/currencies/{currencyId}
+     * @name SetCompanyPaymentProviderSelection
+     * @request POST:/admin/companies/{companyId}/configurations/providers-selections
      * @secure
      */
-    setCompanyCurrencyPaymentProvider: (
+    setCompanyPaymentProviderSelection: (
       companyId: string,
-      currencyId: string,
-      data: SetCompanyCurrencyPaymentProviderDto,
+      data: SetCompanyPaymentProviderSelectionDto,
       params: RequestParams = {},
     ) =>
       this.request<void, void>({
-        path: `/admin/companies/${companyId}/configurations/currencies/${currencyId}`,
-        method: 'PATCH',
+        path: `/admin/companies/${companyId}/configurations/providers-selections`,
+        method: 'POST',
         body: data,
         secure: true,
         type: ContentType.Json,
@@ -2384,6 +2960,29 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     ) =>
       this.request<CompanyConfigurationEntityDto, void>({
         path: `/admin/companies/${companyId}/configurations/providers/paypal`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Creates configuration of transfer payment provider in the company
+     *
+     * @tags Companies (Admin)
+     * @name CreateTransferPaymentProvider
+     * @request PATCH:/admin/companies/{companyId}/configurations/providers/transfer
+     * @secure
+     */
+    createTransferPaymentProvider: (
+      companyId: string,
+      data: CreateTransferPaymentProviderDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<CompanyConfigurationEntityDto, void>({
+        path: `/admin/companies/${companyId}/configurations/providers/transfer`,
         method: 'PATCH',
         body: data,
         secure: true,
@@ -2441,11 +3040,34 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      */
     refreshStripePaymentProviderConfiguration: (
       companyId: string,
-      data: RefreshStripePaymentProviderDto,
+      data: ConnectOrRefreshStripePaymentProviderDto,
       params: RequestParams = {},
     ) =>
       this.request<StripeConnectAccountResponseDto, void>({
         path: `/admin/companies/${companyId}/configurations/providers/stripe/refresh-connection`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Configures/Refresh configuration of ASAAS payment provider in the company
+     *
+     * @tags Companies (Admin)
+     * @name ConfigureAsaasPaymentProvider
+     * @request PATCH:/admin/companies/{companyId}/configurations/providers/asaas
+     * @secure
+     */
+    configureAsaasPaymentProvider: (
+      companyId: string,
+      data: CreateAsaasPaymentProviderDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<CompanyConfigurationEntityDto, void>({
+        path: `/admin/companies/${companyId}/configurations/providers/asaas`,
         method: 'PATCH',
         body: data,
         secure: true,
@@ -2471,6 +3093,83 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/admin/companies/${companyId}/configurations/providers/${provider}`,
         method: 'DELETE',
         secure: true,
+        ...params,
+      }),
+
+    /**
+     * @description Create a company tag
+     *
+     * @tags Tags (Admin)
+     * @name CreateTag
+     * @request POST:/admin/companies/{companyId}/tags
+     * @secure
+     */
+    createTag: (companyId: string, data: TagDto, params: RequestParams = {}) =>
+      this.request<TagEntityDto, void>({
+        path: `/admin/companies/${companyId}/tags`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Get all company tags paginated
+     *
+     * @tags Tags (Admin)
+     * @name ListTags
+     * @request GET:/admin/companies/{companyId}/tags
+     * @secure
+     */
+    listTags: (
+      companyId: string,
+      query?: { page?: number; limit?: number; search?: string; sortBy?: TagsSortBy; orderBy?: OrderByEnum },
+      params: RequestParams = {},
+    ) =>
+      this.request<TagsEntityPaginated, void>({
+        path: `/admin/companies/${companyId}/tags`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Get some company tag by id
+     *
+     * @tags Tags (Admin)
+     * @name GetTag
+     * @request GET:/admin/companies/{companyId}/tags/{id}
+     * @secure
+     */
+    getTag: (id: string, companyId: string, params: RequestParams = {}) =>
+      this.request<TagEntityDto, void>({
+        path: `/admin/companies/${companyId}/tags/${id}`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Updates some company tag
+     *
+     * @tags Tags (Admin)
+     * @name UpdateTag
+     * @request PATCH:/admin/companies/{companyId}/tags/{id}
+     * @secure
+     */
+    updateTag: (id: string, companyId: string, data: TagDto, params: RequestParams = {}) =>
+      this.request<TagEntityDto, void>({
+        path: `/admin/companies/${companyId}/tags/${id}`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
         ...params,
       }),
 
@@ -2646,7 +3345,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     requestAssetUpload: (companyId: string, data: RequestAssetUploadDto, params: RequestParams = {}) =>
-      this.request<AssetEntityWithSignatureDto, void>({
+      this.request<AssetEntityWithProviderUploadParamsDto, void>({
         path: `/admin/companies/${companyId}/assets`,
         method: 'POST',
         body: data,
@@ -2842,6 +3541,48 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     updateFaqItem: (companyId: string, faqItemId: string, data: CreateFaqContextItemDto, params: RequestParams = {}) =>
       this.request<FaqItemsEntityDto, void>({
         path: `/admin/companies/${companyId}/faq/items/${faqItemId}`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+  };
+  superAdmin = {
+    /**
+     * @description Enables/Setup company on commerce services
+     *
+     * @tags Companies (Super Admin)
+     * @name CreateAndEnableCommerceCompany
+     * @request PATCH:/super-admin/companies/{companyId}/enable
+     * @secure
+     */
+    createAndEnableCommerceCompany: (
+      companyId: string,
+      data: SuperAdminCompanySetInfoDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, any>({
+        path: `/super-admin/companies/${companyId}/enable`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * @description Updates company super admin properties
+     *
+     * @tags Companies (Super Admin)
+     * @name SuperAdminUpdateCompany
+     * @request PATCH:/super-admin/companies/{companyId}
+     * @secure
+     */
+    superAdminUpdateCompany: (companyId: string, data: SuperAdminCompanySetInfoDto, params: RequestParams = {}) =>
+      this.request<CompanyConfigurationEntityDto, any>({
+        path: `/super-admin/companies/${companyId}`,
         method: 'PATCH',
         body: data,
         secure: true,

@@ -43,8 +43,9 @@
             "name": "sortBy",
             "required": false,
             "in": "query",
+            "example": "createdAt",
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/OrderSortByEnum"
             }
           },
           {
@@ -173,6 +174,17 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "fetchNewestStatus",
+            "required": false,
+            "in": "query",
+            "example": false,
+            "description": "Use this attribute to force fetching the newest status available based on payment driver used.",
+            "schema": {
+              "default": false,
+              "type": "boolean"
+            }
           }
         ],
         "responses": {
@@ -262,6 +274,8 @@
     "/admin/companies/{companyId}/orders": {
       "get": {
         "operationId": "listOrders",
+        "summary": "",
+        "description": "List orders",
         "parameters": [
           {
             "name": "companyId",
@@ -301,8 +315,9 @@
             "name": "sortBy",
             "required": false,
             "in": "query",
+            "example": "createdAt",
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/OrderSortByEnum"
             }
           },
           {
@@ -360,6 +375,8 @@
     "/admin/companies/{companyId}/orders/{orderId}/cancel": {
       "patch": {
         "operationId": "cancelOrder",
+        "summary": "",
+        "description": "Cancel an order",
         "parameters": [
           {
             "name": "companyId",
@@ -408,6 +425,8 @@
     "/admin/companies/{companyId}/orders/{orderId}/force-deliver": {
       "patch": {
         "operationId": "forceOrderDeliver",
+        "summary": "",
+        "description": "Force delivery of order token",
         "parameters": [
           {
             "name": "companyId",
@@ -436,6 +455,278 @@
         },
         "tags": [
           "Orders (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/admin/companies/{companyId}/orders/{orderId}/approve-payment": {
+      "patch": {
+        "operationId": "approveOrderManually",
+        "summary": "",
+        "description": "Approves an order manually. This order should be created using transfer payment provider",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Orders (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/admin/companies/{companyId}/orders/{orderId}/order-documents": {
+      "post": {
+        "operationId": "createOrderDocument",
+        "summary": "",
+        "description": "Creates an order document",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateOrderDocumentDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderDocumentEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Order Documents (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "listOrderDocuments",
+        "summary": "",
+        "description": "Lists order documents from order",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderDocumentsEntityPaginatedDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Order Documents (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/admin/companies/{companyId}/orders/{orderId}/order-documents/{id}": {
+      "delete": {
+        "operationId": "removeOrderDocuments",
+        "summary": "",
+        "description": "Deletes an order document from order",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Order Documents (Admin)"
         ],
         "security": [
           {
@@ -518,6 +809,63 @@
               "default": false,
               "type": "boolean"
             }
+          },
+          {
+            "name": "tagIds",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Products"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/companies/{companyId}/products/{productId}": {
+      "get": {
+        "operationId": "getProduct",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "productId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -558,6 +906,51 @@
           },
           {
             "name": "productId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Products"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/companies/{companyId}/products/get-by-slug/{slug}": {
+      "get": {
+        "operationId": "getProductBySlug",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "slug",
             "required": true,
             "in": "path",
             "schema": {
@@ -711,10 +1104,21 @@
             }
           },
           {
+            "name": "tagIds",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
             "name": "status",
             "required": false,
             "in": "query",
-            "example": null,
             "schema": {
               "$ref": "#/components/schemas/ProductStatus"
             }
@@ -922,6 +1326,56 @@
         ],
         "responses": {
           "200": {
+            "description": ""
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Products (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/admin/companies/{companyId}/products/{productId}/cancel": {
+      "patch": {
+        "operationId": "cancelProductResaleById",
+        "summary": "",
+        "description": "Cancels some product to be on sale inside a company",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "productId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
             "description": ""
           },
           "401": {
@@ -1268,91 +1722,11 @@
         ]
       }
     },
-    "/globals/currencies": {
+    "/companies/{companyId}/products-resale": {
       "get": {
-        "operationId": "listCurrencies",
+        "operationId": "listUserResaleProducts",
         "summary": "",
-        "description": "Lists system available currencies and its supported payment providers",
-        "parameters": [
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "default": 1,
-              "type": "number"
-            }
-          },
-          {
-            "name": "limit",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "default": 10,
-              "type": "number"
-            }
-          },
-          {
-            "name": "search",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "sortBy",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "orderBy",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/OrderByEnum"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Currencies was successfully got",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CurrencyEntityPaginatedDto"
-                }
-              }
-            }
-          }
-        },
-        "tags": [
-          "Globals"
-        ],
-        "security": [
-          {
-            "bearer": []
-          },
-          {
-            "x-w3block-api-key": []
-          },
-          {
-            "x-w3block-id": []
-          },
-          {
-            "x-w3block-secret": []
-          }
-        ]
-      }
-    },
-    "/admin/companies/{companyId}/tags": {
-      "post": {
-        "operationId": "createTag",
-        "summary": "",
-        "description": "Create a company tag",
+        "description": "Lists users product resales",
         "parameters": [
           {
             "name": "companyId",
@@ -1361,56 +1735,7 @@
             "schema": {
               "type": "string"
             }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TagDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TagsEntityDto"
-                }
-              }
-            }
           },
-          "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
-          }
-        },
-        "tags": [
-          "Tags (Admin)"
-        ],
-        "security": [
-          {
-            "bearer": []
-          },
-          {
-            "x-w3block-api-key": []
-          },
-          {
-            "x-w3block-id": []
-          },
-          {
-            "x-w3block-secret": []
-          }
-        ]
-      },
-      "get": {
-        "operationId": "listTags",
-        "summary": "",
-        "description": "Get all company tags paginated",
-        "parameters": [
           {
             "name": "page",
             "required": false,
@@ -1443,7 +1768,7 @@
             "in": "query",
             "example": "createdAt",
             "schema": {
-              "$ref": "#/components/schemas/TagsSortBy"
+              "$ref": "#/components/schemas/ProductSortBy"
             }
           },
           {
@@ -1455,11 +1780,26 @@
             }
           },
           {
-            "name": "companyId",
-            "required": true,
-            "in": "path",
+            "name": "includeMetadata",
+            "required": false,
+            "in": "query",
+            "example": false,
+            "description": "Includes first product token found metadata for each product. (Works good if you want to get some common NFT metadata attributes that is applied for all contract tokens)",
             "schema": {
-              "type": "string"
+              "default": false,
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "tagIds",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           }
         ],
@@ -1469,17 +1809,74 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TagsEntityPaginated"
+                  "$ref": "#/components/schemas/ProductEntity"
                 }
               }
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
           }
         },
         "tags": [
-          "Tags (Admin)"
+          "Products Resale"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      },
+      "post": {
+        "operationId": "addProductForResale",
+        "summary": "",
+        "description": "Add some user token for resale inside a company marketplace",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResaleProductDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductEntity"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Products Resale"
         ],
         "security": [
           {
@@ -1497,14 +1894,14 @@
         ]
       }
     },
-    "/admin/companies/{companyId}/tags/{id}": {
-      "get": {
-        "operationId": "getTag",
+    "/companies/{companyId}/products-resale/{productId}/cancel": {
+      "patch": {
+        "operationId": "cancelProductResaleById",
         "summary": "",
-        "description": "Get some company tag by id",
+        "description": "Cancels some user token from resale inside a company marketplace",
         "parameters": [
           {
-            "name": "id",
+            "name": "companyId",
             "required": true,
             "in": "path",
             "schema": {
@@ -1512,7 +1909,7 @@
             }
           },
           {
-            "name": "companyId",
+            "name": "productId",
             "required": true,
             "in": "path",
             "schema": {
@@ -1521,22 +1918,15 @@
           }
         ],
         "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TagsEntityDto"
-                }
-              }
-            }
+          "204": {
+            "description": ""
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
           }
         },
         "tags": [
-          "Tags (Admin)"
+          "Products Resale"
         ],
         "security": [
           {
@@ -1552,20 +1942,14 @@
             "x-w3block-secret": []
           }
         ]
-      },
-      "patch": {
-        "operationId": "updateTag",
+      }
+    },
+    "/admin/companies/{companyId}/is-enabled": {
+      "get": {
+        "operationId": "getCompanyWithEnabledState",
         "summary": "",
-        "description": "Updates some company tag",
+        "description": "Gets company with its commerce state",
         "parameters": [
-          {
-            "name": "id",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
           {
             "name": "companyId",
             "required": true,
@@ -1575,23 +1959,13 @@
             }
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TagDto"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TagsEntityDto"
+                  "$ref": "#/components/schemas/CompanyWithEnabledStateResponseDto"
                 }
               }
             }
@@ -1601,7 +1975,7 @@
           }
         },
         "tags": [
-          "Tags (Admin)"
+          "Companies (Admin)"
         ],
         "security": [
           {
@@ -1725,22 +2099,14 @@
         ]
       }
     },
-    "/admin/companies/{companyId}/configurations/currencies/{currencyId}": {
-      "patch": {
-        "operationId": "setCompanyCurrencyPaymentProvider",
+    "/admin/companies/{companyId}/configurations/providers-selections": {
+      "post": {
+        "operationId": "setCompanyPaymentProviderSelection",
         "summary": "",
-        "description": "Set a company payment provider to be used in some currency purchases",
+        "description": "Set a some company configured payment provider to be available for use in some purchasing occasion",
         "parameters": [
           {
             "name": "companyId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "currencyId",
             "required": true,
             "in": "path",
             "schema": {
@@ -1753,7 +2119,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/SetCompanyCurrencyPaymentProviderDto"
+                "$ref": "#/components/schemas/SetCompanyPaymentProviderSelectionDto"
               }
             }
           }
@@ -1865,6 +2231,65 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/CreatePaypalPaymentProviderDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompanyConfigurationEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Companies (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/admin/companies/{companyId}/configurations/providers/transfer": {
+      "patch": {
+        "operationId": "createTransferPaymentProvider",
+        "summary": "",
+        "description": "Creates configuration of transfer payment provider in the company",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTransferPaymentProviderDto"
               }
             }
           }
@@ -2024,7 +2449,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RefreshStripePaymentProviderDto"
+                "$ref": "#/components/schemas/ConnectOrRefreshStripePaymentProviderDto"
               }
             }
           }
@@ -2036,6 +2461,65 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/StripeConnectAccountResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Companies (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/admin/companies/{companyId}/configurations/providers/asaas": {
+      "patch": {
+        "operationId": "configureAsaasPaymentProvider",
+        "summary": "",
+        "description": "Configures/Refresh configuration of ASAAS payment provider in the company",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAsaasPaymentProviderDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompanyConfigurationEntityDto"
                 }
               }
             }
@@ -2097,6 +2581,462 @@
         },
         "tags": [
           "Companies (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/super-admin/companies/{companyId}/enable": {
+      "patch": {
+        "operationId": "createAndEnableCommerceCompany",
+        "summary": "",
+        "description": "Enables/Setup company on commerce services",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SuperAdminCompanySetInfoDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Companies (Super Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/super-admin/companies/{companyId}": {
+      "patch": {
+        "operationId": "superAdminUpdateCompany",
+        "summary": "",
+        "description": "Updates company super admin properties",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SuperAdminCompanySetInfoDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompanyConfigurationEntityDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Companies (Super Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/globals/currencies": {
+      "get": {
+        "operationId": "listCurrencies",
+        "summary": "",
+        "description": "Lists system available currencies and its supported payment providers",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Currencies was successfully got",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrencyEntityPaginatedDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Globals"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/admin/companies/{companyId}/tags": {
+      "post": {
+        "operationId": "createTag",
+        "summary": "",
+        "description": "Create a company tag",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TagDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TagEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Tags (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      },
+      "get": {
+        "operationId": "listTags",
+        "summary": "",
+        "description": "Get all company tags paginated",
+        "parameters": [
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "example": "createdAt",
+            "schema": {
+              "$ref": "#/components/schemas/TagsSortBy"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          },
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TagsEntityPaginated"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Tags (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/admin/companies/{companyId}/tags/{id}": {
+      "get": {
+        "operationId": "getTag",
+        "summary": "",
+        "description": "Get some company tag by id",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TagEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Tags (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "updateTag",
+        "summary": "",
+        "description": "Updates some company tag",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TagDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TagEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Tags (Admin)"
         ],
         "security": [
           {
@@ -2679,7 +3619,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AssetEntityWithSignatureDto"
+                  "$ref": "#/components/schemas/AssetEntityWithProviderUploadParamsDto"
                 }
               }
             }
@@ -3521,13 +4461,13 @@
   "info": {
     "title": "commerce-backend",
     "description": "",
-    "version": "1.0.0",
+    "version": "2.14.1",
     "contact": {}
   },
   "tags": [],
   "servers": [
     {
-      "url": "https://commerce.stg.pixway.io",
+      "url": "https://commerce.stg.w3block.io",
       "description": "W3Block Commerce Server",
       "variables": {}
     }
@@ -3562,6 +4502,13 @@
       }
     },
     "schemas": {
+      "OrderSortByEnum": {
+        "type": "string",
+        "enum": [
+          "createdAt",
+          "updatedAt"
+        ]
+      },
       "OrderByEnum": {
         "type": "string",
         "enum": [
@@ -3579,6 +4526,7 @@
           "concluded",
           "failed",
           "cancelled",
+          "partially_cancelled",
           "expired"
         ]
       },
@@ -3663,6 +4611,7 @@
           "concluded",
           "failed",
           "cancelled",
+          "partially_cancelled",
           "expired"
         ]
       },
@@ -3671,22 +4620,30 @@
         "enum": [
           "pagar_me",
           "paypal",
-          "stripe"
+          "transfer",
+          "stripe",
+          "asaas",
+          "crypto",
+          "free"
         ]
       },
-      "PaymentMethod": {
+      "PaymentMethodEnum": {
         "type": "string",
         "enum": [
           "credit_card",
+          "debit_card",
           "pix",
-          "crypto"
+          "crypto",
+          "transfer",
+          "billet"
         ]
       },
       "OrderEntityDto": {
         "type": "object",
         "properties": {
           "id": {
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           },
           "createdAt": {
             "format": "date-time",
@@ -3697,13 +4654,15 @@
             "type": "string"
           },
           "companyId": {
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           },
           "company": {
             "$ref": "#/components/schemas/CompanyEntity"
           },
           "userId": {
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           },
           "user": {
             "$ref": "#/components/schemas/UserEntity"
@@ -3712,13 +4671,15 @@
             "type": "string"
           },
           "addressId": {
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           },
           "address": {
             "$ref": "#/components/schemas/AddressEntity"
           },
           "currencyId": {
-            "type": "string"
+            "type": "string",
+            "format": "uuid"
           },
           "currency": {
             "$ref": "#/components/schemas/CurrencyEntity"
@@ -3747,7 +4708,7 @@
           },
           "paymentMethod": {
             "example": "credit_card",
-            "$ref": "#/components/schemas/PaymentMethod"
+            "$ref": "#/components/schemas/PaymentMethodEnum"
           },
           "paymentInfo": {
             "type": "object",
@@ -3769,7 +4730,7 @@
           "clientServiceFee": {
             "type": "string"
           },
-          "serviceFee": {
+          "totalAmount": {
             "type": "string"
           }
         },
@@ -3786,7 +4747,7 @@
           "paymentInfo",
           "gasFee",
           "clientServiceFee",
-          "serviceFee"
+          "totalAmount"
         ]
       },
       "OrderEntityPaginatedDto": {
@@ -3815,10 +4776,12 @@
         "properties": {
           "productId": {
             "type": "string",
+            "format": "uuid",
             "example": "3db843f4-1ee6-4f6e-a86d-b0aee938bdde"
           },
           "productTokenId": {
             "type": "string",
+            "format": "uuid",
             "example": "3062cdc2-2bd8-4143-8a04-90fc1e607794"
           },
           "expectedPrice": {
@@ -3829,6 +4792,43 @@
         "required": [
           "productId",
           "expectedPrice"
+        ]
+      },
+      "UtmParamsDto": {
+        "type": "object",
+        "properties": {
+          "utm_source": {
+            "type": "string",
+            "example": "google"
+          },
+          "utm_medium": {
+            "type": "string",
+            "example": "cpc"
+          },
+          "utm_campaign": {
+            "type": "string",
+            "example": "super_sales"
+          },
+          "utm_term": {
+            "type": "string",
+            "example": "nft"
+          },
+          "utm_content": {
+            "type": "string",
+            "example": "header_banner_link"
+          }
+        }
+      },
+      "PaymentProviderEnum": {
+        "type": "string",
+        "enum": [
+          "pagar_me",
+          "paypal",
+          "transfer",
+          "stripe",
+          "asaas",
+          "crypto",
+          "free"
         ]
       },
       "CreateOrderDto": {
@@ -3859,12 +4859,28 @@
           "successUrl": {
             "type": "string",
             "example": "https://domain.com"
+          },
+          "paymentMethod": {
+            "example": "pix",
+            "$ref": "#/components/schemas/PaymentMethodEnum"
+          },
+          "paymentProvider": {
+            "example": "stripe",
+            "$ref": "#/components/schemas/PaymentProviderEnum"
+          },
+          "providerInputs": {
+            "type": "object",
+            "example": {
+              "ssn": "659.315.680-93"
+            }
+          },
+          "utmParams": {
+            "$ref": "#/components/schemas/UtmParamsDto"
           }
         },
         "required": [
           "orderProducts",
-          "currencyId",
-          "signedGasFee"
+          "currencyId"
         ]
       },
       "OrderProductPreviewDto": {
@@ -3872,10 +4888,12 @@
         "properties": {
           "productId": {
             "type": "string",
+            "format": "uuid",
             "example": "3db843f4-1ee6-4f6e-a86d-b0aee938bdde"
           },
           "productTokenId": {
             "type": "string",
+            "format": "uuid",
             "example": "3062cdc2-2bd8-4143-8a04-90fc1e607794"
           }
         },
@@ -3895,11 +4913,123 @@
           "currencyId": {
             "type": "string",
             "example": "65fe1119-6ec0-4b78-8d30-cb989914bdcb"
+          },
+          "acceptIncompleteCart": {
+            "type": "object",
+            "example": true,
+            "default": true
           }
         },
         "required": [
           "orderProducts",
           "currencyId"
+        ]
+      },
+      "CreateOrderDocumentDto": {
+        "type": "object",
+        "properties": {
+          "assetId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "assetId"
+        ]
+      },
+      "CompanyEntityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "OrderEntity": {
+        "type": "object",
+        "properties": {}
+      },
+      "AssetEntity": {
+        "type": "object",
+        "properties": {}
+      },
+      "OrderDocumentEntityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "orderId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "order": {
+            "$ref": "#/components/schemas/OrderEntity"
+          },
+          "companyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "assetId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/AssetEntity"
+          }
+        },
+        "required": [
+          "id",
+          "orderId",
+          "order",
+          "companyId",
+          "assetId",
+          "asset"
+        ]
+      },
+      "OrderDocumentsEntityPaginatedDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderDocumentEntityDto"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMetaDto"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinksDto"
+          }
+        },
+        "required": [
+          "items",
+          "meta"
         ]
       },
       "ProductSortBy": {
@@ -3956,6 +5086,28 @@
           }
         }
       },
+      "ProductRequirementDto": {
+        "type": "object",
+        "properties": {
+          "companyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "keyCollectionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "productId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "companyId",
+          "keyCollectionId",
+          "productId"
+        ]
+      },
       "ProductDistributionType": {
         "type": "string",
         "enum": [
@@ -3985,11 +5137,11 @@
           },
           "name": {
             "type": "string",
-            "example": "W3"
+            "example": "W3Block Product"
           },
           "description": {
             "type": "string",
-            "example": "block"
+            "example": "My Description"
           },
           "images": {
             "type": "array",
@@ -4026,6 +5178,18 @@
           },
           "slug": {
             "type": "string"
+          },
+          "htmlContent": {
+            "type": "object",
+            "example": "<b>block</b>"
+          },
+          "onDemandMintEnabled": {
+            "type": "boolean",
+            "example": true,
+            "default": true
+          },
+          "requirements": {
+            "$ref": "#/components/schemas/ProductRequirementDto"
           }
         },
         "required": [
@@ -4047,7 +5211,10 @@
         "enum": [
           "draft",
           "publishing",
-          "published"
+          "updating",
+          "published",
+          "cancelled",
+          "sold"
         ]
       },
       "UpdateProductDto": {
@@ -4064,11 +5231,11 @@
           },
           "name": {
             "type": "string",
-            "example": "W3"
+            "example": "W3Block Product"
           },
           "description": {
             "type": "string",
-            "example": "block"
+            "example": "My Description"
           },
           "images": {
             "type": "array",
@@ -4105,6 +5272,18 @@
           },
           "slug": {
             "type": "string"
+          },
+          "htmlContent": {
+            "type": "object",
+            "example": "<b>block</b>"
+          },
+          "onDemandMintEnabled": {
+            "type": "boolean",
+            "example": true,
+            "default": true
+          },
+          "requirements": {
+            "$ref": "#/components/schemas/ProductRequirementDto"
           }
         }
       },
@@ -4134,12 +5313,10 @@
           },
           "whitelistId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "default": null
           }
-        },
-        "required": [
-          "whitelistId"
-        ]
+        }
       },
       "UpdateProductOrderRuleDto": {
         "type": "object",
@@ -4160,16 +5337,384 @@
           },
           "whitelistId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "default": null
           }
         }
       },
-      "PaymentProviderEnum": {
+      "ResaleProductDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "My Product"
+          },
+          "description": {
+            "type": "string",
+            "example": "A beautiful product"
+          },
+          "images": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ImageDto"
+            }
+          },
+          "prices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductPriceDto"
+            }
+          },
+          "contractAddress": {
+            "type": "string",
+            "example": "0xDAA50a02340cBcFA1a6F4c02765430Ffe411b125"
+          },
+          "chainId": {
+            "type": "number",
+            "example": 80001,
+            "enum": [
+              1,
+              3,
+              4,
+              42,
+              1337,
+              80001,
+              137
+            ]
+          },
+          "tokenId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "description",
+          "prices",
+          "contractAddress",
+          "chainId",
+          "tokenId"
+        ]
+      },
+      "CompanyWithEnabledStateResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean",
+            "example": true,
+            "default": true
+          }
+        },
+        "required": [
+          "id",
+          "enabled"
+        ]
+      },
+      "DeliverDelayDto": {
+        "type": "object",
+        "properties": {
+          "paymentMethod": {
+            "example": "credit_card",
+            "$ref": "#/components/schemas/PaymentMethodEnum"
+          },
+          "delay": {
+            "type": "number",
+            "default": 0,
+            "example": 259200000
+          }
+        },
+        "required": [
+          "paymentMethod",
+          "delay"
+        ]
+      },
+      "CompanyConfigurationEntityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "companyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "company": {
+            "$ref": "#/components/schemas/CompanyEntityDto"
+          },
+          "deliveryDelays": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeliverDelayDto"
+            }
+          },
+          "logo": {
+            "type": "string"
+          },
+          "operatorWalletAddress": {
+            "type": "string"
+          },
+          "paymentProviders": {
+            "type": "array",
+            "items": {
+              "type": "array"
+            }
+          },
+          "clientServiceFeePercentage": {
+            "type": "number"
+          },
+          "companyServiceFeePercentage": {
+            "type": "number"
+          },
+          "resaleFeePercentage": {
+            "type": "number"
+          },
+          "disableGasBilling": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "companyId",
+          "clientServiceFeePercentage",
+          "companyServiceFeePercentage",
+          "resaleFeePercentage",
+          "disableGasBilling"
+        ]
+      },
+      "UpdateCompanyConfigurationsDto": {
+        "type": "object",
+        "properties": {
+          "logo": {
+            "type": "string",
+            "example": "https://w3block.io/images/1.png"
+          },
+          "deliverDelays": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeliverDelayDto"
+            }
+          },
+          "resaleFeePercentage": {
+            "type": "number",
+            "default": 0,
+            "example": 0
+          }
+        },
+        "required": [
+          "resaleFeePercentage"
+        ]
+      },
+      "SetCompanyPaymentProviderSelectionDto": {
+        "type": "object",
+        "properties": {
+          "currencyId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "65fe1119-6ec0-4b78-8d30-cb989914bdcb"
+          },
+          "paymentProvider": {
+            "example": "stripe",
+            "$ref": "#/components/schemas/PaymentProviderEnum"
+          },
+          "paymentMethod": {
+            "example": "pix",
+            "default": null,
+            "$ref": "#/components/schemas/PaymentMethodEnum"
+          }
+        },
+        "required": [
+          "currencyId",
+          "paymentProvider"
+        ]
+      },
+      "CreatePagarMePaymentProviderDto": {
+        "type": "object",
+        "properties": {
+          "secretKey": {
+            "type": "string"
+          },
+          "checkoutExpireTime": {
+            "type": "number"
+          },
+          "successUrl": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "secretKey"
+        ]
+      },
+      "CreatePaypalPaymentProviderDto": {
+        "type": "object",
+        "properties": {
+          "secret": {
+            "type": "string"
+          },
+          "clientId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "url": {
+            "type": "string"
+          },
+          "checkoutExpireTime": {
+            "type": "number"
+          },
+          "successUrl": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "secret",
+          "clientId",
+          "url"
+        ]
+      },
+      "TransferTypeEnum": {
         "type": "string",
         "enum": [
-          "pagar_me",
-          "paypal",
-          "stripe"
+          "pix",
+          "bank_transfer"
+        ]
+      },
+      "CreateTransferPaymentProviderDto": {
+        "type": "object",
+        "properties": {
+          "checkoutExpireTime": {
+            "type": "number"
+          },
+          "successUrl": {
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/TransferTypeEnum"
+          },
+          "pixKey": {
+            "type": "string"
+          },
+          "bankCode": {
+            "type": "string"
+          },
+          "bankAgency": {
+            "type": "string"
+          },
+          "bankAccount": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "type"
+        ]
+      },
+      "CreateStripePaymentProviderDto": {
+        "type": "object",
+        "properties": {
+          "successConnectUrl": {
+            "type": "string"
+          },
+          "refreshConnectUrl": {
+            "type": "string"
+          },
+          "withoutConnect": {
+            "type": "boolean"
+          },
+          "checkoutExpireTime": {
+            "type": "number"
+          },
+          "successUrl": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "successConnectUrl",
+          "refreshConnectUrl"
+        ]
+      },
+      "StripeConnectAccountResponseDto": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ]
+      },
+      "ConnectOrRefreshStripePaymentProviderDto": {
+        "type": "object",
+        "properties": {
+          "successConnectUrl": {
+            "type": "string"
+          },
+          "refreshConnectUrl": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "successConnectUrl",
+          "refreshConnectUrl"
+        ]
+      },
+      "CreateAsaasPaymentProviderDto": {
+        "type": "object",
+        "properties": {
+          "apiKey": {
+            "type": "string"
+          },
+          "checkoutExpireTime": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "apiKey"
+        ]
+      },
+      "SuperAdminCompanySetInfoDto": {
+        "type": "object",
+        "properties": {
+          "clientServiceFeePercentage": {
+            "type": "number",
+            "default": 10,
+            "example": 10
+          },
+          "companyServiceFeePercentage": {
+            "type": "number",
+            "default": 10,
+            "example": 10
+          },
+          "disableGasBilling": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "required": [
+          "clientServiceFeePercentage",
+          "companyServiceFeePercentage",
+          "disableGasBilling"
         ]
       },
       "CurrencyPaymentProviderEntityDto": {
@@ -4217,6 +5762,18 @@
           "crypto": {
             "type": "boolean"
           },
+          "symbol": {
+            "type": "string",
+            "example": "$"
+          },
+          "code": {
+            "type": "string",
+            "example": "USD"
+          },
+          "erc20contractAddress": {
+            "type": "string",
+            "example": "0x7dd80541ad31078244d9f2b73026a025e70b5484"
+          },
           "paymentProviders": {
             "type": "array",
             "items": {
@@ -4226,7 +5783,9 @@
         },
         "required": [
           "id",
-          "name"
+          "name",
+          "symbol",
+          "code"
         ]
       },
       "CurrencyEntityPaginatedDto": {
@@ -4301,7 +5860,7 @@
           }
         }
       },
-      "TagsEntityDto": {
+      "TagEntityDto": {
         "type": "object",
         "properties": {
           "id": {
@@ -4362,7 +5921,7 @@
           "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/TagsEntityDto"
+              "$ref": "#/components/schemas/TagEntityDto"
             }
           },
           "meta": {
@@ -4375,301 +5934,6 @@
         "required": [
           "items",
           "meta"
-        ]
-      },
-      "CompanyEntityDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "id"
-        ]
-      },
-      "ImageResponseDto": {
-        "type": "object",
-        "properties": {
-          "assetId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "thumb": {
-            "type": "string",
-            "example": "https://dummyimage.com/200x200/fff/000"
-          },
-          "original": {
-            "type": "string",
-            "example": "https://dummyimage.com/600x400/fff/000"
-          }
-        },
-        "required": [
-          "assetId",
-          "thumb",
-          "original"
-        ]
-      },
-      "BannerResponseDto": {
-        "type": "object",
-        "properties": {
-          "text": {
-            "type": "string",
-            "example": "Banner description"
-          },
-          "buttonText": {
-            "type": "string",
-            "example": "Click"
-          },
-          "buttonLink": {
-            "type": "string",
-            "example": "https://w3block.io"
-          },
-          "image": {
-            "$ref": "#/components/schemas/ImageResponseDto"
-          }
-        },
-        "required": [
-          "image"
-        ]
-      },
-      "DeliverDelayDto": {
-        "type": "object",
-        "properties": {
-          "paymentMethod": {
-            "example": "credit_card",
-            "$ref": "#/components/schemas/PaymentMethod"
-          },
-          "delay": {
-            "type": "number",
-            "default": 0,
-            "example": 259200000
-          }
-        },
-        "required": [
-          "paymentMethod",
-          "delay"
-        ]
-      },
-      "CompanyConfigurationEntityDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "companyId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "company": {
-            "$ref": "#/components/schemas/CompanyEntityDto"
-          },
-          "banners": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BannerResponseDto"
-            }
-          },
-          "deliveryDelays": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/DeliverDelayDto"
-            }
-          },
-          "domain": {
-            "type": "string"
-          },
-          "logo": {
-            "type": "string"
-          },
-          "operatorWalletAddress": {
-            "type": "string"
-          },
-          "paymentProviders": {
-            "type": "array",
-            "items": {
-              "type": "array"
-            }
-          },
-          "clientServiceFeePercentage": {
-            "type": "number"
-          },
-          "companyServiceFeePercentage": {
-            "type": "number"
-          }
-        },
-        "required": [
-          "id",
-          "companyId",
-          "clientServiceFeePercentage",
-          "companyServiceFeePercentage"
-        ]
-      },
-      "BannerDto": {
-        "type": "object",
-        "properties": {
-          "text": {
-            "type": "string",
-            "example": "Banner description"
-          },
-          "buttonText": {
-            "type": "string",
-            "example": "Click"
-          },
-          "buttonLink": {
-            "type": "string",
-            "example": "https://w3block.io"
-          },
-          "image": {
-            "$ref": "#/components/schemas/ImageDto"
-          }
-        },
-        "required": [
-          "image"
-        ]
-      },
-      "UpdateCompanyConfigurationsDto": {
-        "type": "object",
-        "properties": {
-          "logo": {
-            "type": "string",
-            "example": "https://w3block.io/images/1.png"
-          },
-          "banners": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/BannerDto"
-            }
-          },
-          "deliverDelays": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/DeliverDelayDto"
-            }
-          }
-        }
-      },
-      "SetCompanyCurrencyPaymentProviderDto": {
-        "type": "object",
-        "properties": {
-          "paymentProvider": {
-            "example": "pagar_me",
-            "$ref": "#/components/schemas/PaymentProviderEnum"
-          }
-        },
-        "required": [
-          "paymentProvider"
-        ]
-      },
-      "CreatePagarMePaymentProviderDto": {
-        "type": "object",
-        "properties": {
-          "secretKey": {
-            "type": "string"
-          },
-          "checkoutExpireTime": {
-            "type": "number"
-          },
-          "successUrl": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "secretKey"
-        ]
-      },
-      "CreatePaypalPaymentProviderDto": {
-        "type": "object",
-        "properties": {
-          "secret": {
-            "type": "string"
-          },
-          "clientId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "url": {
-            "type": "string"
-          },
-          "checkoutExpireTime": {
-            "type": "number"
-          },
-          "successUrl": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "secret",
-          "clientId",
-          "url"
-        ]
-      },
-      "CreateStripePaymentProviderDto": {
-        "type": "object",
-        "properties": {
-          "successConnectUrl": {
-            "type": "string"
-          },
-          "refreshConnectUrl": {
-            "type": "string"
-          },
-          "checkoutExpireTime": {
-            "type": "number"
-          },
-          "successUrl": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "successConnectUrl",
-          "refreshConnectUrl"
-        ]
-      },
-      "StripeConnectAccountResponseDto": {
-        "type": "object",
-        "properties": {
-          "url": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "url"
-        ]
-      },
-      "RefreshStripePaymentProviderDto": {
-        "type": "object",
-        "properties": {
-          "successConnectUrl": {
-            "type": "string"
-          },
-          "refreshConnectUrl": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "successConnectUrl",
-          "refreshConnectUrl"
         ]
       },
       "WebhooksConfigurationEntityDto": {
@@ -4874,7 +6138,18 @@
         "type": "string",
         "enum": [
           "image",
-          "video"
+          "video",
+          "document"
+        ]
+      },
+      "AssetTargetEnum": {
+        "type": "string",
+        "enum": [
+          "product",
+          "order_document",
+          "refund",
+          "storefront_page",
+          "storefront_theme"
         ]
       },
       "RequestAssetUploadDto": {
@@ -4884,10 +6159,57 @@
             "default": "image",
             "example": "image",
             "$ref": "#/components/schemas/AssetTypeEnum"
+          },
+          "target": {
+            "example": "product",
+            "$ref": "#/components/schemas/AssetTargetEnum"
           }
         },
         "required": [
-          "type"
+          "type",
+          "target"
+        ]
+      },
+      "CloudinaryProviderUploadParamsDto": {
+        "type": "object",
+        "properties": {
+          "apiKey": {
+            "type": "string",
+            "example": "000000000000"
+          },
+          "timestamp": {
+            "type": "number",
+            "example": 1666215568
+          },
+          "publicId": {
+            "type": "string",
+            "example": "commerce/3fa85f64-5717-4562-b3fc-2c963f66afa6"
+          },
+          "signature": {
+            "type": "string",
+            "example": "bfd09f95f331f558cbd1320e67aa8d488770583e"
+          },
+          "signedParams": {
+            "type": "string",
+            "example": "filename_override=false&public_id=commerce/3fa85f64-5717-4562-b3fc-2c963f66afa6&timestamp=1666215568&unique_filename=true"
+          },
+          "queryParams": {
+            "type": "object",
+            "example": {
+              "filename_override": "false",
+              "public_id": "commerce/3fa85f64-5717-4562-b3fc-2c963f66afa6",
+              "timestamp": "1666215568",
+              "unique_filename": "true"
+            }
+          }
+        },
+        "required": [
+          "apiKey",
+          "timestamp",
+          "publicId",
+          "signature",
+          "signedParams",
+          "queryParams"
         ]
       },
       "AssetStatusEnum": {
@@ -4906,7 +6228,7 @@
           "cloudinary"
         ]
       },
-      "AssetEntityWithSignatureDto": {
+      "AssetEntityWithProviderUploadParamsDto": {
         "type": "object",
         "properties": {
           "id": {
@@ -4944,17 +6266,13 @@
             "type": "string",
             "example": "https://dummyimage.com/200x200/fff/000"
           },
-          "signature": {
-            "type": "string",
-            "example": "bfd09f95f331f558cbd1320e67aa8d488770583e"
+          "target": {
+            "example": "product",
+            "nullable": true,
+            "$ref": "#/components/schemas/AssetTargetEnum"
           },
-          "timestamp": {
-            "type": "number",
-            "example": 1666215568
-          },
-          "params": {
-            "type": "string",
-            "example": "filename_override=false&public_id=commerce/3fa85f64-5717-4562-b3fc-2c963f66afa6&timestamp=1666215568&unique_filename=true"
+          "providerUploadParams": {
+            "$ref": "#/components/schemas/CloudinaryProviderUploadParamsDto"
           }
         },
         "required": [
@@ -4963,9 +6281,7 @@
           "type",
           "status",
           "provider",
-          "signature",
-          "timestamp",
-          "params"
+          "providerUploadParams"
         ]
       },
       "I18nItemDto": {
