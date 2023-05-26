@@ -60,7 +60,9 @@
             "name": "status",
             "required": false,
             "in": "query",
-            "example": "pending",
+            "example": [
+              "pending"
+            ],
             "schema": {
               "$ref": "#/components/schemas/OrderStatusEnum"
             }
@@ -332,9 +334,76 @@
             "name": "status",
             "required": false,
             "in": "query",
-            "example": "pending",
+            "example": [
+              "pending"
+            ],
             "schema": {
               "$ref": "#/components/schemas/OrderStatusEnum"
+            }
+          },
+          {
+            "name": "createdFrom",
+            "required": false,
+            "in": "query",
+            "example": null,
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "createdUntil",
+            "required": false,
+            "in": "query",
+            "example": null,
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "currencyId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "paymentMethod",
+            "required": false,
+            "in": "query",
+            "example": "pix",
+            "schema": {
+              "$ref": "#/components/schemas/PaymentMethodEnum"
+            }
+          },
+          {
+            "name": "paymentProvider",
+            "required": false,
+            "in": "query",
+            "example": "stripe",
+            "schema": {
+              "$ref": "#/components/schemas/PaymentProviderEnum"
+            }
+          },
+          {
+            "name": "utmCampaign",
+            "required": false,
+            "in": "query",
+            "example": "super_sales",
+            "schema": {
+              "type": "string"
             }
           }
         ],

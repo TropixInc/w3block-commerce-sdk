@@ -1215,6 +1215,13 @@ export namespace Admin {
       sortBy?: OrderSortByEnum;
       orderBy?: OrderByEnum;
       status?: OrderStatusEnum;
+      createdFrom?: string;
+      createdUntil?: string;
+      userId?: string;
+      currencyId?: string;
+      paymentMethod?: PaymentMethodEnum;
+      paymentProvider?: PaymentProviderEnum;
+      utmCampaign?: string;
     };
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -2482,6 +2489,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         sortBy?: OrderSortByEnum;
         orderBy?: OrderByEnum;
         status?: OrderStatusEnum;
+        createdFrom?: string;
+        createdUntil?: string;
+        userId?: string;
+        currencyId?: string;
+        paymentMethod?: PaymentMethodEnum;
+        paymentProvider?: PaymentProviderEnum;
+        utmCampaign?: string;
       },
       params: RequestParams = {},
     ) =>
