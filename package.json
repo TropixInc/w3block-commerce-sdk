@@ -1,6 +1,6 @@
 {
   "name": "@w3block/sdk-commerce",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "W3block Commerce SDK",
   "main": "dist/cjs/index.js",
   "module": "dist/esm/index.js",
