@@ -441,6 +441,74 @@
         ]
       }
     },
+    "/admin/companies/{companyId}/orders/{orderId}": {
+      "get": {
+        "operationId": "getOrderById",
+        "summary": "",
+        "description": "Get a specific company order by id",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fetchNewestStatus",
+            "required": false,
+            "in": "query",
+            "example": false,
+            "description": "Use this attribute to force fetching the newest status available based on payment driver used.",
+            "schema": {
+              "default": false,
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Orders (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
     "/admin/companies/{companyId}/orders/{orderId}/cancel": {
       "patch": {
         "operationId": "cancelOrder",
@@ -4530,7 +4598,7 @@
   "info": {
     "title": "commerce-backend",
     "description": "",
-    "version": "2.14.1",
+    "version": "2.14.2",
     "contact": {}
   },
   "tags": [],

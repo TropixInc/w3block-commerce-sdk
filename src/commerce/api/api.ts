@@ -1228,6 +1228,20 @@ export namespace Admin {
     export type ResponseBody = OrderEntityPaginatedDto;
   }
   /**
+   * @description Get a specific company order by id
+   * @tags Orders (Admin)
+   * @name GetOrderById
+   * @request GET:/admin/companies/{companyId}/orders/{orderId}
+   * @secure
+   */
+  export namespace GetOrderById {
+    export type RequestParams = { companyId: string; orderId: string };
+    export type RequestQuery = { fetchNewestStatus?: boolean };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = OrderEntityDto;
+  }
+  /**
    * @description Cancel an order
    * @tags Orders (Admin)
    * @name CancelOrder
@@ -2204,7 +2218,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title commerce-backend
- * @version 2.14.1
+ * @version 2.14.2
  * @baseUrl https://commerce.stg.w3block.io
  * @contact
  */
@@ -2501,6 +2515,29 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     ) =>
       this.request<OrderEntityPaginatedDto, void>({
         path: `/admin/companies/${companyId}/orders`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Get a specific company order by id
+     *
+     * @tags Orders (Admin)
+     * @name GetOrderById
+     * @request GET:/admin/companies/{companyId}/orders/{orderId}
+     * @secure
+     */
+    getOrderById: (
+      companyId: string,
+      orderId: string,
+      query?: { fetchNewestStatus?: boolean },
+      params: RequestParams = {},
+    ) =>
+      this.request<OrderEntityDto, void>({
+        path: `/admin/companies/${companyId}/orders/${orderId}`,
         method: 'GET',
         query: query,
         secure: true,
