@@ -18,18 +18,6 @@ export enum OrderByEnum {
   DESC = 'DESC',
 }
 
-export enum OrderStatusEnum {
-  Pending = 'pending',
-  ConfirmingPayment = 'confirming_payment',
-  WaitingDelivery = 'waiting_delivery',
-  Delivering = 'delivering',
-  Concluded = 'concluded',
-  Failed = 'failed',
-  Cancelled = 'cancelled',
-  PartiallyCancelled = 'partially_cancelled',
-  Expired = 'expired',
-}
-
 export interface PaginationMetaDto {
   /** @example 1 */
   itemCount: number;
@@ -129,6 +117,7 @@ export interface OrderEntityDto {
   currencyId: string;
   currency?: CurrencyEntity;
   currencyAmount: string;
+  currencyAmountDiscount: string;
   products: OrderProductEntity[];
 
   /** @example pending */
@@ -154,6 +143,8 @@ export interface OrderEntityDto {
   gasFee: string;
   clientServiceFee: string;
   totalAmount: string;
+  originalCurrencyAmount: string;
+  originalTotalAmount: string;
 }
 
 export interface OrderEntityPaginatedDto {
@@ -174,6 +165,9 @@ export interface OrderProductDto {
    * @example 3062cdc2-2bd8-4143-8a04-90fc1e607794
    */
   productTokenId?: string;
+
+  /** @example [] */
+  variantIds?: string[];
 
   /** @example 100 */
   expectedPrice: string;
@@ -233,6 +227,9 @@ export interface CreateOrderDto {
   /** @example {"ssn":"659.315.680-93"} */
   providerInputs?: object;
   utmParams?: UtmParamsDto;
+
+  /** @example coupon-code */
+  couponCode?: string;
 }
 
 export interface OrderProductPreviewDto {
@@ -247,16 +244,25 @@ export interface OrderProductPreviewDto {
    * @example 3062cdc2-2bd8-4143-8a04-90fc1e607794
    */
   productTokenId?: string;
+
+  /** @example [] */
+  variantIds?: string[];
 }
 
 export interface OrderPreviewDto {
-  orderProducts: any[][];
+  orderProducts: OrderProductPreviewDto[];
 
   /** @example 65fe1119-6ec0-4b78-8d30-cb989914bdcb */
   currencyId: string;
 
+  /** @example pix */
+  paymentMethod?: PaymentMethodEnum;
+
   /** @example true */
   acceptIncompleteCart?: object;
+
+  /** @example coupon-code */
+  couponCode?: string;
 }
 
 export interface CreateOrderDocumentDto {
@@ -348,6 +354,9 @@ export interface ProductRequirementDto {
 
   /** @format uuid */
   productId: string;
+  requirementCTALabel: string;
+  requirementDescription: string;
+  requirementModalContent: string;
 }
 
 export enum ProductDistributionType {
@@ -399,18 +408,12 @@ export interface CreateProductDto {
   /** @example true */
   onDemandMintEnabled?: boolean;
   requirements?: ProductRequirementDto;
+
+  /** @example null */
+  terms?: object;
 }
 
 export type ProductEntity = object;
-
-export enum ProductStatus {
-  Draft = 'draft',
-  Publishing = 'publishing',
-  Updating = 'updating',
-  Published = 'published',
-  Cancelled = 'cancelled',
-  Sold = 'sold',
-}
 
 export interface UpdateProductDto {
   /** @example ["7ca74ed3-93ff-4df9-b8a0-8308c590174b"] */
@@ -450,6 +453,9 @@ export interface UpdateProductDto {
   /** @example true */
   onDemandMintEnabled?: boolean;
   requirements?: ProductRequirementDto;
+
+  /** @example null */
+  terms?: object;
 }
 
 export enum ProductOrderRuleSortBy {
@@ -512,6 +518,81 @@ export interface ResaleProductDto {
   /** @example 80001 */
   chainId: 1 | 3 | 4 | 42 | 1337 | 80001 | 137;
   tokenId: string;
+}
+
+export interface ProductVariantEntityDto {
+  /** @format uuid */
+  id: string;
+
+  /** @format date-time */
+  createdAt?: string;
+
+  /** @format date-time */
+  updatedAt?: string;
+
+  /** @format date-time */
+  deletedAt?: string;
+
+  /** @format uuid */
+  companyId: string;
+
+  /** @format uuid */
+  productId: string;
+  name: string;
+  keyLabel: string;
+}
+
+export interface ProductVariantEntityPaginatedDto {
+  items: ProductVariantEntityDto[];
+  meta: PaginationMetaDto;
+  links?: PaginationLinksDto;
+}
+
+export interface CreateProductVariantDto {
+  name: string;
+  keyLabel: string;
+}
+
+export interface UpdateProductVariantDto {
+  name: string;
+  keyLabel: string;
+}
+
+export interface ProductVariantValueEntityDto {
+  /** @format uuid */
+  id: string;
+
+  /** @format date-time */
+  createdAt?: string;
+
+  /** @format date-time */
+  updatedAt?: string;
+
+  /** @format date-time */
+  deletedAt?: string;
+
+  /** @format uuid */
+  variantId: string;
+  variant?: ProductVariantEntityDto;
+  name: string;
+  keyValue: string;
+
+  /** @example 0 */
+  extraAmount: string;
+}
+
+export interface ProductVariantValueEntityPaginatedDto {
+  items: ProductVariantValueEntityDto[];
+  meta: PaginationMetaDto;
+  links?: PaginationLinksDto;
+}
+
+export interface CreateProductVariantValueDto {
+  name: string;
+  keyValue: string;
+
+  /** @example 100 */
+  extraAmount: string;
 }
 
 export interface CompanyWithEnabledStateResponseDto {
@@ -920,6 +1001,187 @@ export interface AssetEntityWithProviderUploadParamsDto {
   providerUploadParams: CloudinaryProviderUploadParamsDto;
 }
 
+export interface PromotionRequirementsDto {
+  minCartPrice?: string;
+  maxCartPrice?: string;
+  minCartItems?: number;
+  maxCartItems?: number;
+  minSameCartItems?: number;
+  maxSameCartItems?: number;
+
+  /** @example ["pix"] */
+  paymentMethods?: string[];
+}
+
+export enum PromotionTypeEnum {
+  Coupon = 'coupon',
+  Discount = 'discount',
+}
+
+export enum PromotionAmountTypeEnum {
+  Fixed = 'fixed',
+  Percentage = 'percentage',
+}
+
+export interface PromotionEntityDto {
+  /** @format uuid */
+  id: string;
+
+  /** @format date-time */
+  createdAt?: string;
+
+  /** @format date-time */
+  updatedAt?: string;
+
+  /** @format date-time */
+  deletedAt?: string;
+
+  /** @format uuid */
+  companyId: string;
+
+  /** @example coupon */
+  type: PromotionTypeEnum;
+
+  /** @example fixed */
+  amountType: PromotionAmountTypeEnum;
+  amount: string;
+  amountByCart: boolean;
+  code?: string;
+  applyToAllProducts: boolean;
+  applyToAllUsers: boolean;
+  isCombinable: boolean;
+
+  /** @format date-time */
+  startAt?: string;
+
+  /** @format date-time */
+  endAt?: string;
+  usages: number;
+  maxUsages?: number;
+  maxUsagesPerUser?: number;
+  requirements?: PromotionRequirementsDto;
+}
+
+export interface PromotionEntityPaginatedDto {
+  items: PromotionEntityDto[];
+  meta: PaginationMetaDto;
+  links?: PaginationLinksDto;
+}
+
+export interface CreatePromotionDto {
+  /** @example coupon */
+  type: PromotionTypeEnum;
+
+  /** @example fixed */
+  amountType: PromotionAmountTypeEnum;
+  amount: string;
+  amountByCart: boolean;
+  code?: string;
+  applyToAllProducts: boolean;
+  applyToAllUsers: boolean;
+  isCombinable: boolean;
+
+  /** @format date-time */
+  startAt?: string;
+
+  /** @format date-time */
+  endAt?: string;
+  maxUsages?: number;
+  maxUsagesPerUser?: number;
+  requirements?: PromotionRequirementsDto;
+}
+
+export interface UpdatePromotionDto {
+  /** @example coupon */
+  type: PromotionTypeEnum;
+
+  /** @example fixed */
+  amountType: PromotionAmountTypeEnum;
+  amount: string;
+  amountByCart: boolean;
+  code?: string;
+  applyToAllProducts: boolean;
+  applyToAllUsers: boolean;
+  isCombinable: boolean;
+
+  /** @format date-time */
+  startAt?: string;
+
+  /** @format date-time */
+  endAt?: string;
+  maxUsages?: number;
+  maxUsagesPerUser?: number;
+  requirements?: PromotionRequirementsDto;
+}
+
+export interface PromotionProductEntityDto {
+  /** @format uuid */
+  promotionId: string;
+  promotion: PromotionEntityDto;
+
+  /** @format uuid */
+  productId: string;
+  usages: number;
+  maxUsages?: number;
+  maxUsagesPerUser?: number;
+}
+
+export interface PromotionProductEntityPaginatedDto {
+  items: PromotionProductEntityDto[];
+  meta: PaginationMetaDto;
+  links?: PaginationLinksDto;
+}
+
+export interface CreatePromotionProductDto {
+  /** @format uuid */
+  productId: string;
+  maxUsages?: number;
+  maxUsagesPerUser?: number;
+}
+
+export enum PromotionWhitelistTypeEnum {
+  W3BlockIdWhitelist = 'w3block_id_whitelist',
+  Email = 'email',
+}
+
+export interface PromotionWhitelistEntityDto {
+  /** @format uuid */
+  id: string;
+
+  /** @format date-time */
+  createdAt?: string;
+
+  /** @format date-time */
+  updatedAt?: string;
+
+  /** @format uuid */
+  promotionId: string;
+  promotion: PromotionEntityDto;
+
+  /** @example w3block_id_whitelist */
+  type: PromotionWhitelistTypeEnum;
+  value: string;
+  usages: number;
+  maxUsages?: number;
+  maxUsagesPerUser?: number;
+}
+
+export interface PromotionWhitelistEntityPaginatedDto {
+  items: PromotionWhitelistEntityDto[];
+  meta: PaginationMetaDto;
+  links?: PaginationLinksDto;
+}
+
+export interface CreatePromotionWhitelistDto {
+  /** @example w3block_id_whitelist */
+  type: PromotionWhitelistTypeEnum;
+
+  /** @example 0xd3304183ec1fa687e380b67419875f97f1db05f5 */
+  value: string;
+  maxUsages?: number;
+  maxUsagesPerUser?: number;
+}
+
 export interface I18NItemDto {
   /** @example Algum texto em pt-br */
   'pt-br': string;
@@ -1012,7 +1274,17 @@ export namespace Companies {
       search?: string;
       sortBy?: OrderSortByEnum;
       orderBy?: OrderByEnum;
-      status?: OrderStatusEnum;
+      status?: (
+        | 'pending'
+        | 'confirming_payment'
+        | 'waiting_delivery'
+        | 'delivering'
+        | 'concluded'
+        | 'failed'
+        | 'cancelled'
+        | 'partially_cancelled'
+        | 'expired'
+      )[];
     };
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -1091,7 +1363,7 @@ export namespace Companies {
    */
   export namespace GetProduct {
     export type RequestParams = { companyId: string; productId: string };
-    export type RequestQuery = {};
+    export type RequestQuery = { refreshPermissions?: boolean };
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = void;
@@ -1119,7 +1391,7 @@ export namespace Companies {
    */
   export namespace GetProductBySlug {
     export type RequestParams = { companyId: string; slug: string };
-    export type RequestQuery = {};
+    export type RequestQuery = { refreshPermissions?: boolean };
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = void;
@@ -1214,7 +1486,17 @@ export namespace Admin {
       search?: string;
       sortBy?: OrderSortByEnum;
       orderBy?: OrderByEnum;
-      status?: OrderStatusEnum;
+      status?: (
+        | 'pending'
+        | 'confirming_payment'
+        | 'waiting_delivery'
+        | 'delivering'
+        | 'concluded'
+        | 'failed'
+        | 'cancelled'
+        | 'partially_cancelled'
+        | 'expired'
+      )[];
       createdFrom?: string;
       createdUntil?: string;
       userId?: string;
@@ -1362,7 +1644,7 @@ export namespace Admin {
       orderBy?: OrderByEnum;
       includeMetadata?: boolean;
       tagIds?: string[];
-      status?: ProductStatus;
+      status?: ('draft' | 'publishing' | 'updating' | 'published' | 'cancelled' | 'sold')[];
     };
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -1509,6 +1791,144 @@ export namespace Admin {
    */
   export namespace DeleteProductOrderRule {
     export type RequestParams = { companyId: string; productId: string; orderRuleId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * @description Lists all product variants
+   * @tags Products (Admin)
+   * @name ListProductVariants
+   * @request GET:/admin/companies/{companyId}/products/{productId}/variants
+   * @secure
+   */
+  export namespace ListProductVariants {
+    export type RequestParams = { companyId: string; productId: string };
+    export type RequestQuery = {
+      page?: number;
+      limit?: number;
+      search?: string;
+      sortBy?: string;
+      orderBy?: OrderByEnum;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ProductVariantEntityPaginatedDto;
+  }
+  /**
+   * @description Creates a new product variant
+   * @tags Products (Admin)
+   * @name CreateProductVariant
+   * @request POST:/admin/companies/{companyId}/products/{productId}/variants
+   * @secure
+   */
+  export namespace CreateProductVariant {
+    export type RequestParams = { companyId: string; productId: string };
+    export type RequestQuery = {};
+    export type RequestBody = CreateProductVariantDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = ProductVariantEntityDto;
+  }
+  /**
+   * @description Gets some product variant by id
+   * @tags Products (Admin)
+   * @name GetProductVariant
+   * @request GET:/admin/companies/{companyId}/products/{productId}/variants/{variantId}
+   * @secure
+   */
+  export namespace GetProductVariant {
+    export type RequestParams = { companyId: string; productId: string; variantId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ProductVariantEntityDto;
+  }
+  /**
+   * @description Updates some product variant
+   * @tags Products (Admin)
+   * @name UpdateProductVariant
+   * @request PATCH:/admin/companies/{companyId}/products/{productId}/variants/{variantId}
+   * @secure
+   */
+  export namespace UpdateProductVariant {
+    export type RequestParams = { companyId: string; productId: string; variantId: string };
+    export type RequestQuery = {};
+    export type RequestBody = UpdateProductVariantDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = ProductVariantEntityDto;
+  }
+  /**
+   * @description Deletes some product variant
+   * @tags Products (Admin)
+   * @name DeleteProductVariant
+   * @request DELETE:/admin/companies/{companyId}/products/{productId}/variants/{variantId}
+   * @secure
+   */
+  export namespace DeleteProductVariant {
+    export type RequestParams = { companyId: string; productId: string; variantId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * @description Lists all product variant available values
+   * @tags Products (Admin)
+   * @name ListProductVariantValues
+   * @request GET:/admin/companies/{companyId}/products/{productId}/variants/{variantId}/values
+   * @secure
+   */
+  export namespace ListProductVariantValues {
+    export type RequestParams = { companyId: string; productId: string; variantId: string };
+    export type RequestQuery = {
+      page?: number;
+      limit?: number;
+      search?: string;
+      sortBy?: string;
+      orderBy?: OrderByEnum;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ProductVariantValueEntityPaginatedDto;
+  }
+  /**
+   * @description Creates a new product variant value
+   * @tags Products (Admin)
+   * @name CreateProductVariantValue
+   * @request POST:/admin/companies/{companyId}/products/{productId}/variants/{variantId}/values
+   * @secure
+   */
+  export namespace CreateProductVariantValue {
+    export type RequestParams = { companyId: string; productId: string; variantId: string };
+    export type RequestQuery = {};
+    export type RequestBody = CreateProductVariantValueDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = ProductVariantValueEntityDto;
+  }
+  /**
+   * @description Gets some product variant value
+   * @tags Products (Admin)
+   * @name GetProductVariantValue
+   * @request GET:/admin/companies/{companyId}/products/{productId}/variants/{variantId}/values/{variantValueId}
+   * @secure
+   */
+  export namespace GetProductVariantValue {
+    export type RequestParams = { companyId: string; productId: string; variantId: string; variantValueId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ProductVariantValueEntityDto;
+  }
+  /**
+   * @description Deletes some product variant value by id
+   * @tags Products (Admin)
+   * @name DeleteProductVariantValue
+   * @request DELETE:/admin/companies/{companyId}/products/{productId}/variants/{variantId}/values/{variantValueId}
+   * @secure
+   */
+  export namespace DeleteProductVariantValue {
+    export type RequestParams = { companyId: string; productId: string; variantId: string; variantValueId: string };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -1883,6 +2303,206 @@ export namespace Admin {
     export type ResponseBody = AssetEntityWithProviderUploadParamsDto;
   }
   /**
+   * @description Lists all company promotions
+   * @tags Companies Promotions (Admin)
+   * @name ListPromotions
+   * @request GET:/admin/companies/{companyId}/promotions
+   * @secure
+   */
+  export namespace ListPromotions {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = {
+      page?: number;
+      limit?: number;
+      search?: string;
+      sortBy?: string;
+      orderBy?: OrderByEnum;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = PromotionEntityPaginatedDto;
+  }
+  /**
+   * @description Creates a new company promotion
+   * @tags Companies Promotions (Admin)
+   * @name CreatePromotion
+   * @request POST:/admin/companies/{companyId}/promotions
+   * @secure
+   */
+  export namespace CreatePromotion {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = {};
+    export type RequestBody = CreatePromotionDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = PromotionEntityDto;
+  }
+  /**
+   * @description Gets some company promotion by id
+   * @tags Companies Promotions (Admin)
+   * @name GetPromotion
+   * @request GET:/admin/companies/{companyId}/promotions/{promotionId}
+   * @secure
+   */
+  export namespace GetPromotion {
+    export type RequestParams = { companyId: string; promotionId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = PromotionEntityDto;
+  }
+  /**
+   * @description Updates some company promotion
+   * @tags Companies Promotions (Admin)
+   * @name UpdatePromotion
+   * @request PATCH:/admin/companies/{companyId}/promotions/{promotionId}
+   * @secure
+   */
+  export namespace UpdatePromotion {
+    export type RequestParams = { companyId: string; promotionId: string };
+    export type RequestQuery = {};
+    export type RequestBody = UpdatePromotionDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = PromotionEntityDto;
+  }
+  /**
+   * @description Deletes some company promotion
+   * @tags Companies Promotions (Admin)
+   * @name DeletePromotion
+   * @request DELETE:/admin/companies/{companyId}/promotions/{promotionId}
+   * @secure
+   */
+  export namespace DeletePromotion {
+    export type RequestParams = { companyId: string; promotionId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * @description Lists all company specific promotion products
+   * @tags Companies Promotions (Admin)
+   * @name ListPromotionProducts
+   * @request GET:/admin/companies/{companyId}/promotions/{promotionId}/products
+   * @secure
+   */
+  export namespace ListPromotionProducts {
+    export type RequestParams = { companyId: string; promotionId: string };
+    export type RequestQuery = {
+      page?: number;
+      limit?: number;
+      search?: string;
+      sortBy?: string;
+      orderBy?: OrderByEnum;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = PromotionProductEntityPaginatedDto;
+  }
+  /**
+   * @description Creates a new company promotion product
+   * @tags Companies Promotions (Admin)
+   * @name CreatePromotionProduct
+   * @request POST:/admin/companies/{companyId}/promotions/{promotionId}/products
+   * @secure
+   */
+  export namespace CreatePromotionProduct {
+    export type RequestParams = { companyId: string; promotionId: string };
+    export type RequestQuery = {};
+    export type RequestBody = CreatePromotionProductDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = PromotionProductEntityDto;
+  }
+  /**
+   * @description Gets some company promotion product by ids
+   * @tags Companies Promotions (Admin)
+   * @name GetPromotionProduct
+   * @request GET:/admin/companies/{companyId}/promotions/{promotionId}/products/{productId}
+   * @secure
+   */
+  export namespace GetPromotionProduct {
+    export type RequestParams = { companyId: string; promotionId: string; productId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = PromotionProductEntityDto;
+  }
+  /**
+   * @description Deletes some company promotion product by ids
+   * @tags Companies Promotions (Admin)
+   * @name DeletePromotionProduct
+   * @request DELETE:/admin/companies/{companyId}/promotions/{promotionId}/products/{productId}
+   * @secure
+   */
+  export namespace DeletePromotionProduct {
+    export type RequestParams = { companyId: string; promotionId: string; productId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * @description Lists all company specific promotion whitelists
+   * @tags Companies Promotions (Admin)
+   * @name ListPromotionWhitelists
+   * @request GET:/admin/companies/{companyId}/promotions/{promotionId}/whitelists
+   * @secure
+   */
+  export namespace ListPromotionWhitelists {
+    export type RequestParams = { companyId: string; promotionId: string };
+    export type RequestQuery = {
+      page?: number;
+      limit?: number;
+      search?: string;
+      sortBy?: string;
+      orderBy?: OrderByEnum;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = PromotionWhitelistEntityPaginatedDto;
+  }
+  /**
+   * @description Creates a new company promotion whitelist
+   * @tags Companies Promotions (Admin)
+   * @name CreatePromotionWhitelist
+   * @request POST:/admin/companies/{companyId}/promotions/{promotionId}/whitelists
+   * @secure
+   */
+  export namespace CreatePromotionWhitelist {
+    export type RequestParams = { companyId: string; promotionId: string };
+    export type RequestQuery = {};
+    export type RequestBody = CreatePromotionWhitelistDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = PromotionWhitelistEntityDto;
+  }
+  /**
+   * @description Gets some company promotion whitelist by ids
+   * @tags Companies Promotions (Admin)
+   * @name GetPromotionWhitelist
+   * @request GET:/admin/companies/{companyId}/promotions/{promotionId}/whitelists/{whitelistId}
+   * @secure
+   */
+  export namespace GetPromotionWhitelist {
+    export type RequestParams = { companyId: string; promotionId: string; whitelistId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = PromotionWhitelistEntityDto;
+  }
+  /**
+   * @description Deletes some company promotion whitelist by ids
+   * @tags Companies Promotions (Admin)
+   * @name DeletePromotionWhitelist
+   * @request DELETE:/admin/companies/{companyId}/promotions/{promotionId}/whitelists/{whitelistId}
+   * @secure
+   */
+  export namespace DeletePromotionWhitelist {
+    export type RequestParams = { companyId: string; promotionId: string; whitelistId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
    * @description Lists all company FAQ contexts
    * @tags Faq (Admin)
    * @name ListFaqContexts
@@ -2218,7 +2838,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title commerce-backend
- * @version 2.14.2
+ * @version 2.20.0
  * @baseUrl https://commerce.stg.w3block.io
  * @contact
  */
@@ -2240,7 +2860,17 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         search?: string;
         sortBy?: OrderSortByEnum;
         orderBy?: OrderByEnum;
-        status?: OrderStatusEnum;
+        status?: (
+          | 'pending'
+          | 'confirming_payment'
+          | 'waiting_delivery'
+          | 'delivering'
+          | 'concluded'
+          | 'failed'
+          | 'cancelled'
+          | 'partially_cancelled'
+          | 'expired'
+        )[];
       },
       params: RequestParams = {},
     ) =>
@@ -2350,10 +2980,16 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/companies/{companyId}/products/{productId}
      * @secure
      */
-    getProduct: (companyId: string, productId: string, params: RequestParams = {}) =>
+    getProduct: (
+      companyId: string,
+      productId: string,
+      query?: { refreshPermissions?: boolean },
+      params: RequestParams = {},
+    ) =>
       this.request<void, any>({
         path: `/companies/${companyId}/products/${productId}`,
         method: 'GET',
+        query: query,
         secure: true,
         ...params,
       }),
@@ -2382,10 +3018,16 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @request GET:/companies/{companyId}/products/get-by-slug/{slug}
      * @secure
      */
-    getProductBySlug: (companyId: string, slug: string, params: RequestParams = {}) =>
+    getProductBySlug: (
+      companyId: string,
+      slug: string,
+      query?: { refreshPermissions?: boolean },
+      params: RequestParams = {},
+    ) =>
       this.request<void, any>({
         path: `/companies/${companyId}/products/get-by-slug/${slug}`,
         method: 'GET',
+        query: query,
         secure: true,
         ...params,
       }),
@@ -2502,7 +3144,17 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         search?: string;
         sortBy?: OrderSortByEnum;
         orderBy?: OrderByEnum;
-        status?: OrderStatusEnum;
+        status?: (
+          | 'pending'
+          | 'confirming_payment'
+          | 'waiting_delivery'
+          | 'delivering'
+          | 'concluded'
+          | 'failed'
+          | 'cancelled'
+          | 'partially_cancelled'
+          | 'expired'
+        )[];
         createdFrom?: string;
         createdUntil?: string;
         userId?: string;
@@ -2693,7 +3345,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         orderBy?: OrderByEnum;
         includeMetadata?: boolean;
         tagIds?: string[];
-        status?: ProductStatus;
+        status?: ('draft' | 'publishing' | 'updating' | 'published' | 'cancelled' | 'sold')[];
       },
       params: RequestParams = {},
     ) =>
@@ -2889,6 +3541,205 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     deleteProductOrderRule: (companyId: string, productId: string, orderRuleId: string, params: RequestParams = {}) =>
       this.request<void, void>({
         path: `/admin/companies/${companyId}/products/${productId}/order-rules/${orderRuleId}`,
+        method: 'DELETE',
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * @description Lists all product variants
+     *
+     * @tags Products (Admin)
+     * @name ListProductVariants
+     * @request GET:/admin/companies/{companyId}/products/{productId}/variants
+     * @secure
+     */
+    listProductVariants: (
+      companyId: string,
+      productId: string,
+      query?: { page?: number; limit?: number; search?: string; sortBy?: string; orderBy?: OrderByEnum },
+      params: RequestParams = {},
+    ) =>
+      this.request<ProductVariantEntityPaginatedDto, void>({
+        path: `/admin/companies/${companyId}/products/${productId}/variants`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Creates a new product variant
+     *
+     * @tags Products (Admin)
+     * @name CreateProductVariant
+     * @request POST:/admin/companies/{companyId}/products/{productId}/variants
+     * @secure
+     */
+    createProductVariant: (
+      companyId: string,
+      productId: string,
+      data: CreateProductVariantDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<ProductVariantEntityDto, void>({
+        path: `/admin/companies/${companyId}/products/${productId}/variants`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Gets some product variant by id
+     *
+     * @tags Products (Admin)
+     * @name GetProductVariant
+     * @request GET:/admin/companies/{companyId}/products/{productId}/variants/{variantId}
+     * @secure
+     */
+    getProductVariant: (companyId: string, productId: string, variantId: string, params: RequestParams = {}) =>
+      this.request<ProductVariantEntityDto, void>({
+        path: `/admin/companies/${companyId}/products/${productId}/variants/${variantId}`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Updates some product variant
+     *
+     * @tags Products (Admin)
+     * @name UpdateProductVariant
+     * @request PATCH:/admin/companies/{companyId}/products/{productId}/variants/{variantId}
+     * @secure
+     */
+    updateProductVariant: (
+      companyId: string,
+      productId: string,
+      variantId: string,
+      data: UpdateProductVariantDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<ProductVariantEntityDto, void>({
+        path: `/admin/companies/${companyId}/products/${productId}/variants/${variantId}`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Deletes some product variant
+     *
+     * @tags Products (Admin)
+     * @name DeleteProductVariant
+     * @request DELETE:/admin/companies/{companyId}/products/{productId}/variants/{variantId}
+     * @secure
+     */
+    deleteProductVariant: (companyId: string, productId: string, variantId: string, params: RequestParams = {}) =>
+      this.request<void, void>({
+        path: `/admin/companies/${companyId}/products/${productId}/variants/${variantId}`,
+        method: 'DELETE',
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * @description Lists all product variant available values
+     *
+     * @tags Products (Admin)
+     * @name ListProductVariantValues
+     * @request GET:/admin/companies/{companyId}/products/{productId}/variants/{variantId}/values
+     * @secure
+     */
+    listProductVariantValues: (
+      companyId: string,
+      productId: string,
+      variantId: string,
+      query?: { page?: number; limit?: number; search?: string; sortBy?: string; orderBy?: OrderByEnum },
+      params: RequestParams = {},
+    ) =>
+      this.request<ProductVariantValueEntityPaginatedDto, void>({
+        path: `/admin/companies/${companyId}/products/${productId}/variants/${variantId}/values`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Creates a new product variant value
+     *
+     * @tags Products (Admin)
+     * @name CreateProductVariantValue
+     * @request POST:/admin/companies/{companyId}/products/{productId}/variants/{variantId}/values
+     * @secure
+     */
+    createProductVariantValue: (
+      companyId: string,
+      productId: string,
+      variantId: string,
+      data: CreateProductVariantValueDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<ProductVariantValueEntityDto, void>({
+        path: `/admin/companies/${companyId}/products/${productId}/variants/${variantId}/values`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Gets some product variant value
+     *
+     * @tags Products (Admin)
+     * @name GetProductVariantValue
+     * @request GET:/admin/companies/{companyId}/products/{productId}/variants/{variantId}/values/{variantValueId}
+     * @secure
+     */
+    getProductVariantValue: (
+      companyId: string,
+      productId: string,
+      variantId: string,
+      variantValueId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<ProductVariantValueEntityDto, void>({
+        path: `/admin/companies/${companyId}/products/${productId}/variants/${variantId}/values/${variantValueId}`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Deletes some product variant value by id
+     *
+     * @tags Products (Admin)
+     * @name DeleteProductVariantValue
+     * @request DELETE:/admin/companies/{companyId}/products/{productId}/variants/{variantId}/values/{variantValueId}
+     * @secure
+     */
+    deleteProductVariantValue: (
+      companyId: string,
+      productId: string,
+      variantId: string,
+      variantValueId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, void>({
+        path: `/admin/companies/${companyId}/products/${productId}/variants/${variantId}/values/${variantValueId}`,
         method: 'DELETE',
         secure: true,
         ...params,
@@ -3403,6 +4254,264 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         secure: true,
         type: ContentType.Json,
         format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Lists all company promotions
+     *
+     * @tags Companies Promotions (Admin)
+     * @name ListPromotions
+     * @request GET:/admin/companies/{companyId}/promotions
+     * @secure
+     */
+    listPromotions: (
+      companyId: string,
+      query?: { page?: number; limit?: number; search?: string; sortBy?: string; orderBy?: OrderByEnum },
+      params: RequestParams = {},
+    ) =>
+      this.request<PromotionEntityPaginatedDto, void>({
+        path: `/admin/companies/${companyId}/promotions`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Creates a new company promotion
+     *
+     * @tags Companies Promotions (Admin)
+     * @name CreatePromotion
+     * @request POST:/admin/companies/{companyId}/promotions
+     * @secure
+     */
+    createPromotion: (companyId: string, data: CreatePromotionDto, params: RequestParams = {}) =>
+      this.request<PromotionEntityDto, void>({
+        path: `/admin/companies/${companyId}/promotions`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Gets some company promotion by id
+     *
+     * @tags Companies Promotions (Admin)
+     * @name GetPromotion
+     * @request GET:/admin/companies/{companyId}/promotions/{promotionId}
+     * @secure
+     */
+    getPromotion: (companyId: string, promotionId: string, params: RequestParams = {}) =>
+      this.request<PromotionEntityDto, void>({
+        path: `/admin/companies/${companyId}/promotions/${promotionId}`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Updates some company promotion
+     *
+     * @tags Companies Promotions (Admin)
+     * @name UpdatePromotion
+     * @request PATCH:/admin/companies/{companyId}/promotions/{promotionId}
+     * @secure
+     */
+    updatePromotion: (companyId: string, promotionId: string, data: UpdatePromotionDto, params: RequestParams = {}) =>
+      this.request<PromotionEntityDto, void>({
+        path: `/admin/companies/${companyId}/promotions/${promotionId}`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Deletes some company promotion
+     *
+     * @tags Companies Promotions (Admin)
+     * @name DeletePromotion
+     * @request DELETE:/admin/companies/{companyId}/promotions/{promotionId}
+     * @secure
+     */
+    deletePromotion: (companyId: string, promotionId: string, params: RequestParams = {}) =>
+      this.request<void, void>({
+        path: `/admin/companies/${companyId}/promotions/${promotionId}`,
+        method: 'DELETE',
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * @description Lists all company specific promotion products
+     *
+     * @tags Companies Promotions (Admin)
+     * @name ListPromotionProducts
+     * @request GET:/admin/companies/{companyId}/promotions/{promotionId}/products
+     * @secure
+     */
+    listPromotionProducts: (
+      companyId: string,
+      promotionId: string,
+      query?: { page?: number; limit?: number; search?: string; sortBy?: string; orderBy?: OrderByEnum },
+      params: RequestParams = {},
+    ) =>
+      this.request<PromotionProductEntityPaginatedDto, void>({
+        path: `/admin/companies/${companyId}/promotions/${promotionId}/products`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Creates a new company promotion product
+     *
+     * @tags Companies Promotions (Admin)
+     * @name CreatePromotionProduct
+     * @request POST:/admin/companies/{companyId}/promotions/{promotionId}/products
+     * @secure
+     */
+    createPromotionProduct: (
+      companyId: string,
+      promotionId: string,
+      data: CreatePromotionProductDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<PromotionProductEntityDto, void>({
+        path: `/admin/companies/${companyId}/promotions/${promotionId}/products`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Gets some company promotion product by ids
+     *
+     * @tags Companies Promotions (Admin)
+     * @name GetPromotionProduct
+     * @request GET:/admin/companies/{companyId}/promotions/{promotionId}/products/{productId}
+     * @secure
+     */
+    getPromotionProduct: (companyId: string, promotionId: string, productId: string, params: RequestParams = {}) =>
+      this.request<PromotionProductEntityDto, void>({
+        path: `/admin/companies/${companyId}/promotions/${promotionId}/products/${productId}`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Deletes some company promotion product by ids
+     *
+     * @tags Companies Promotions (Admin)
+     * @name DeletePromotionProduct
+     * @request DELETE:/admin/companies/{companyId}/promotions/{promotionId}/products/{productId}
+     * @secure
+     */
+    deletePromotionProduct: (companyId: string, promotionId: string, productId: string, params: RequestParams = {}) =>
+      this.request<void, void>({
+        path: `/admin/companies/${companyId}/promotions/${promotionId}/products/${productId}`,
+        method: 'DELETE',
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * @description Lists all company specific promotion whitelists
+     *
+     * @tags Companies Promotions (Admin)
+     * @name ListPromotionWhitelists
+     * @request GET:/admin/companies/{companyId}/promotions/{promotionId}/whitelists
+     * @secure
+     */
+    listPromotionWhitelists: (
+      companyId: string,
+      promotionId: string,
+      query?: { page?: number; limit?: number; search?: string; sortBy?: string; orderBy?: OrderByEnum },
+      params: RequestParams = {},
+    ) =>
+      this.request<PromotionWhitelistEntityPaginatedDto, void>({
+        path: `/admin/companies/${companyId}/promotions/${promotionId}/whitelists`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Creates a new company promotion whitelist
+     *
+     * @tags Companies Promotions (Admin)
+     * @name CreatePromotionWhitelist
+     * @request POST:/admin/companies/{companyId}/promotions/{promotionId}/whitelists
+     * @secure
+     */
+    createPromotionWhitelist: (
+      companyId: string,
+      promotionId: string,
+      data: CreatePromotionWhitelistDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<PromotionWhitelistEntityDto, void>({
+        path: `/admin/companies/${companyId}/promotions/${promotionId}/whitelists`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Gets some company promotion whitelist by ids
+     *
+     * @tags Companies Promotions (Admin)
+     * @name GetPromotionWhitelist
+     * @request GET:/admin/companies/{companyId}/promotions/{promotionId}/whitelists/{whitelistId}
+     * @secure
+     */
+    getPromotionWhitelist: (companyId: string, promotionId: string, whitelistId: string, params: RequestParams = {}) =>
+      this.request<PromotionWhitelistEntityDto, void>({
+        path: `/admin/companies/${companyId}/promotions/${promotionId}/whitelists/${whitelistId}`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Deletes some company promotion whitelist by ids
+     *
+     * @tags Companies Promotions (Admin)
+     * @name DeletePromotionWhitelist
+     * @request DELETE:/admin/companies/{companyId}/promotions/{promotionId}/whitelists/{whitelistId}
+     * @secure
+     */
+    deletePromotionWhitelist: (
+      companyId: string,
+      promotionId: string,
+      whitelistId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, void>({
+        path: `/admin/companies/${companyId}/promotions/${promotionId}/whitelists/${whitelistId}`,
+        method: 'DELETE',
+        secure: true,
         ...params,
       }),
 

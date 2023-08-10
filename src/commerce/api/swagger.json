@@ -64,7 +64,21 @@
               "pending"
             ],
             "schema": {
-              "$ref": "#/components/schemas/OrderStatusEnum"
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "pending",
+                  "confirming_payment",
+                  "waiting_delivery",
+                  "delivering",
+                  "concluded",
+                  "failed",
+                  "cancelled",
+                  "partially_cancelled",
+                  "expired"
+                ]
+              }
             }
           }
         ],
@@ -338,7 +352,21 @@
               "pending"
             ],
             "schema": {
-              "$ref": "#/components/schemas/OrderStatusEnum"
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "pending",
+                  "confirming_payment",
+                  "waiting_delivery",
+                  "delivering",
+                  "concluded",
+                  "failed",
+                  "cancelled",
+                  "partially_cancelled",
+                  "expired"
+                ]
+              }
             }
           },
           {
@@ -1003,6 +1031,17 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "refreshPermissions",
+            "required": false,
+            "in": "query",
+            "example": false,
+            "description": "Forces permission refresh which can affect canPurchase result params",
+            "schema": {
+              "default": false,
+              "type": "boolean"
+            }
           }
         ],
         "responses": {
@@ -1092,6 +1131,17 @@
             "in": "path",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "refreshPermissions",
+            "required": false,
+            "in": "query",
+            "example": false,
+            "description": "Forces permission refresh which can affect canPurchase result params",
+            "schema": {
+              "default": false,
+              "type": "boolean"
             }
           }
         ],
@@ -1257,7 +1307,18 @@
             "required": false,
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/ProductStatus"
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "draft",
+                  "publishing",
+                  "updating",
+                  "published",
+                  "cancelled",
+                  "sold"
+                ]
+              }
             }
           }
         ],
@@ -2064,6 +2125,681 @@
         },
         "tags": [
           "Products Resale"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/admin/companies/{companyId}/products/{productId}/variants": {
+      "get": {
+        "operationId": "listProductVariants",
+        "summary": "",
+        "description": "Lists all product variants",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "productId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductVariantEntityPaginatedDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Products (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      },
+      "post": {
+        "operationId": "createProductVariant",
+        "summary": "",
+        "description": "Creates a new product variant",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "productId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProductVariantDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductVariantEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Products (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/admin/companies/{companyId}/products/{productId}/variants/{variantId}": {
+      "get": {
+        "operationId": "getProductVariant",
+        "summary": "",
+        "description": "Gets some product variant by id",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "productId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "variantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductVariantEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Products (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "updateProductVariant",
+        "summary": "",
+        "description": "Updates some product variant",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "productId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "variantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProductVariantDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductVariantEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Products (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "deleteProductVariant",
+        "summary": "",
+        "description": "Deletes some product variant",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "productId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "variantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Products (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/admin/companies/{companyId}/products/{productId}/variants/{variantId}/values": {
+      "get": {
+        "operationId": "listProductVariantValues",
+        "summary": "",
+        "description": "Lists all product variant available values",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "productId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "variantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductVariantValueEntityPaginatedDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Products (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      },
+      "post": {
+        "operationId": "createProductVariantValue",
+        "summary": "",
+        "description": "Creates a new product variant value",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "productId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "variantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProductVariantValueDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductVariantValueEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Products (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/admin/companies/{companyId}/products/{productId}/variants/{variantId}/values/{variantValueId}": {
+      "get": {
+        "operationId": "getProductVariantValue",
+        "summary": "",
+        "description": "Gets some product variant value",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "productId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "variantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "variantValueId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProductVariantValueEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Products (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "deleteProductVariantValue",
+        "summary": "",
+        "description": "Deletes some product variant value by id",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "productId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "variantId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "variantValueId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Products (Admin)"
         ],
         "security": [
           {
@@ -3784,6 +4520,894 @@
         ]
       }
     },
+    "/admin/companies/{companyId}/promotions": {
+      "get": {
+        "operationId": "listPromotions",
+        "summary": "",
+        "description": "Lists all company promotions",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromotionEntityPaginatedDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Companies Promotions (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      },
+      "post": {
+        "operationId": "createPromotion",
+        "summary": "",
+        "description": "Creates a new company promotion",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePromotionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromotionEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Companies Promotions (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/admin/companies/{companyId}/promotions/{promotionId}": {
+      "get": {
+        "operationId": "getPromotion",
+        "summary": "",
+        "description": "Gets some company promotion by id",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "promotionId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromotionEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Companies Promotions (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "updatePromotion",
+        "summary": "",
+        "description": "Updates some company promotion",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "promotionId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePromotionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromotionEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Companies Promotions (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "deletePromotion",
+        "summary": "",
+        "description": "Deletes some company promotion",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "promotionId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Companies Promotions (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/admin/companies/{companyId}/promotions/{promotionId}/products": {
+      "get": {
+        "operationId": "listPromotionProducts",
+        "summary": "",
+        "description": "Lists all company specific promotion products",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "promotionId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromotionProductEntityPaginatedDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Companies Promotions (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      },
+      "post": {
+        "operationId": "createPromotionProduct",
+        "summary": "",
+        "description": "Creates a new company promotion product",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "promotionId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePromotionProductDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromotionProductEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Companies Promotions (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/admin/companies/{companyId}/promotions/{promotionId}/products/{productId}": {
+      "get": {
+        "operationId": "getPromotionProduct",
+        "summary": "",
+        "description": "Gets some company promotion product by ids",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "promotionId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "productId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromotionProductEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Companies Promotions (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "deletePromotionProduct",
+        "summary": "",
+        "description": "Deletes some company promotion product by ids",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "promotionId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "productId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Companies Promotions (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/admin/companies/{companyId}/promotions/{promotionId}/whitelists": {
+      "get": {
+        "operationId": "listPromotionWhitelists",
+        "summary": "",
+        "description": "Lists all company specific promotion whitelists",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "promotionId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromotionWhitelistEntityPaginatedDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Companies Promotions (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      },
+      "post": {
+        "operationId": "createPromotionWhitelist",
+        "summary": "",
+        "description": "Creates a new company promotion whitelist",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "promotionId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePromotionWhitelistDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromotionWhitelistEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Companies Promotions (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/admin/companies/{companyId}/promotions/{promotionId}/whitelists/{whitelistId}": {
+      "get": {
+        "operationId": "getPromotionWhitelist",
+        "summary": "",
+        "description": "Gets some company promotion whitelist by ids",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "promotionId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "whitelistId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PromotionWhitelistEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Companies Promotions (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "deletePromotionWhitelist",
+        "summary": "",
+        "description": "Deletes some company promotion whitelist by ids",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "promotionId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "whitelistId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Companies Promotions (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
     "/companies/{companyId}/faq": {
       "get": {
         "operationId": "listFaq",
@@ -4598,7 +6222,7 @@
   "info": {
     "title": "commerce-backend",
     "description": "",
-    "version": "2.14.2",
+    "version": "2.20.0",
     "contact": {}
   },
   "tags": [],
@@ -4651,20 +6275,6 @@
         "enum": [
           "ASC",
           "DESC"
-        ]
-      },
-      "OrderStatusEnum": {
-        "type": "string",
-        "enum": [
-          "pending",
-          "confirming_payment",
-          "waiting_delivery",
-          "delivering",
-          "concluded",
-          "failed",
-          "cancelled",
-          "partially_cancelled",
-          "expired"
         ]
       },
       "PaginationMetaDto": {
@@ -4824,6 +6434,9 @@
           "currencyAmount": {
             "type": "string"
           },
+          "currencyAmountDiscount": {
+            "type": "string"
+          },
           "products": {
             "type": "array",
             "items": {
@@ -4869,6 +6482,12 @@
           },
           "totalAmount": {
             "type": "string"
+          },
+          "originalCurrencyAmount": {
+            "type": "string"
+          },
+          "originalTotalAmount": {
+            "type": "string"
           }
         },
         "required": [
@@ -4879,12 +6498,15 @@
           "addressId",
           "currencyId",
           "currencyAmount",
+          "currencyAmountDiscount",
           "products",
           "status",
           "paymentInfo",
           "gasFee",
           "clientServiceFee",
-          "totalAmount"
+          "totalAmount",
+          "originalCurrencyAmount",
+          "originalTotalAmount"
         ]
       },
       "OrderEntityPaginatedDto": {
@@ -4920,6 +6542,14 @@
             "type": "string",
             "format": "uuid",
             "example": "3062cdc2-2bd8-4143-8a04-90fc1e607794"
+          },
+          "variantIds": {
+            "example": [],
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
           },
           "expectedPrice": {
             "type": "string",
@@ -5013,6 +6643,10 @@
           },
           "utmParams": {
             "$ref": "#/components/schemas/UtmParamsDto"
+          },
+          "couponCode": {
+            "type": "string",
+            "example": "coupon-code"
           }
         },
         "required": [
@@ -5032,6 +6666,14 @@
             "type": "string",
             "format": "uuid",
             "example": "3062cdc2-2bd8-4143-8a04-90fc1e607794"
+          },
+          "variantIds": {
+            "example": [],
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
           }
         },
         "required": [
@@ -5044,17 +6686,25 @@
           "orderProducts": {
             "type": "array",
             "items": {
-              "type": "array"
+              "$ref": "#/components/schemas/OrderProductPreviewDto"
             }
           },
           "currencyId": {
             "type": "string",
             "example": "65fe1119-6ec0-4b78-8d30-cb989914bdcb"
           },
+          "paymentMethod": {
+            "example": "pix",
+            "$ref": "#/components/schemas/PaymentMethodEnum"
+          },
           "acceptIncompleteCart": {
             "type": "object",
             "example": true,
             "default": true
+          },
+          "couponCode": {
+            "type": "string",
+            "example": "coupon-code"
           }
         },
         "required": [
@@ -5237,12 +6887,24 @@
           "productId": {
             "type": "string",
             "format": "uuid"
+          },
+          "requirementCTALabel": {
+            "type": "string"
+          },
+          "requirementDescription": {
+            "type": "string"
+          },
+          "requirementModalContent": {
+            "type": "string"
           }
         },
         "required": [
           "companyId",
           "keyCollectionId",
-          "productId"
+          "productId",
+          "requirementCTALabel",
+          "requirementDescription",
+          "requirementModalContent"
         ]
       },
       "ProductDistributionType": {
@@ -5327,6 +6989,10 @@
           },
           "requirements": {
             "$ref": "#/components/schemas/ProductRequirementDto"
+          },
+          "terms": {
+            "type": "object",
+            "example": null
           }
         },
         "required": [
@@ -5342,17 +7008,6 @@
       "ProductEntity": {
         "type": "object",
         "properties": {}
-      },
-      "ProductStatus": {
-        "type": "string",
-        "enum": [
-          "draft",
-          "publishing",
-          "updating",
-          "published",
-          "cancelled",
-          "sold"
-        ]
       },
       "UpdateProductDto": {
         "type": "object",
@@ -5421,6 +7076,10 @@
           },
           "requirements": {
             "$ref": "#/components/schemas/ProductRequirementDto"
+          },
+          "terms": {
+            "type": "object",
+            "example": null
           }
         }
       },
@@ -5530,6 +7189,186 @@
           "contractAddress",
           "chainId",
           "tokenId"
+        ]
+      },
+      "ProductVariantEntityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "companyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "productId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "keyLabel": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "companyId",
+          "productId",
+          "name",
+          "keyLabel"
+        ]
+      },
+      "ProductVariantEntityPaginatedDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductVariantEntityDto"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMetaDto"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinksDto"
+          }
+        },
+        "required": [
+          "items",
+          "meta"
+        ]
+      },
+      "CreateProductVariantDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "keyLabel": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "keyLabel"
+        ]
+      },
+      "UpdateProductVariantDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "keyLabel": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "keyLabel"
+        ]
+      },
+      "ProductVariantValueEntityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "variantId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "variant": {
+            "$ref": "#/components/schemas/ProductVariantEntityDto"
+          },
+          "name": {
+            "type": "string"
+          },
+          "keyValue": {
+            "type": "string"
+          },
+          "extraAmount": {
+            "type": "string",
+            "default": "0",
+            "example": "0"
+          }
+        },
+        "required": [
+          "id",
+          "variantId",
+          "name",
+          "keyValue",
+          "extraAmount"
+        ]
+      },
+      "ProductVariantValueEntityPaginatedDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProductVariantValueEntityDto"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMetaDto"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinksDto"
+          }
+        },
+        "required": [
+          "items",
+          "meta"
+        ]
+      },
+      "CreateProductVariantValueDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "keyValue": {
+            "type": "string"
+          },
+          "extraAmount": {
+            "type": "string",
+            "example": "100"
+          }
+        },
+        "required": [
+          "name",
+          "keyValue",
+          "extraAmount"
         ]
       },
       "CompanyWithEnabledStateResponseDto": {
@@ -6419,6 +8258,439 @@
           "status",
           "provider",
           "providerUploadParams"
+        ]
+      },
+      "PromotionRequirementsDto": {
+        "type": "object",
+        "properties": {
+          "minCartPrice": {
+            "type": "string"
+          },
+          "maxCartPrice": {
+            "type": "string"
+          },
+          "minCartItems": {
+            "type": "number"
+          },
+          "maxCartItems": {
+            "type": "number"
+          },
+          "minSameCartItems": {
+            "type": "number"
+          },
+          "maxSameCartItems": {
+            "type": "number"
+          },
+          "paymentMethods": {
+            "example": [
+              "pix"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "PromotionTypeEnum": {
+        "type": "string",
+        "enum": [
+          "coupon",
+          "discount"
+        ]
+      },
+      "PromotionAmountTypeEnum": {
+        "type": "string",
+        "enum": [
+          "fixed",
+          "percentage"
+        ]
+      },
+      "PromotionEntityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "companyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "example": "coupon",
+            "$ref": "#/components/schemas/PromotionTypeEnum"
+          },
+          "amountType": {
+            "example": "fixed",
+            "$ref": "#/components/schemas/PromotionAmountTypeEnum"
+          },
+          "amount": {
+            "type": "string"
+          },
+          "amountByCart": {
+            "type": "boolean"
+          },
+          "code": {
+            "type": "string"
+          },
+          "applyToAllProducts": {
+            "type": "boolean"
+          },
+          "applyToAllUsers": {
+            "type": "boolean"
+          },
+          "isCombinable": {
+            "type": "boolean"
+          },
+          "startAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "endAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "usages": {
+            "type": "number"
+          },
+          "maxUsages": {
+            "type": "number"
+          },
+          "maxUsagesPerUser": {
+            "type": "number"
+          },
+          "requirements": {
+            "$ref": "#/components/schemas/PromotionRequirementsDto"
+          }
+        },
+        "required": [
+          "id",
+          "companyId",
+          "type",
+          "amountType",
+          "amount",
+          "amountByCart",
+          "applyToAllProducts",
+          "applyToAllUsers",
+          "isCombinable",
+          "usages"
+        ]
+      },
+      "PromotionEntityPaginatedDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PromotionEntityDto"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMetaDto"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinksDto"
+          }
+        },
+        "required": [
+          "items",
+          "meta"
+        ]
+      },
+      "CreatePromotionDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "example": "coupon",
+            "$ref": "#/components/schemas/PromotionTypeEnum"
+          },
+          "amountType": {
+            "example": "fixed",
+            "$ref": "#/components/schemas/PromotionAmountTypeEnum"
+          },
+          "amount": {
+            "type": "string"
+          },
+          "amountByCart": {
+            "type": "boolean"
+          },
+          "code": {
+            "type": "string"
+          },
+          "applyToAllProducts": {
+            "type": "boolean"
+          },
+          "applyToAllUsers": {
+            "type": "boolean"
+          },
+          "isCombinable": {
+            "type": "boolean"
+          },
+          "startAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "endAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "maxUsages": {
+            "type": "number"
+          },
+          "maxUsagesPerUser": {
+            "type": "number"
+          },
+          "requirements": {
+            "$ref": "#/components/schemas/PromotionRequirementsDto"
+          }
+        },
+        "required": [
+          "type",
+          "amountType",
+          "amount",
+          "amountByCart",
+          "applyToAllProducts",
+          "applyToAllUsers",
+          "isCombinable"
+        ]
+      },
+      "UpdatePromotionDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "example": "coupon",
+            "$ref": "#/components/schemas/PromotionTypeEnum"
+          },
+          "amountType": {
+            "example": "fixed",
+            "$ref": "#/components/schemas/PromotionAmountTypeEnum"
+          },
+          "amount": {
+            "type": "string"
+          },
+          "amountByCart": {
+            "type": "boolean"
+          },
+          "code": {
+            "type": "string"
+          },
+          "applyToAllProducts": {
+            "type": "boolean"
+          },
+          "applyToAllUsers": {
+            "type": "boolean"
+          },
+          "isCombinable": {
+            "type": "boolean"
+          },
+          "startAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "endAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "maxUsages": {
+            "type": "number"
+          },
+          "maxUsagesPerUser": {
+            "type": "number"
+          },
+          "requirements": {
+            "$ref": "#/components/schemas/PromotionRequirementsDto"
+          }
+        },
+        "required": [
+          "type",
+          "amountType",
+          "amount",
+          "amountByCart",
+          "applyToAllProducts",
+          "applyToAllUsers",
+          "isCombinable"
+        ]
+      },
+      "PromotionProductEntityDto": {
+        "type": "object",
+        "properties": {
+          "promotionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "promotion": {
+            "$ref": "#/components/schemas/PromotionEntityDto"
+          },
+          "productId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "usages": {
+            "type": "number"
+          },
+          "maxUsages": {
+            "type": "number"
+          },
+          "maxUsagesPerUser": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "promotionId",
+          "promotion",
+          "productId",
+          "usages"
+        ]
+      },
+      "PromotionProductEntityPaginatedDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PromotionProductEntityDto"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMetaDto"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinksDto"
+          }
+        },
+        "required": [
+          "items",
+          "meta"
+        ]
+      },
+      "CreatePromotionProductDto": {
+        "type": "object",
+        "properties": {
+          "productId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "maxUsages": {
+            "type": "number"
+          },
+          "maxUsagesPerUser": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "productId"
+        ]
+      },
+      "PromotionWhitelistTypeEnum": {
+        "type": "string",
+        "enum": [
+          "w3block_id_whitelist",
+          "email"
+        ]
+      },
+      "PromotionWhitelistEntityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "promotionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "promotion": {
+            "$ref": "#/components/schemas/PromotionEntityDto"
+          },
+          "type": {
+            "example": "w3block_id_whitelist",
+            "$ref": "#/components/schemas/PromotionWhitelistTypeEnum"
+          },
+          "value": {
+            "type": "string"
+          },
+          "usages": {
+            "type": "number"
+          },
+          "maxUsages": {
+            "type": "number"
+          },
+          "maxUsagesPerUser": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "promotionId",
+          "promotion",
+          "type",
+          "value",
+          "usages"
+        ]
+      },
+      "PromotionWhitelistEntityPaginatedDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PromotionWhitelistEntityDto"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMetaDto"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinksDto"
+          }
+        },
+        "required": [
+          "items",
+          "meta"
+        ]
+      },
+      "CreatePromotionWhitelistDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "example": "w3block_id_whitelist",
+            "$ref": "#/components/schemas/PromotionWhitelistTypeEnum"
+          },
+          "value": {
+            "type": "string",
+            "example": "0xd3304183ec1fa687e380b67419875f97f1db05f5"
+          },
+          "maxUsages": {
+            "type": "number"
+          },
+          "maxUsagesPerUser": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "type",
+          "value"
         ]
       },
       "I18nItemDto": {
