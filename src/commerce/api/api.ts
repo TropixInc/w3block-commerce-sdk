@@ -1139,6 +1139,10 @@ export interface CreatePromotionProductDto {
   maxUsagesPerUser?: number;
 }
 
+export interface SetAndOverridePromotionProductsDto {
+  products: CreatePromotionProductDto[];
+}
+
 export enum PromotionWhitelistTypeEnum {
   W3BlockIdWhitelist = 'w3block_id_whitelist',
   Email = 'email',
@@ -1180,6 +1184,10 @@ export interface CreatePromotionWhitelistDto {
   value: string;
   maxUsages?: number;
   maxUsagesPerUser?: number;
+}
+
+export interface SetAndOverridePromotionWhitelistsDto {
+  whitelists: CreatePromotionWhitelistDto[];
 }
 
 export interface I18NItemDto {
@@ -2413,6 +2421,20 @@ export namespace Admin {
     export type ResponseBody = PromotionProductEntityDto;
   }
   /**
+   * @description Sets and override the company promotion products
+   * @tags Companies Promotions (Admin)
+   * @name SetAndOverridePromotionProducts
+   * @request PATCH:/admin/companies/{companyId}/promotions/{promotionId}/products
+   * @secure
+   */
+  export namespace SetAndOverridePromotionProducts {
+    export type RequestParams = { companyId: string; promotionId: string };
+    export type RequestQuery = {};
+    export type RequestBody = SetAndOverridePromotionProductsDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = PromotionProductEntityDto[];
+  }
+  /**
    * @description Gets some company promotion product by ids
    * @tags Companies Promotions (Admin)
    * @name GetPromotionProduct
@@ -2473,6 +2495,20 @@ export namespace Admin {
     export type RequestBody = CreatePromotionWhitelistDto;
     export type RequestHeaders = {};
     export type ResponseBody = PromotionWhitelistEntityDto;
+  }
+  /**
+   * @description Sets and override the company promotion whitelists
+   * @tags Companies Promotions (Admin)
+   * @name SetAndOverridePromotionWhitelists
+   * @request PATCH:/admin/companies/{companyId}/promotions/{promotionId}/whitelists
+   * @secure
+   */
+  export namespace SetAndOverridePromotionWhitelists {
+    export type RequestParams = { companyId: string; promotionId: string };
+    export type RequestQuery = {};
+    export type RequestBody = SetAndOverridePromotionWhitelistsDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = PromotionWhitelistEntityDto[];
   }
   /**
    * @description Gets some company promotion whitelist by ids
@@ -4398,6 +4434,30 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
+     * @description Sets and override the company promotion products
+     *
+     * @tags Companies Promotions (Admin)
+     * @name SetAndOverridePromotionProducts
+     * @request PATCH:/admin/companies/{companyId}/promotions/{promotionId}/products
+     * @secure
+     */
+    setAndOverridePromotionProducts: (
+      companyId: string,
+      promotionId: string,
+      data: SetAndOverridePromotionProductsDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<PromotionProductEntityDto[], void>({
+        path: `/admin/companies/${companyId}/promotions/${promotionId}/products`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
      * @description Gets some company promotion product by ids
      *
      * @tags Companies Promotions (Admin)
@@ -4470,6 +4530,30 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<PromotionWhitelistEntityDto, void>({
         path: `/admin/companies/${companyId}/promotions/${promotionId}/whitelists`,
         method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Sets and override the company promotion whitelists
+     *
+     * @tags Companies Promotions (Admin)
+     * @name SetAndOverridePromotionWhitelists
+     * @request PATCH:/admin/companies/{companyId}/promotions/{promotionId}/whitelists
+     * @secure
+     */
+    setAndOverridePromotionWhitelists: (
+      companyId: string,
+      promotionId: string,
+      data: SetAndOverridePromotionWhitelistsDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<PromotionWhitelistEntityDto[], void>({
+        path: `/admin/companies/${companyId}/promotions/${promotionId}/whitelists`,
+        method: 'PATCH',
         body: data,
         secure: true,
         type: ContentType.Json,

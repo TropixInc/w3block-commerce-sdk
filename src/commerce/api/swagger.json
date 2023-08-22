@@ -5000,6 +5000,74 @@
             "x-w3block-secret": []
           }
         ]
+      },
+      "patch": {
+        "operationId": "setAndOverridePromotionProducts",
+        "summary": "",
+        "description": "Sets and override the company promotion products",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "promotionId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetAndOverridePromotionProductsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PromotionProductEntityDto"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Companies Promotions (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
       }
     },
     "/admin/companies/{companyId}/promotions/{promotionId}/products/{productId}": {
@@ -5260,6 +5328,74 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/PromotionWhitelistEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Companies Promotions (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "setAndOverridePromotionWhitelists",
+        "summary": "",
+        "description": "Sets and override the company promotion whitelists",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "promotionId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetAndOverridePromotionWhitelistsDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PromotionWhitelistEntityDto"
+                  }
                 }
               }
             }
@@ -8594,6 +8730,20 @@
           "productId"
         ]
       },
+      "SetAndOverridePromotionProductsDto": {
+        "type": "object",
+        "properties": {
+          "products": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreatePromotionProductDto"
+            }
+          }
+        },
+        "required": [
+          "products"
+        ]
+      },
       "PromotionWhitelistTypeEnum": {
         "type": "string",
         "enum": [
@@ -8691,6 +8841,20 @@
         "required": [
           "type",
           "value"
+        ]
+      },
+      "SetAndOverridePromotionWhitelistsDto": {
+        "type": "object",
+        "properties": {
+          "whitelists": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CreatePromotionWhitelistDto"
+            }
+          }
+        },
+        "required": [
+          "whitelists"
         ]
       },
       "I18nItemDto": {
