@@ -8577,20 +8577,29 @@
           },
           "startAt": {
             "format": "date-time",
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "endAt": {
             "format": "date-time",
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "maxUsages": {
-            "type": "number"
+            "type": "number",
+            "nullable": true
           },
           "maxUsagesPerUser": {
-            "type": "number"
+            "type": "number",
+            "nullable": true
           },
           "requirements": {
-            "$ref": "#/components/schemas/PromotionRequirementsDto"
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PromotionRequirementsDto"
+              }
+            ]
           }
         },
         "required": [
@@ -8634,20 +8643,29 @@
           },
           "startAt": {
             "format": "date-time",
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "endAt": {
             "format": "date-time",
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "maxUsages": {
-            "type": "number"
+            "type": "number",
+            "nullable": true
           },
           "maxUsagesPerUser": {
-            "type": "number"
+            "type": "number",
+            "nullable": true
           },
           "requirements": {
-            "$ref": "#/components/schemas/PromotionRequirementsDto"
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PromotionRequirementsDto"
+              }
+            ]
           }
         },
         "required": [

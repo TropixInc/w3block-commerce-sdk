@@ -1082,13 +1082,13 @@ export interface CreatePromotionDto {
   isCombinable: boolean;
 
   /** @format date-time */
-  startAt?: string;
+  startAt?: string | null;
 
   /** @format date-time */
-  endAt?: string;
-  maxUsages?: number;
-  maxUsagesPerUser?: number;
-  requirements?: PromotionRequirementsDto;
+  endAt?: string | null;
+  maxUsages?: number | null;
+  maxUsagesPerUser?: number | null;
+  requirements?: PromotionRequirementsDto | null;
 }
 
 export interface UpdatePromotionDto {
@@ -1105,13 +1105,13 @@ export interface UpdatePromotionDto {
   isCombinable: boolean;
 
   /** @format date-time */
-  startAt?: string;
+  startAt?: string | null;
 
   /** @format date-time */
-  endAt?: string;
-  maxUsages?: number;
-  maxUsagesPerUser?: number;
-  requirements?: PromotionRequirementsDto;
+  endAt?: string | null;
+  maxUsages?: number | null;
+  maxUsagesPerUser?: number | null;
+  requirements?: PromotionRequirementsDto | null;
 }
 
 export interface PromotionProductEntityDto {
