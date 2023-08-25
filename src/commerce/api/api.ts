@@ -1038,6 +1038,8 @@ export interface PromotionEntityDto {
 
   /** @format uuid */
   companyId: string;
+  description: string | null;
+  publicDescription: string;
 
   /** @example coupon */
   type: PromotionTypeEnum;
@@ -1069,6 +1071,9 @@ export interface PromotionEntityPaginatedDto {
 }
 
 export interface CreatePromotionDto {
+  description?: string | null;
+  publicDescription: string;
+
   /** @example coupon */
   type: PromotionTypeEnum;
 
@@ -1092,6 +1097,9 @@ export interface CreatePromotionDto {
 }
 
 export interface UpdatePromotionDto {
+  description?: string | null;
+  publicDescription: string;
+
   /** @example coupon */
   type: PromotionTypeEnum;
 

@@ -8465,6 +8465,13 @@
             "type": "string",
             "format": "uuid"
           },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "publicDescription": {
+            "type": "string"
+          },
           "type": {
             "example": "coupon",
             "$ref": "#/components/schemas/PromotionTypeEnum"
@@ -8515,6 +8522,8 @@
         "required": [
           "id",
           "companyId",
+          "description",
+          "publicDescription",
           "type",
           "amountType",
           "amount",
@@ -8549,6 +8558,13 @@
       "CreatePromotionDto": {
         "type": "object",
         "properties": {
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "publicDescription": {
+            "type": "string"
+          },
           "type": {
             "example": "coupon",
             "$ref": "#/components/schemas/PromotionTypeEnum"
@@ -8603,6 +8619,7 @@
           }
         },
         "required": [
+          "publicDescription",
           "type",
           "amountType",
           "amount",
@@ -8615,6 +8632,13 @@
       "UpdatePromotionDto": {
         "type": "object",
         "properties": {
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "publicDescription": {
+            "type": "string"
+          },
           "type": {
             "example": "coupon",
             "$ref": "#/components/schemas/PromotionTypeEnum"
@@ -8669,6 +8693,7 @@
           }
         },
         "required": [
+          "publicDescription",
           "type",
           "amountType",
           "amount",
