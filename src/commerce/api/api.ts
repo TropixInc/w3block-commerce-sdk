@@ -263,6 +263,9 @@ export interface OrderPreviewDto {
 
   /** @example coupon-code */
   couponCode?: string;
+
+  /** @example 0xd3304183ec1fa687e380b67419875f97f1db05f5 */
+  destinationWalletAddress?: string;
 }
 
 export interface CreateOrderDocumentDto {
@@ -518,6 +521,12 @@ export interface ResaleProductDto {
   /** @example 80001 */
   chainId: 1 | 3 | 4 | 42 | 1337 | 80001 | 137;
   tokenId: string;
+
+  /** @example null */
+  startSaleAt?: object;
+
+  /** @example null */
+  endSaleAt?: object;
 }
 
 export interface ProductVariantEntityDto {
@@ -759,8 +768,17 @@ export interface CurrencyEntityDto {
   /** @example USD */
   code: string;
 
+  /**
+   * @format uuid
+   * @example null
+   */
+  companyId?: string;
+
   /** @example 0x7dd80541ad31078244d9f2b73026a025e70b5484 */
   erc20contractAddress?: string;
+
+  /** @example 137 */
+  erc20ChainId?: number;
   paymentProviders?: CurrencyPaymentProviderEntityDto[];
 }
 
@@ -768,6 +786,27 @@ export interface CurrencyEntityPaginatedDto {
   items: CurrencyEntityDto[];
   meta: PaginationMetaDto;
   links?: PaginationLinksDto;
+}
+
+export interface HasAllowanceResponseDto {
+  currency: CurrencyEntityDto;
+  walletAddress: string;
+
+  /** @example 100 */
+  amount: string;
+
+  /** @example true */
+  hasAllowance: boolean;
+
+  /** @example 100 */
+  currentAllowance: string;
+}
+
+export interface IncreaseCurrencyAllowanceDto {
+  walletAddress?: string;
+
+  /** @example 100 */
+  targetAmount: string;
 }
 
 export interface TagDto {
@@ -928,6 +967,7 @@ export enum AssetTargetEnum {
   Refund = 'refund',
   StorefrontPage = 'storefront_page',
   StorefrontTheme = 'storefront_theme',
+  Export = 'export',
 }
 
 export interface RequestAssetUploadDto {
@@ -1011,6 +1051,7 @@ export interface PromotionRequirementsDto {
 
   /** @example ["pix"] */
   paymentMethods?: string[];
+  currencyIds?: string[];
 }
 
 export enum PromotionTypeEnum {
@@ -1459,6 +1500,34 @@ export namespace Companies {
     export type RequestParams = { companyId: string; productId: string };
     export type RequestQuery = {};
     export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * @description Checks if some user wallet has approved an allowance to purchase using some amount of its ERC20 currency tokens
+   * @tags Currencies
+   * @name HasCurrencyAllowance
+   * @request GET:/companies/{companyId}/currencies/{currencyId}/has-allowance
+   * @secure
+   */
+  export namespace HasCurrencyAllowance {
+    export type RequestParams = { companyId: string; currencyId: string };
+    export type RequestQuery = { walletAddress?: string; amount: string };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = HasAllowanceResponseDto;
+  }
+  /**
+   * @description Sends to blockchain a request to increase some user wallet allowance of the ERC20 currency to a target amount. This is necessary to purchase using ERC20 tokens.
+   * @tags Currencies
+   * @name IncreaseCurrencyAllowance
+   * @request PATCH:/companies/{companyId}/currencies/{currencyId}/increase-allowance
+   * @secure
+   */
+  export namespace IncreaseCurrencyAllowance {
+    export type RequestParams = { companyId: string; currencyId: string };
+    export type RequestQuery = {};
+    export type RequestBody = IncreaseCurrencyAllowanceDto;
     export type RequestHeaders = {};
     export type ResponseBody = void;
   }
@@ -3138,6 +3207,52 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/companies/${companyId}/products-resale/${productId}/cancel`,
         method: 'PATCH',
         secure: true,
+        ...params,
+      }),
+
+    /**
+     * @description Checks if some user wallet has approved an allowance to purchase using some amount of its ERC20 currency tokens
+     *
+     * @tags Currencies
+     * @name HasCurrencyAllowance
+     * @request GET:/companies/{companyId}/currencies/{currencyId}/has-allowance
+     * @secure
+     */
+    hasCurrencyAllowance: (
+      companyId: string,
+      currencyId: string,
+      query: { walletAddress?: string; amount: string },
+      params: RequestParams = {},
+    ) =>
+      this.request<HasAllowanceResponseDto, void>({
+        path: `/companies/${companyId}/currencies/${currencyId}/has-allowance`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Sends to blockchain a request to increase some user wallet allowance of the ERC20 currency to a target amount. This is necessary to purchase using ERC20 tokens.
+     *
+     * @tags Currencies
+     * @name IncreaseCurrencyAllowance
+     * @request PATCH:/companies/{companyId}/currencies/{currencyId}/increase-allowance
+     * @secure
+     */
+    increaseCurrencyAllowance: (
+      companyId: string,
+      currencyId: string,
+      data: IncreaseCurrencyAllowanceDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, void>({
+        path: `/companies/${companyId}/currencies/${currencyId}/increase-allowance`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
         ...params,
       }),
 

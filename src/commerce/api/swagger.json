@@ -3656,6 +3656,140 @@
         ]
       }
     },
+    "/companies/{companyId}/currencies/{currencyId}/has-allowance": {
+      "get": {
+        "operationId": "hasCurrencyAllowance",
+        "summary": "",
+        "description": "Checks if some user wallet has approved an allowance to purchase using some amount of its ERC20 currency tokens",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "currencyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "walletAddress",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "amount",
+            "required": true,
+            "in": "query",
+            "example": "100",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Allowance check successfully executed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HasAllowanceResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Currencies"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/companies/{companyId}/currencies/{currencyId}/increase-allowance": {
+      "patch": {
+        "operationId": "increaseCurrencyAllowance",
+        "summary": "",
+        "description": "Sends to blockchain a request to increase some user wallet allowance of the ERC20 currency to a target amount. This is necessary to purchase using ERC20 tokens.",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "currencyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IncreaseCurrencyAllowanceDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Allowance increase was successfully sent to blockchain."
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Currencies"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
     "/admin/companies/{companyId}/tags": {
       "post": {
         "operationId": "createTag",
@@ -6841,6 +6975,10 @@
           "couponCode": {
             "type": "string",
             "example": "coupon-code"
+          },
+          "destinationWalletAddress": {
+            "type": "string",
+            "example": "0xd3304183ec1fa687e380b67419875f97f1db05f5"
           }
         },
         "required": [
@@ -7316,6 +7454,14 @@
           },
           "tokenId": {
             "type": "string"
+          },
+          "startSaleAt": {
+            "type": "object",
+            "example": null
+          },
+          "endSaleAt": {
+            "type": "object",
+            "example": null
           }
         },
         "required": [
@@ -7882,9 +8028,18 @@
             "type": "string",
             "example": "USD"
           },
+          "companyId": {
+            "type": "string",
+            "format": "uuid",
+            "example": null
+          },
           "erc20contractAddress": {
             "type": "string",
             "example": "0x7dd80541ad31078244d9f2b73026a025e70b5484"
+          },
+          "erc20ChainId": {
+            "type": "number",
+            "example": 137
           },
           "paymentProviders": {
             "type": "array",
@@ -7919,6 +8074,51 @@
         "required": [
           "items",
           "meta"
+        ]
+      },
+      "HasAllowanceResponseDto": {
+        "type": "object",
+        "properties": {
+          "currency": {
+            "$ref": "#/components/schemas/CurrencyEntityDto"
+          },
+          "walletAddress": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "string",
+            "example": "100"
+          },
+          "hasAllowance": {
+            "type": "boolean",
+            "example": true
+          },
+          "currentAllowance": {
+            "type": "string",
+            "example": "100"
+          }
+        },
+        "required": [
+          "currency",
+          "walletAddress",
+          "amount",
+          "hasAllowance",
+          "currentAllowance"
+        ]
+      },
+      "IncreaseCurrencyAllowanceDto": {
+        "type": "object",
+        "properties": {
+          "walletAddress": {
+            "type": "string"
+          },
+          "targetAmount": {
+            "type": "string",
+            "example": "100"
+          }
+        },
+        "required": [
+          "targetAmount"
         ]
       },
       "TagDto": {
@@ -8261,7 +8461,8 @@
           "order_document",
           "refund",
           "storefront_page",
-          "storefront_theme"
+          "storefront_theme",
+          "export"
         ]
       },
       "RequestAssetUploadDto": {
@@ -8424,6 +8625,13 @@
             "type": "array",
             "items": {
               "type": "string"
+            }
+          },
+          "currencyIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
             }
           }
         }
