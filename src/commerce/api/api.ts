@@ -1245,6 +1245,362 @@ export interface SetAndOverridePromotionWhitelistsDto {
   whitelists: CreatePromotionWhitelistDto[] | null;
 }
 
+export interface ProjectHostEntityDto {
+  /** @format uuid */
+  id: string;
+
+  /** @format date-time */
+  createdAt?: string;
+
+  /** @format date-time */
+  updatedAt?: string;
+
+  /** @format uuid */
+  projectId: string;
+  host: string;
+}
+
+export interface ProjectEntityDto {
+  /** @format uuid */
+  id: string;
+
+  /** @format date-time */
+  createdAt?: string;
+
+  /** @format date-time */
+  updatedAt?: string;
+
+  /** @format uuid */
+  companyId: string;
+  name: string;
+  hosts: ProjectHostEntityDto[];
+}
+
+export interface ProjectEntityPaginatedDto {
+  items: ProjectEntityDto[];
+  meta: PaginationMetaDto;
+  links?: PaginationLinksDto;
+}
+
+export interface AttachProjectHostRequestDto {
+  /** @example subdomain.domain.io */
+  host: string;
+}
+
+export enum ProjectAuthTypeEnum {
+  All = 'all',
+  Authenticated = 'authenticated',
+  Whitelist = 'whitelist',
+}
+
+export interface ProjectAuthConfigDto {
+  /** @example all */
+  type: ProjectAuthTypeEnum;
+
+  /** @example {"whitelists":[]} */
+  data?: object;
+  redirectUrl?: string;
+}
+
+export interface SetProjectPageRequestDto {
+  /** @example / */
+  routePattern: string;
+
+  /** @example false */
+  isRoutePatternRegex: boolean;
+
+  /** @example null */
+  data?: object;
+
+  /** @example My first page */
+  name?: string;
+  auth?: ProjectAuthConfigDto;
+}
+
+export interface SetProjectThemeRequestDto {
+  name?: string;
+
+  /** @example null */
+  data?: object;
+}
+
+export interface CreateProjectRequestDto {
+  /** @example Project 1 */
+  name: string;
+  hosts?: AttachProjectHostRequestDto[];
+  pages?: SetProjectPageRequestDto[];
+  theme?: SetProjectThemeRequestDto;
+}
+
+export interface UpdateProjectRequestDto {
+  /** @example Project 1 */
+  name: string;
+}
+
+export interface ProjectHostCheckResponseDto {
+  /** @example subdomain.domain.io */
+  host: string;
+
+  /** @example false */
+  available: boolean;
+}
+
+export interface ProjectThemeEntityDto {
+  /** @format uuid */
+  id: string;
+
+  /** @format date-time */
+  createdAt?: string;
+
+  /** @format date-time */
+  updatedAt?: string;
+
+  /** @format uuid */
+  companyId: string;
+
+  /** @format uuid */
+  projectId: string;
+  project?: ProjectEntityDto;
+  name?: string;
+  isDefault: boolean;
+
+  /** @example null */
+  data?: object;
+}
+
+export interface ProjectPageEntityDto {
+  /** @format uuid */
+  id: string;
+
+  /** @format date-time */
+  createdAt?: string;
+
+  /** @format date-time */
+  updatedAt?: string;
+
+  /** @format uuid */
+  companyId: string;
+
+  /** @format uuid */
+  projectId: string;
+  project?: ProjectEntityDto;
+
+  /** @example / */
+  routePattern: string;
+
+  /** @example true */
+  isRoutePatternRegex: boolean;
+
+  /** @example null */
+  data?: object;
+  name?: string;
+
+  /** @example true */
+  isActive: boolean;
+
+  /** @example {"type":"all"} */
+  auth?: ProjectAuthConfigDto;
+}
+
+export interface ProjectPageEntityPaginatedDto {
+  items: ProjectPageEntityDto[];
+  meta: PaginationMetaDto;
+  links?: PaginationLinksDto;
+}
+
+export enum ComponentModuleSortByEnum {
+  CreatedAt = 'createdAt',
+  UpdatedAt = 'updatedAt',
+  Label = 'label',
+}
+
+export interface ComponentModuleEntityDto {
+  /** @format uuid */
+  id: string;
+
+  /** @format date-time */
+  createdAt?: string;
+
+  /** @format date-time */
+  updatedAt?: string;
+
+  /** @format uuid */
+  companyId?: string;
+  label: string;
+
+  /** @example null */
+  contentForm?: object;
+
+  /** @example null */
+  styleForm?: object;
+}
+
+export interface ComponentModuleEntityPaginatedDto {
+  items: ComponentModuleEntityDto[];
+  meta: PaginationMetaDto;
+  links?: PaginationLinksDto;
+}
+
+export interface CreateComponentModuleRequestDto {
+  /** @example Header */
+  label: string;
+
+  /** @example null */
+  contentForm?: object;
+
+  /** @example null */
+  styleForm?: object;
+
+  /** @format uuid */
+  companyId?: string;
+}
+
+export interface UpdateComponentModuleRequestDto {
+  /** @example Header */
+  label: string;
+
+  /** @example null */
+  contentForm?: object;
+
+  /** @example null */
+  styleForm?: object;
+
+  /** @format uuid */
+  companyId?: string;
+}
+
+export interface AssetEntityDto {
+  /** @format uuid */
+  id: string;
+
+  /** @format date-time */
+  createdAt?: string;
+
+  /** @format date-time */
+  updatedAt?: string;
+
+  /** @format uuid */
+  companyId: string;
+  company?: CompanyEntityDto;
+
+  /** @example image */
+  type: AssetTypeEnum;
+
+  /** @example associated */
+  status: AssetStatusEnum;
+
+  /** @example cloudinary */
+  provider: AssetProviderEnum;
+
+  /** @example https://dummyimage.com/200x200/fff/000 */
+  directLink?: string;
+
+  /** @example product */
+  target?: AssetTargetEnum | null;
+}
+
+export enum ExportTypeEnum {
+  OrdersReport = 'orders_report',
+}
+
+export enum ExportStatusEnum {
+  Pending = 'pending',
+  Generating = 'generating',
+  ReadyForDownload = 'ready_for_download',
+  Failed = 'failed',
+  Expired = 'expired',
+}
+
+export interface ExportEntityDto {
+  /** @format uuid */
+  id: string;
+
+  /** @format date-time */
+  createdAt?: string;
+
+  /** @format date-time */
+  updatedAt?: string;
+
+  /** @format uuid */
+  companyId: string;
+
+  /** @example orders_report */
+  type: ExportTypeEnum;
+
+  /** @example ready_for_download */
+  status: ExportStatusEnum;
+
+  /** @format date-time */
+  readyForDownloadDate?: string;
+
+  /** @format date-time */
+  expiresIn?: string;
+
+  /** @format uuid */
+  assetId: string;
+  asset: AssetEntityDto;
+
+  /** @example null */
+  params?: object;
+}
+
+export interface ExportEntityPaginatedDto {
+  items: ExportEntityDto[];
+  meta: PaginationMetaDto;
+  links?: PaginationLinksDto;
+}
+
+export interface ExportOrdersDto {
+  /**
+   * @format date-time
+   * @example null
+   */
+  createdFrom?: string;
+
+  /**
+   * @format date-time
+   * @example null
+   */
+  createdUntil?: string;
+
+  /** @format uuid */
+  userId?: string;
+
+  /** @format uuid */
+  currencyId?: string;
+
+  /** @example pix */
+  paymentMethod?: PaymentMethodEnum;
+
+  /** @example stripe */
+  paymentProvider?: PaymentProviderEnum;
+
+  /** @example super_sales */
+  utmCampaign?: string;
+
+  /** @example ASC */
+  orderBy?: OrderByEnum;
+
+  /** @example createdAt */
+  sortBy?: OrderSortByEnum;
+
+  /** @example ["pending"] */
+  status?: (
+    | 'pending'
+    | 'confirming_payment'
+    | 'waiting_delivery'
+    | 'delivering'
+    | 'concluded'
+    | 'failed'
+    | 'cancelled'
+    | 'partially_cancelled'
+    | 'expired'
+  )[];
+
+  /** @format uuid */
+  productId?: string;
+}
+
 export interface I18NItemDto {
   /** @example Algum texto em pt-br */
   'pt-br': string;
@@ -1595,6 +1951,7 @@ export namespace Admin {
       paymentMethod?: PaymentMethodEnum;
       paymentProvider?: PaymentProviderEnum;
       utmCampaign?: string;
+      productId?: string;
     };
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -2622,6 +2979,294 @@ export namespace Admin {
     export type ResponseBody = void;
   }
   /**
+   * @description Lists company projects
+   * @tags Projects (Admin)
+   * @name ListCompanyProjects
+   * @request GET:/admin/companies/{companyId}/projects
+   * @secure
+   */
+  export namespace ListCompanyProjects {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = {
+      page?: number;
+      limit?: number;
+      search?: string;
+      sortBy?: string;
+      orderBy?: OrderByEnum;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ProjectEntityPaginatedDto;
+  }
+  /**
+   * @description Creates a project inside a company context
+   * @tags Projects (Admin)
+   * @name CreateCompanyProject
+   * @request POST:/admin/companies/{companyId}/projects
+   * @secure
+   */
+  export namespace CreateCompanyProject {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = {};
+    export type RequestBody = CreateProjectRequestDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = ProjectEntityDto;
+  }
+  /**
+   * @description Gets some company project by ID
+   * @tags Projects (Admin)
+   * @name GetCompanyProject
+   * @request GET:/admin/companies/{companyId}/projects/{projectId}
+   * @secure
+   */
+  export namespace GetCompanyProject {
+    export type RequestParams = { companyId: string; projectId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ProjectEntityDto;
+  }
+  /**
+   * @description Updates some company project
+   * @tags Projects (Admin)
+   * @name UpdateCompanyProject
+   * @request PATCH:/admin/companies/{companyId}/projects/{projectId}
+   * @secure
+   */
+  export namespace UpdateCompanyProject {
+    export type RequestParams = { companyId: string; projectId: string };
+    export type RequestQuery = {};
+    export type RequestBody = UpdateProjectRequestDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = ProjectEntityDto;
+  }
+  /**
+   * @description Deletes some company project
+   * @tags Projects (Admin)
+   * @name DeleteCompanyProject
+   * @request DELETE:/admin/companies/{companyId}/projects/{projectId}
+   * @secure
+   */
+  export namespace DeleteCompanyProject {
+    export type RequestParams = { companyId: string; projectId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * @description Checks if some host is available to be attached into a project
+   * @tags Projects (Admin)
+   * @name CheckHostState
+   * @request GET:/admin/companies/{companyId}/projects/check/host-availability
+   * @secure
+   */
+  export namespace CheckHostState {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = { host: string };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ProjectHostCheckResponseDto;
+  }
+  /**
+   * @description Attach some host into a company project
+   * @tags Projects (Admin)
+   * @name AttachHostToCompanyProject
+   * @request POST:/admin/companies/{companyId}/projects/{projectId}/hosts
+   * @secure
+   */
+  export namespace AttachHostToCompanyProject {
+    export type RequestParams = { companyId: string; projectId: string };
+    export type RequestQuery = {};
+    export type RequestBody = AttachProjectHostRequestDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = ProjectHostEntityDto;
+  }
+  /**
+   * @description Detach some host from a company project
+   * @tags Projects (Admin)
+   * @name DetachHostFromCompanyProject
+   * @request DELETE:/admin/companies/{companyId}/projects/{projectId}/hosts/{hostId}
+   * @secure
+   */
+  export namespace DetachHostFromCompanyProject {
+    export type RequestParams = { companyId: string; projectId: string; hostId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * @description Updates some company project default theme. If there's no default theme configured, a new one is automatically created
+   * @tags Projects (Admin)
+   * @name UpsertDefaultCompanyProjectTheme
+   * @request PATCH:/admin/companies/{companyId}/projects/{projectId}/themes/default
+   * @secure
+   */
+  export namespace UpsertDefaultCompanyProjectTheme {
+    export type RequestParams = { companyId: string; projectId: string };
+    export type RequestQuery = {};
+    export type RequestBody = SetProjectThemeRequestDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = ProjectThemeEntityDto;
+  }
+  /**
+   * @description Lists company project pages
+   * @tags Projects (Admin)
+   * @name ListCompanyProjectPages
+   * @request GET:/admin/companies/{companyId}/projects/{projectId}/pages
+   * @secure
+   */
+  export namespace ListCompanyProjectPages {
+    export type RequestParams = { companyId: string; projectId: string };
+    export type RequestQuery = {
+      page?: number;
+      limit?: number;
+      search?: string;
+      sortBy?: string;
+      orderBy?: OrderByEnum;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ProjectPageEntityPaginatedDto;
+  }
+  /**
+   * @description Upsert some company project page. The unique key used to upsert is the page route pattern
+   * @tags Projects (Admin)
+   * @name UpsertCompanyProjectPage
+   * @request POST:/admin/companies/{companyId}/projects/{projectId}/pages
+   * @secure
+   */
+  export namespace UpsertCompanyProjectPage {
+    export type RequestParams = { companyId: string; projectId: string };
+    export type RequestQuery = {};
+    export type RequestBody = SetProjectPageRequestDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = ProjectPageEntityDto;
+  }
+  /**
+   * @description Gets a company project page by ID
+   * @tags Projects (Admin)
+   * @name GetCompanyProjectPageById
+   * @request GET:/admin/companies/{companyId}/projects/{projectId}/pages/{pageId}
+   * @secure
+   */
+  export namespace GetCompanyProjectPageById {
+    export type RequestParams = { companyId: string; projectId: string; pageId: string };
+    export type RequestQuery = {
+      enableSimulation?: boolean;
+      simulateUnauthenticatedUser?: boolean;
+      simulateUserWhitelistAccesses?: string[];
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ProjectPageEntityDto;
+  }
+  /**
+   * @description Updates some company project page by id
+   * @tags Projects (Admin)
+   * @name UpdateCompanyProjectPageById
+   * @request PATCH:/admin/companies/{companyId}/projects/{projectId}/pages/{pageId}
+   * @secure
+   */
+  export namespace UpdateCompanyProjectPageById {
+    export type RequestParams = { companyId: string; projectId: string; pageId: string };
+    export type RequestQuery = {};
+    export type RequestBody = SetProjectPageRequestDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = ProjectPageEntityDto;
+  }
+  /**
+   * @description Deletes some company project page by id
+   * @tags Projects (Admin)
+   * @name DeleteCompanyProjectPageById
+   * @request DELETE:/admin/companies/{companyId}/projects/{projectId}/pages/{pageId}
+   * @secure
+   */
+  export namespace DeleteCompanyProjectPageById {
+    export type RequestParams = { companyId: string; projectId: string; pageId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * @description Activates some company project page by id
+   * @tags Projects (Admin)
+   * @name ActivateCompanyProjectPageById
+   * @request PATCH:/admin/companies/{companyId}/projects/{projectId}/pages/{pageId}/activate
+   * @secure
+   */
+  export namespace ActivateCompanyProjectPageById {
+    export type RequestParams = { companyId: string; projectId: string; pageId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ProjectPageEntityDto;
+  }
+  /**
+   * @description Deactivates some company project page by id
+   * @tags Projects (Admin)
+   * @name DeactivateCompanyProjectPageById
+   * @request PATCH:/admin/companies/{companyId}/projects/{projectId}/pages/{pageId}/deactivate
+   * @secure
+   */
+  export namespace DeactivateCompanyProjectPageById {
+    export type RequestParams = { companyId: string; projectId: string; pageId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ProjectPageEntityDto;
+  }
+  /**
+   * @description Lists all company exports
+   * @tags Exports (Admin)
+   * @name ListCompanyExports
+   * @request GET:/admin/companies/{companyId}/exports
+   * @secure
+   */
+  export namespace ListCompanyExports {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = {
+      page?: number;
+      limit?: number;
+      search?: string;
+      sortBy?: string;
+      orderBy?: OrderByEnum;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ExportEntityPaginatedDto;
+  }
+  /**
+   * @description Gets some specific company export by its ID
+   * @tags Exports (Admin)
+   * @name GetCompanyExport
+   * @request GET:/admin/companies/{companyId}/exports/{exportId}
+   * @secure
+   */
+  export namespace GetCompanyExport {
+    export type RequestParams = { companyId: string; exportId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ExportEntityDto;
+  }
+  /**
+   * @description Requests an order exports XLS based on some params
+   * @tags Exports (Admin)
+   * @name RequestCompanyOrdersExportGeneration
+   * @request POST:/admin/companies/{companyId}/exports/generate/orders
+   * @secure
+   */
+  export namespace RequestCompanyOrdersExportGeneration {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = {};
+    export type RequestBody = ExportOrdersDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = ExportEntityDto;
+  }
+  /**
    * @description Lists all company FAQ contexts
    * @tags Faq (Admin)
    * @name ListFaqContexts
@@ -2832,6 +3477,100 @@ export namespace Globals {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = CurrencyEntityPaginatedDto;
+  }
+  /**
+   * @description Lists system available component modules
+   * @tags Globals
+   * @name ListComponentModules
+   * @request GET:/globals/component-modules
+   * @secure
+   */
+  export namespace ListComponentModules {
+    export type RequestParams = {};
+    export type RequestQuery = {
+      page?: number;
+      limit?: number;
+      search?: string;
+      sortBy?: ComponentModuleSortByEnum;
+      orderBy?: OrderByEnum;
+      label?: string;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ComponentModuleEntityPaginatedDto;
+  }
+  /**
+   * @description Creates a component module globally of just for some company
+   * @tags Globals
+   * @name CreateComponentModule
+   * @request POST:/globals/component-modules
+   * @secure
+   */
+  export namespace CreateComponentModule {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = CreateComponentModuleRequestDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = ComponentModuleEntityDto;
+  }
+  /**
+   * @description Updates some component module
+   * @tags Globals
+   * @name UpdateComponentModule
+   * @request PATCH:/globals/component-modules/{id}
+   * @secure
+   */
+  export namespace UpdateComponentModule {
+    export type RequestParams = { id: string };
+    export type RequestQuery = {};
+    export type RequestBody = UpdateComponentModuleRequestDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = ComponentModuleEntityDto;
+  }
+  /**
+   * @description Deletes some component module
+   * @tags Globals
+   * @name DeleteComponentModule
+   * @request DELETE:/globals/component-modules/{id}
+   * @secure
+   */
+  export namespace DeleteComponentModule {
+    export type RequestParams = { id: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+}
+
+export namespace Projects {
+  /**
+   * @description Gets some theme configs based on request url
+   * @tags Projects
+   * @name GetThemeByUrl
+   * @request GET:/projects/get-theme
+   * @secure
+   */
+  export namespace GetThemeByUrl {
+    export type RequestParams = {};
+    export type RequestQuery = { url?: string };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ProjectThemeEntityDto;
+  }
+  /**
+   * @description Gets some page configs based on request url
+   * @tags Projects
+   * @name GetPageByUrl
+   * @request GET:/projects/get-page
+   * @secure
+   */
+  export namespace GetPageByUrl {
+    export type RequestParams = {};
+    export type RequestQuery = { url?: string };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ProjectPageEntityDto;
   }
 }
 
@@ -3327,6 +4066,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         paymentMethod?: PaymentMethodEnum;
         paymentProvider?: PaymentProviderEnum;
         utmCampaign?: string;
+        productId?: string;
       },
       params: RequestParams = {},
     ) =>
@@ -4729,6 +5469,404 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
+     * @description Lists company projects
+     *
+     * @tags Projects (Admin)
+     * @name ListCompanyProjects
+     * @request GET:/admin/companies/{companyId}/projects
+     * @secure
+     */
+    listCompanyProjects: (
+      companyId: string,
+      query?: { page?: number; limit?: number; search?: string; sortBy?: string; orderBy?: OrderByEnum },
+      params: RequestParams = {},
+    ) =>
+      this.request<ProjectEntityPaginatedDto, void>({
+        path: `/admin/companies/${companyId}/projects`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Creates a project inside a company context
+     *
+     * @tags Projects (Admin)
+     * @name CreateCompanyProject
+     * @request POST:/admin/companies/{companyId}/projects
+     * @secure
+     */
+    createCompanyProject: (companyId: string, data: CreateProjectRequestDto, params: RequestParams = {}) =>
+      this.request<ProjectEntityDto, void>({
+        path: `/admin/companies/${companyId}/projects`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Gets some company project by ID
+     *
+     * @tags Projects (Admin)
+     * @name GetCompanyProject
+     * @request GET:/admin/companies/{companyId}/projects/{projectId}
+     * @secure
+     */
+    getCompanyProject: (companyId: string, projectId: string, params: RequestParams = {}) =>
+      this.request<ProjectEntityDto, void>({
+        path: `/admin/companies/${companyId}/projects/${projectId}`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Updates some company project
+     *
+     * @tags Projects (Admin)
+     * @name UpdateCompanyProject
+     * @request PATCH:/admin/companies/{companyId}/projects/{projectId}
+     * @secure
+     */
+    updateCompanyProject: (
+      companyId: string,
+      projectId: string,
+      data: UpdateProjectRequestDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<ProjectEntityDto, void>({
+        path: `/admin/companies/${companyId}/projects/${projectId}`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Deletes some company project
+     *
+     * @tags Projects (Admin)
+     * @name DeleteCompanyProject
+     * @request DELETE:/admin/companies/{companyId}/projects/{projectId}
+     * @secure
+     */
+    deleteCompanyProject: (companyId: string, projectId: string, params: RequestParams = {}) =>
+      this.request<void, void>({
+        path: `/admin/companies/${companyId}/projects/${projectId}`,
+        method: 'DELETE',
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * @description Checks if some host is available to be attached into a project
+     *
+     * @tags Projects (Admin)
+     * @name CheckHostState
+     * @request GET:/admin/companies/{companyId}/projects/check/host-availability
+     * @secure
+     */
+    checkHostState: (companyId: string, query: { host: string }, params: RequestParams = {}) =>
+      this.request<ProjectHostCheckResponseDto, void>({
+        path: `/admin/companies/${companyId}/projects/check/host-availability`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Attach some host into a company project
+     *
+     * @tags Projects (Admin)
+     * @name AttachHostToCompanyProject
+     * @request POST:/admin/companies/{companyId}/projects/{projectId}/hosts
+     * @secure
+     */
+    attachHostToCompanyProject: (
+      companyId: string,
+      projectId: string,
+      data: AttachProjectHostRequestDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<ProjectHostEntityDto, void>({
+        path: `/admin/companies/${companyId}/projects/${projectId}/hosts`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Detach some host from a company project
+     *
+     * @tags Projects (Admin)
+     * @name DetachHostFromCompanyProject
+     * @request DELETE:/admin/companies/{companyId}/projects/{projectId}/hosts/{hostId}
+     * @secure
+     */
+    detachHostFromCompanyProject: (companyId: string, projectId: string, hostId: string, params: RequestParams = {}) =>
+      this.request<void, void>({
+        path: `/admin/companies/${companyId}/projects/${projectId}/hosts/${hostId}`,
+        method: 'DELETE',
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * @description Updates some company project default theme. If there's no default theme configured, a new one is automatically created
+     *
+     * @tags Projects (Admin)
+     * @name UpsertDefaultCompanyProjectTheme
+     * @request PATCH:/admin/companies/{companyId}/projects/{projectId}/themes/default
+     * @secure
+     */
+    upsertDefaultCompanyProjectTheme: (
+      companyId: string,
+      projectId: string,
+      data: SetProjectThemeRequestDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<ProjectThemeEntityDto, void>({
+        path: `/admin/companies/${companyId}/projects/${projectId}/themes/default`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Lists company project pages
+     *
+     * @tags Projects (Admin)
+     * @name ListCompanyProjectPages
+     * @request GET:/admin/companies/{companyId}/projects/{projectId}/pages
+     * @secure
+     */
+    listCompanyProjectPages: (
+      companyId: string,
+      projectId: string,
+      query?: { page?: number; limit?: number; search?: string; sortBy?: string; orderBy?: OrderByEnum },
+      params: RequestParams = {},
+    ) =>
+      this.request<ProjectPageEntityPaginatedDto, void>({
+        path: `/admin/companies/${companyId}/projects/${projectId}/pages`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Upsert some company project page. The unique key used to upsert is the page route pattern
+     *
+     * @tags Projects (Admin)
+     * @name UpsertCompanyProjectPage
+     * @request POST:/admin/companies/{companyId}/projects/{projectId}/pages
+     * @secure
+     */
+    upsertCompanyProjectPage: (
+      companyId: string,
+      projectId: string,
+      data: SetProjectPageRequestDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<ProjectPageEntityDto, void>({
+        path: `/admin/companies/${companyId}/projects/${projectId}/pages`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Gets a company project page by ID
+     *
+     * @tags Projects (Admin)
+     * @name GetCompanyProjectPageById
+     * @request GET:/admin/companies/{companyId}/projects/{projectId}/pages/{pageId}
+     * @secure
+     */
+    getCompanyProjectPageById: (
+      companyId: string,
+      projectId: string,
+      pageId: string,
+      query?: {
+        enableSimulation?: boolean;
+        simulateUnauthenticatedUser?: boolean;
+        simulateUserWhitelistAccesses?: string[];
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<ProjectPageEntityDto, void>({
+        path: `/admin/companies/${companyId}/projects/${projectId}/pages/${pageId}`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Updates some company project page by id
+     *
+     * @tags Projects (Admin)
+     * @name UpdateCompanyProjectPageById
+     * @request PATCH:/admin/companies/{companyId}/projects/{projectId}/pages/{pageId}
+     * @secure
+     */
+    updateCompanyProjectPageById: (
+      companyId: string,
+      projectId: string,
+      pageId: string,
+      data: SetProjectPageRequestDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<ProjectPageEntityDto, void>({
+        path: `/admin/companies/${companyId}/projects/${projectId}/pages/${pageId}`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Deletes some company project page by id
+     *
+     * @tags Projects (Admin)
+     * @name DeleteCompanyProjectPageById
+     * @request DELETE:/admin/companies/{companyId}/projects/{projectId}/pages/{pageId}
+     * @secure
+     */
+    deleteCompanyProjectPageById: (companyId: string, projectId: string, pageId: string, params: RequestParams = {}) =>
+      this.request<void, void>({
+        path: `/admin/companies/${companyId}/projects/${projectId}/pages/${pageId}`,
+        method: 'DELETE',
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * @description Activates some company project page by id
+     *
+     * @tags Projects (Admin)
+     * @name ActivateCompanyProjectPageById
+     * @request PATCH:/admin/companies/{companyId}/projects/{projectId}/pages/{pageId}/activate
+     * @secure
+     */
+    activateCompanyProjectPageById: (
+      companyId: string,
+      projectId: string,
+      pageId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<ProjectPageEntityDto, void>({
+        path: `/admin/companies/${companyId}/projects/${projectId}/pages/${pageId}/activate`,
+        method: 'PATCH',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Deactivates some company project page by id
+     *
+     * @tags Projects (Admin)
+     * @name DeactivateCompanyProjectPageById
+     * @request PATCH:/admin/companies/{companyId}/projects/{projectId}/pages/{pageId}/deactivate
+     * @secure
+     */
+    deactivateCompanyProjectPageById: (
+      companyId: string,
+      projectId: string,
+      pageId: string,
+      params: RequestParams = {},
+    ) =>
+      this.request<ProjectPageEntityDto, void>({
+        path: `/admin/companies/${companyId}/projects/${projectId}/pages/${pageId}/deactivate`,
+        method: 'PATCH',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Lists all company exports
+     *
+     * @tags Exports (Admin)
+     * @name ListCompanyExports
+     * @request GET:/admin/companies/{companyId}/exports
+     * @secure
+     */
+    listCompanyExports: (
+      companyId: string,
+      query?: { page?: number; limit?: number; search?: string; sortBy?: string; orderBy?: OrderByEnum },
+      params: RequestParams = {},
+    ) =>
+      this.request<ExportEntityPaginatedDto, void>({
+        path: `/admin/companies/${companyId}/exports`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Gets some specific company export by its ID
+     *
+     * @tags Exports (Admin)
+     * @name GetCompanyExport
+     * @request GET:/admin/companies/{companyId}/exports/{exportId}
+     * @secure
+     */
+    getCompanyExport: (companyId: string, exportId: string, params: RequestParams = {}) =>
+      this.request<ExportEntityDto, void>({
+        path: `/admin/companies/${companyId}/exports/${exportId}`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Requests an order exports XLS based on some params
+     *
+     * @tags Exports (Admin)
+     * @name RequestCompanyOrdersExportGeneration
+     * @request POST:/admin/companies/{companyId}/exports/generate/orders
+     * @secure
+     */
+    requestCompanyOrdersExportGeneration: (companyId: string, data: ExportOrdersDto, params: RequestParams = {}) =>
+      this.request<ExportEntityDto, void>({
+        path: `/admin/companies/${companyId}/exports/generate/orders`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
      * @description Lists all company FAQ contexts
      *
      * @tags Faq (Admin)
@@ -4979,6 +6117,125 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     ) =>
       this.request<CurrencyEntityPaginatedDto, any>({
         path: `/globals/currencies`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Lists system available component modules
+     *
+     * @tags Globals
+     * @name ListComponentModules
+     * @request GET:/globals/component-modules
+     * @secure
+     */
+    listComponentModules: (
+      query?: {
+        page?: number;
+        limit?: number;
+        search?: string;
+        sortBy?: ComponentModuleSortByEnum;
+        orderBy?: OrderByEnum;
+        label?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<ComponentModuleEntityPaginatedDto, void>({
+        path: `/globals/component-modules`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Creates a component module globally of just for some company
+     *
+     * @tags Globals
+     * @name CreateComponentModule
+     * @request POST:/globals/component-modules
+     * @secure
+     */
+    createComponentModule: (data: CreateComponentModuleRequestDto, params: RequestParams = {}) =>
+      this.request<ComponentModuleEntityDto, any>({
+        path: `/globals/component-modules`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Updates some component module
+     *
+     * @tags Globals
+     * @name UpdateComponentModule
+     * @request PATCH:/globals/component-modules/{id}
+     * @secure
+     */
+    updateComponentModule: (id: string, data: UpdateComponentModuleRequestDto, params: RequestParams = {}) =>
+      this.request<ComponentModuleEntityDto, any>({
+        path: `/globals/component-modules/${id}`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Deletes some component module
+     *
+     * @tags Globals
+     * @name DeleteComponentModule
+     * @request DELETE:/globals/component-modules/{id}
+     * @secure
+     */
+    deleteComponentModule: (id: string, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/globals/component-modules/${id}`,
+        method: 'DELETE',
+        secure: true,
+        ...params,
+      }),
+  };
+  projects = {
+    /**
+     * @description Gets some theme configs based on request url
+     *
+     * @tags Projects
+     * @name GetThemeByUrl
+     * @request GET:/projects/get-theme
+     * @secure
+     */
+    getThemeByUrl: (query?: { url?: string }, params: RequestParams = {}) =>
+      this.request<ProjectThemeEntityDto, any>({
+        path: `/projects/get-theme`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Gets some page configs based on request url
+     *
+     * @tags Projects
+     * @name GetPageByUrl
+     * @request GET:/projects/get-page
+     * @secure
+     */
+    getPageByUrl: (query?: { url?: string }, params: RequestParams = {}) =>
+      this.request<ProjectPageEntityDto, any>({
+        path: `/projects/get-page`,
         method: 'GET',
         query: query,
         secure: true,
