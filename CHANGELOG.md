@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.12](https://github.com/TropixInc/w3block-commerce-sdk/compare/v0.0.11...v0.0.12) (2023-09-12)
+
+
+### Features
+
+* **api:** swagger new version generated ([83ebfca](https://github.com/TropixInc/w3block-commerce-sdk/commit/83ebfca356a7d90c6f770f2cf7f2bf9450df71e4))
+
 ### [0.0.11](https://github.com/TropixInc/w3block-commerce-sdk/compare/v0.0.10...v0.0.11) (2023-08-28)
 
 
