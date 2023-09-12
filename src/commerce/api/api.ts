@@ -414,6 +414,9 @@ export interface CreateProductDto {
 
   /** @example null */
   terms?: object;
+
+  /** @example false */
+  setIssuedAtMetadata?: boolean;
 }
 
 export type ProductEntity = object;
@@ -459,6 +462,9 @@ export interface UpdateProductDto {
 
   /** @example null */
   terms?: object;
+
+  /** @example false */
+  setIssuedAtMetadata?: boolean;
 }
 
 export enum ProductOrderRuleSortBy {
@@ -1189,7 +1195,7 @@ export interface CreatePromotionProductDto {
 }
 
 export interface SetAndOverridePromotionProductsDto {
-  products: CreatePromotionProductDto[];
+  products: CreatePromotionProductDto[] | null;
 }
 
 export enum PromotionWhitelistTypeEnum {
@@ -1236,7 +1242,7 @@ export interface CreatePromotionWhitelistDto {
 }
 
 export interface SetAndOverridePromotionWhitelistsDto {
-  whitelists: CreatePromotionWhitelistDto[];
+  whitelists: CreatePromotionWhitelistDto[] | null;
 }
 
 export interface I18NItemDto {
@@ -2951,7 +2957,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title commerce-backend
- * @version 2.20.0
+ * @version 2.21.2
  * @baseUrl https://commerce.stg.w3block.io
  * @contact
  */

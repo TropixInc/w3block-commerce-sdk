@@ -6492,7 +6492,7 @@
   "info": {
     "title": "commerce-backend",
     "description": "",
-    "version": "2.20.0",
+    "version": "2.21.2",
     "contact": {}
   },
   "tags": [],
@@ -7267,6 +7267,11 @@
           "terms": {
             "type": "object",
             "example": null
+          },
+          "setIssuedAtMetadata": {
+            "type": "boolean",
+            "example": false,
+            "default": false
           }
         },
         "required": [
@@ -7354,6 +7359,11 @@
           "terms": {
             "type": "object",
             "example": null
+          },
+          "setIssuedAtMetadata": {
+            "type": "boolean",
+            "example": false,
+            "default": false
           }
         }
       },
@@ -8985,6 +8995,7 @@
         "type": "object",
         "properties": {
           "products": {
+            "nullable": true,
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/CreatePromotionProductDto"
@@ -9098,6 +9109,7 @@
         "type": "object",
         "properties": {
           "whitelists": {
+            "nullable": true,
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/CreatePromotionWhitelistDto"
