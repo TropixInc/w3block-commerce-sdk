@@ -325,6 +325,7 @@ export enum ProductSortBy {
   Status = 'status',
   ContractAddress = 'contractAddress',
   Name = 'name',
+  Relevance = 'relevance',
 }
 
 export interface ImageDto {
@@ -417,6 +418,9 @@ export interface CreateProductDto {
 
   /** @example false */
   setIssuedAtMetadata?: boolean;
+
+  /** @example 0 */
+  relevance?: number;
 }
 
 export type ProductEntity = object;
@@ -465,6 +469,9 @@ export interface UpdateProductDto {
 
   /** @example false */
   setIssuedAtMetadata?: boolean;
+
+  /** @example 0 */
+  relevance?: number;
 }
 
 export enum ProductOrderRuleSortBy {
@@ -654,6 +661,7 @@ export interface CompanyConfigurationEntityDto {
   companyServiceFeePercentage: number;
   resaleFeePercentage: number;
   disableGasBilling: boolean;
+  sendPassPdf: boolean;
 }
 
 export interface UpdateCompanyConfigurationsDto {
@@ -732,6 +740,62 @@ export interface CreateAsaasPaymentProviderDto {
   checkoutExpireTime?: number;
 }
 
+export enum NotificationTypeEnum {
+  AdminOrderConcluded = 'admin_order_concluded',
+  AdminOrderFailed = 'admin_order_failed',
+  UserOrderWaitingDelivery = 'user_order_waiting_delivery',
+  UserOrderConcluded = 'user_order_concluded',
+}
+
+export interface EmailSenderDto {
+  email: string;
+  name: string;
+}
+
+export interface CompanyNotificationEntityDto {
+  /** @format uuid */
+  id: string;
+
+  /** @format date-time */
+  createdAt?: string;
+
+  /** @format date-time */
+  updatedAt?: string;
+
+  /** @format uuid */
+  companyId: string;
+  type: NotificationTypeEnum;
+  disabled: boolean;
+  customSubject?: string | null;
+  customHtmlContent?: string | null;
+  customTextContent?: string | null;
+  customTemplateId?: number | null;
+
+  /** @example null */
+  customParams?: object | null;
+
+  /** @example null */
+  customSender?: EmailSenderDto | null;
+  bcc?: string[] | null;
+}
+
+export interface SetCompanyNotificationDto {
+  /** @example false */
+  disabled: boolean;
+
+  /** @example null */
+  customSubject: string | null;
+
+  /** @example null */
+  customHtmlContent: string | null;
+
+  /** @example null */
+  customTextContent: string | null;
+
+  /** @example null */
+  customParams: object | null;
+}
+
 export interface SuperAdminCompanySetInfoDto {
   /** @example 10 */
   clientServiceFeePercentage: number;
@@ -739,6 +803,9 @@ export interface SuperAdminCompanySetInfoDto {
   /** @example 10 */
   companyServiceFeePercentage: number;
   disableGasBilling: boolean;
+
+  /** @example false */
+  sendPassPdf: boolean;
 }
 
 export interface CurrencyPaymentProviderEntityDto {
@@ -2551,6 +2618,34 @@ export namespace Admin {
     export type ResponseBody = void;
   }
   /**
+   * @description Gets some company notification config by its type
+   * @tags Companies (Admin)
+   * @name GetCompanyNotificationConfig
+   * @request GET:/admin/companies/{companyId}/notifications/{notificationType}
+   * @secure
+   */
+  export namespace GetCompanyNotificationConfig {
+    export type RequestParams = { companyId: string; notificationType: NotificationTypeEnum };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = CompanyNotificationEntityDto;
+  }
+  /**
+   * @description Sets some company notification config by its type
+   * @tags Companies (Admin)
+   * @name SetCompanyNotificationConfig
+   * @request PATCH:/admin/companies/{companyId}/notifications/{notificationType}
+   * @secure
+   */
+  export namespace SetCompanyNotificationConfig {
+    export type RequestParams = { companyId: string; notificationType: NotificationTypeEnum };
+    export type RequestQuery = {};
+    export type RequestBody = SetCompanyNotificationDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = CompanyNotificationEntityDto;
+  }
+  /**
    * @description Create a company tag
    * @tags Tags (Admin)
    * @name CreateTag
@@ -3696,7 +3791,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title commerce-backend
- * @version 2.21.2
+ * @version 2.23.0
  * @baseUrl https://commerce.stg.w3block.io
  * @contact
  */
@@ -4900,6 +4995,51 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/admin/companies/${companyId}/configurations/providers/${provider}`,
         method: 'DELETE',
         secure: true,
+        ...params,
+      }),
+
+    /**
+     * @description Gets some company notification config by its type
+     *
+     * @tags Companies (Admin)
+     * @name GetCompanyNotificationConfig
+     * @request GET:/admin/companies/{companyId}/notifications/{notificationType}
+     * @secure
+     */
+    getCompanyNotificationConfig: (
+      companyId: string,
+      notificationType: NotificationTypeEnum,
+      params: RequestParams = {},
+    ) =>
+      this.request<CompanyNotificationEntityDto, void>({
+        path: `/admin/companies/${companyId}/notifications/${notificationType}`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Sets some company notification config by its type
+     *
+     * @tags Companies (Admin)
+     * @name SetCompanyNotificationConfig
+     * @request PATCH:/admin/companies/{companyId}/notifications/{notificationType}
+     * @secure
+     */
+    setCompanyNotificationConfig: (
+      companyId: string,
+      notificationType: NotificationTypeEnum,
+      data: SetCompanyNotificationDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<CompanyNotificationEntityDto, void>({
+        path: `/admin/companies/${companyId}/notifications/${notificationType}`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
         ...params,
       }),
 

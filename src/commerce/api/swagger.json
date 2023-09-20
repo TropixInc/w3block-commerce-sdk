@@ -3480,6 +3480,130 @@
         ]
       }
     },
+    "/admin/companies/{companyId}/notifications/{notificationType}": {
+      "get": {
+        "operationId": "getCompanyNotificationConfig",
+        "summary": "",
+        "description": "Gets some company notification config by its type",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "notificationType",
+            "required": true,
+            "in": "path",
+            "example": "user_order_concluded",
+            "schema": {
+              "$ref": "#/components/schemas/NotificationTypeEnum"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompanyNotificationEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Companies (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "setCompanyNotificationConfig",
+        "summary": "",
+        "description": "Sets some company notification config by its type",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "notificationType",
+            "required": true,
+            "in": "path",
+            "example": "user_order_concluded",
+            "schema": {
+              "$ref": "#/components/schemas/NotificationTypeEnum"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetCompanyNotificationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompanyNotificationEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Companies (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
     "/super-admin/companies/{companyId}/enable": {
       "patch": {
         "operationId": "createAndEnableCommerceCompany",
@@ -8121,7 +8245,7 @@
   "info": {
     "title": "commerce-backend",
     "description": "",
-    "version": "2.21.2",
+    "version": "2.23.0",
     "contact": {}
   },
   "tags": [],
@@ -8731,7 +8855,8 @@
           "endSaleAt",
           "status",
           "contractAddress",
-          "name"
+          "name",
+          "relevance"
         ]
       },
       "ImageDto": {
@@ -8901,6 +9026,11 @@
             "type": "boolean",
             "example": false,
             "default": false
+          },
+          "relevance": {
+            "type": "number",
+            "default": 0,
+            "example": 0
           }
         },
         "required": [
@@ -8993,6 +9123,11 @@
             "type": "boolean",
             "example": false,
             "default": false
+          },
+          "relevance": {
+            "type": "number",
+            "default": 0,
+            "example": 0
           }
         }
       },
@@ -9390,6 +9525,9 @@
           },
           "disableGasBilling": {
             "type": "boolean"
+          },
+          "sendPassPdf": {
+            "type": "boolean"
           }
         },
         "required": [
@@ -9398,7 +9536,8 @@
           "clientServiceFeePercentage",
           "companyServiceFeePercentage",
           "resaleFeePercentage",
-          "disableGasBilling"
+          "disableGasBilling",
+          "sendPassPdf"
         ]
       },
       "UpdateCompanyConfigurationsDto": {
@@ -9590,6 +9729,146 @@
           "apiKey"
         ]
       },
+      "NotificationTypeEnum": {
+        "type": "string",
+        "enum": [
+          "admin_order_concluded",
+          "admin_order_failed",
+          "user_order_waiting_delivery",
+          "user_order_concluded"
+        ]
+      },
+      "EmailSenderDto": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "nullable": false
+          },
+          "name": {
+            "type": "string",
+            "nullable": false
+          }
+        },
+        "required": [
+          "email",
+          "name"
+        ]
+      },
+      "CompanyNotificationEntityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "companyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "nullable": false,
+            "$ref": "#/components/schemas/NotificationTypeEnum"
+          },
+          "disabled": {
+            "type": "boolean"
+          },
+          "customSubject": {
+            "type": "string",
+            "nullable": true
+          },
+          "customHtmlContent": {
+            "type": "string",
+            "nullable": true
+          },
+          "customTextContent": {
+            "type": "string",
+            "nullable": true
+          },
+          "customTemplateId": {
+            "type": "number",
+            "nullable": true
+          },
+          "customParams": {
+            "type": "object",
+            "example": null,
+            "default": null,
+            "nullable": true
+          },
+          "customSender": {
+            "nullable": true,
+            "default": null,
+            "example": null,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EmailSenderDto"
+              }
+            ]
+          },
+          "bcc": {
+            "nullable": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "companyId",
+          "type",
+          "disabled"
+        ]
+      },
+      "SetCompanyNotificationDto": {
+        "type": "object",
+        "properties": {
+          "disabled": {
+            "type": "boolean",
+            "example": false,
+            "default": false
+          },
+          "customSubject": {
+            "type": "string",
+            "example": null,
+            "default": null,
+            "nullable": true
+          },
+          "customHtmlContent": {
+            "type": "string",
+            "example": null,
+            "default": null,
+            "nullable": true
+          },
+          "customTextContent": {
+            "type": "string",
+            "example": null,
+            "default": null,
+            "nullable": true
+          },
+          "customParams": {
+            "type": "object",
+            "example": null,
+            "default": null,
+            "nullable": true
+          }
+        },
+        "required": [
+          "disabled",
+          "customSubject",
+          "customHtmlContent",
+          "customTextContent",
+          "customParams"
+        ]
+      },
       "SuperAdminCompanySetInfoDto": {
         "type": "object",
         "properties": {
@@ -9606,12 +9885,18 @@
           "disableGasBilling": {
             "type": "boolean",
             "default": false
+          },
+          "sendPassPdf": {
+            "type": "boolean",
+            "default": false,
+            "example": false
           }
         },
         "required": [
           "clientServiceFeePercentage",
           "companyServiceFeePercentage",
-          "disableGasBilling"
+          "disableGasBilling",
+          "sendPassPdf"
         ]
       },
       "CurrencyPaymentProviderEntityDto": {
