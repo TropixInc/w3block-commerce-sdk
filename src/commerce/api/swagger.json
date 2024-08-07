@@ -3830,6 +3830,634 @@
         ]
       }
     },
+    "/companies/{companyId}/users/{userId}/providers": {
+      "get": {
+        "operationId": "listUserPaymentProviders",
+        "summary": "",
+        "description": "Lists available users payment providers",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserPaymentProviderEntityPaginatedDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Users Payment Providers (Used for Resale)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/companies/{companyId}/users/{userId}/providers/check-configured-providers": {
+      "get": {
+        "operationId": "checkUserConfiguredPaymentProviders",
+        "summary": "",
+        "description": "Gets user state of missing/configured required company payment provider",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetConfiguredProvidersResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Users Payment Providers (Used for Resale)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/companies/{companyId}/users/{userId}/providers/stripe": {
+      "patch": {
+        "operationId": "requestUserStripePaymentProvider",
+        "summary": "",
+        "description": "Requests a configuration of Stripe payment provider in the user (needs to be finished with oauth connection)",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConnectOrRefreshStripePaymentProviderDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StripeConnectAccountResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Users Payment Providers (Used for Resale)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/companies/{companyId}/users/{userId}/providers/stripe/finish-connection": {
+      "patch": {
+        "operationId": "finishUserStripePaymentProvider",
+        "summary": "",
+        "description": "Finishes user connection of Stripe payment provider configuration",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserPaymentProviderEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Users Payment Providers (Used for Resale)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/companies/{companyId}/users/{userId}/providers/stripe/refresh-connection": {
+      "patch": {
+        "operationId": "refreshUserStripePaymentProvider",
+        "summary": "",
+        "description": "Refreshes an user stripe payment provider connection",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConnectOrRefreshStripePaymentProviderDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StripeConnectAccountResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Users Payment Providers (Used for Resale)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/companies/{companyId}/users/{userId}/providers/{provider}": {
+      "delete": {
+        "operationId": "deleteUserPaymentProvider",
+        "summary": "",
+        "description": "Deletes some user payment provider configuration",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "provider",
+            "required": true,
+            "in": "path",
+            "example": "pagar_me",
+            "schema": {
+              "$ref": "#/components/schemas/PaymentProviderEnum"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Users Payment Providers (Used for Resale)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/companies/{companyId}/users/{userId}/credit-cards": {
+      "get": {
+        "operationId": "listUserCreditCards",
+        "summary": "",
+        "description": "Lists all available user credit cards",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicUserCreditCardEntityPaginatedDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Users Credit Cards"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      },
+      "post": {
+        "operationId": "saveUserCreditCard",
+        "summary": "",
+        "description": "Saves a new user credit card",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveUserCreditCardDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicUserCreditCardEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Users Credit Cards"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/companies/{companyId}/users/{userId}/credit-cards/{creditCardId}": {
+      "delete": {
+        "operationId": "deleteUserCreditCard",
+        "summary": "",
+        "description": "Deletes some user credit card by its id",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "creditCardId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Users Credit Cards"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
     "/admin/companies/{companyId}/is-enabled": {
       "get": {
         "operationId": "getCompanyWithEnabledState",
@@ -12109,6 +12737,269 @@
           "extraAmount"
         ]
       },
+      "UserPaymentProviderEntityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "paymentProvider": {
+            "example": "stripe",
+            "$ref": "#/components/schemas/PaymentProviderEnum"
+          },
+          "config": {
+            "type": "object",
+            "example": null
+          },
+          "enabled": {
+            "type": "boolean",
+            "default": false,
+            "example": true
+          }
+        },
+        "required": [
+          "id",
+          "userId",
+          "paymentProvider",
+          "enabled"
+        ]
+      },
+      "UserPaymentProviderEntityPaginatedDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/UserPaymentProviderEntityDto"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMetaDto"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinksDto"
+          }
+        },
+        "required": [
+          "items",
+          "meta"
+        ]
+      },
+      "GetConfiguredProvidersResponseDto": {
+        "type": "object",
+        "properties": {
+          "missingProviders": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "pagar_me",
+                "paypal",
+                "transfer",
+                "stripe",
+                "asaas",
+                "crypto",
+                "free",
+                "braza"
+              ]
+            }
+          },
+          "providersEnabledOnCompany": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "pagar_me",
+                "paypal",
+                "transfer",
+                "stripe",
+                "asaas",
+                "crypto",
+                "free",
+                "braza"
+              ]
+            }
+          },
+          "providersConfiguredByUser": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "pagar_me",
+                "paypal",
+                "transfer",
+                "stripe",
+                "asaas",
+                "crypto",
+                "free",
+                "braza"
+              ]
+            }
+          }
+        },
+        "required": [
+          "missingProviders",
+          "providersEnabledOnCompany",
+          "providersConfiguredByUser"
+        ]
+      },
+      "ConnectOrRefreshStripePaymentProviderDto": {
+        "type": "object",
+        "properties": {
+          "successConnectUrl": {
+            "type": "string"
+          },
+          "refreshConnectUrl": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "successConnectUrl",
+          "refreshConnectUrl"
+        ]
+      },
+      "StripeConnectAccountResponseDto": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "url"
+        ]
+      },
+      "PublicUserCreditCardEntityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "brand": {
+            "type": "string"
+          },
+          "lastNumbers": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "lastNumbers"
+        ]
+      },
+      "PublicUserCreditCardEntityPaginatedDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PublicUserCreditCardEntityDto"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMetaDto"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinksDto"
+          }
+        },
+        "required": [
+          "items",
+          "meta"
+        ]
+      },
+      "CreditCardHolderInfoDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "ssn": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "postalCode": {
+            "type": "string",
+            "example": "00000-000"
+          },
+          "address": {
+            "type": "string"
+          },
+          "addressNumber": {
+            "type": "string"
+          },
+          "addressComplement": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "postalCode"
+        ]
+      },
+      "SaveUserCreditCardDto": {
+        "type": "object",
+        "properties": {
+          "currencyId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "65fe1119-6ec0-4b78-8d30-cb989914bdcb"
+          },
+          "number": {
+            "type": "string"
+          },
+          "cvv": {
+            "type": "string"
+          },
+          "expiryMonth": {
+            "type": "number",
+            "example": 1
+          },
+          "expiryYear": {
+            "type": "number",
+            "example": 1
+          },
+          "name": {
+            "type": "string"
+          },
+          "holderInfo": {
+            "$ref": "#/components/schemas/CreditCardHolderInfoDto"
+          }
+        },
+        "required": [
+          "currencyId",
+          "number",
+          "cvv",
+          "expiryMonth",
+          "expiryYear",
+          "holderInfo"
+        ]
+      },
       "CompanyWithEnabledStateResponseDto": {
         "type": "object",
         "properties": {
@@ -12380,32 +13271,6 @@
             "type": "number"
           },
           "successUrl": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "successConnectUrl",
-          "refreshConnectUrl"
-        ]
-      },
-      "StripeConnectAccountResponseDto": {
-        "type": "object",
-        "properties": {
-          "url": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "url"
-        ]
-      },
-      "ConnectOrRefreshStripePaymentProviderDto": {
-        "type": "object",
-        "properties": {
-          "successConnectUrl": {
-            "type": "string"
-          },
-          "refreshConnectUrl": {
             "type": "string"
           }
         },

@@ -842,6 +842,98 @@ export interface CreateProductVariantValueDto {
   extraAmount: string;
 }
 
+export interface UserPaymentProviderEntityDto {
+  /** @format uuid */
+  id: string;
+
+  /** @format date-time */
+  createdAt?: string;
+
+  /** @format date-time */
+  updatedAt?: string;
+
+  /** @format uuid */
+  userId: string;
+
+  /** @example stripe */
+  paymentProvider: PaymentProviderEnum;
+
+  /** @example null */
+  config?: object;
+
+  /** @example true */
+  enabled: boolean;
+}
+
+export interface UserPaymentProviderEntityPaginatedDto {
+  items: UserPaymentProviderEntityDto[];
+  meta: PaginationMetaDto;
+  links?: PaginationLinksDto;
+}
+
+export interface GetConfiguredProvidersResponseDto {
+  missingProviders: ('pagar_me' | 'paypal' | 'transfer' | 'stripe' | 'asaas' | 'crypto' | 'free' | 'braza')[];
+  providersEnabledOnCompany: ('pagar_me' | 'paypal' | 'transfer' | 'stripe' | 'asaas' | 'crypto' | 'free' | 'braza')[];
+  providersConfiguredByUser: ('pagar_me' | 'paypal' | 'transfer' | 'stripe' | 'asaas' | 'crypto' | 'free' | 'braza')[];
+}
+
+export interface ConnectOrRefreshStripePaymentProviderDto {
+  successConnectUrl: string;
+  refreshConnectUrl: string;
+}
+
+export interface StripeConnectAccountResponseDto {
+  url: string;
+}
+
+export interface PublicUserCreditCardEntityDto {
+  /** @format uuid */
+  id: string;
+
+  /** @format date-time */
+  createdAt?: string;
+  brand?: string;
+  lastNumbers: string;
+  name?: string;
+}
+
+export interface PublicUserCreditCardEntityPaginatedDto {
+  items: PublicUserCreditCardEntityDto[];
+  meta: PaginationMetaDto;
+  links?: PaginationLinksDto;
+}
+
+export interface CreditCardHolderInfoDto {
+  name?: string;
+  email?: string;
+  ssn?: string;
+  phone?: string;
+
+  /** @example 00000-000 */
+  postalCode: string;
+  address?: string;
+  addressNumber?: string;
+  addressComplement?: string;
+}
+
+export interface SaveUserCreditCardDto {
+  /**
+   * @format uuid
+   * @example 65fe1119-6ec0-4b78-8d30-cb989914bdcb
+   */
+  currencyId: string;
+  number: string;
+  cvv: string;
+
+  /** @example 1 */
+  expiryMonth: number;
+
+  /** @example 1 */
+  expiryYear: number;
+  name?: string;
+  holderInfo: CreditCardHolderInfoDto;
+}
+
 export interface CompanyWithEnabledStateResponseDto {
   /** @format uuid */
   id: string;
@@ -955,15 +1047,6 @@ export interface CreateStripePaymentProviderDto {
   withoutConnect?: boolean;
   checkoutExpireTime?: number;
   successUrl?: string;
-}
-
-export interface StripeConnectAccountResponseDto {
-  url: string;
-}
-
-export interface ConnectOrRefreshStripePaymentProviderDto {
-  successConnectUrl: string;
-  refreshConnectUrl: string;
 }
 
 export interface CreateAsaasPaymentProviderDto {
@@ -2450,6 +2533,144 @@ export namespace Companies {
    */
   export namespace CancelProductResaleById {
     export type RequestParams = { companyId: string; productId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * @description Lists available users payment providers
+   * @tags Users Payment Providers (Used for Resale)
+   * @name ListUserPaymentProviders
+   * @request GET:/companies/{companyId}/users/{userId}/providers
+   * @secure
+   */
+  export namespace ListUserPaymentProviders {
+    export type RequestParams = { companyId: string; userId: string };
+    export type RequestQuery = {
+      page?: number;
+      limit?: number;
+      search?: string;
+      sortBy?: string;
+      orderBy?: OrderByEnum;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = UserPaymentProviderEntityPaginatedDto;
+  }
+  /**
+   * @description Gets user state of missing/configured required company payment provider
+   * @tags Users Payment Providers (Used for Resale)
+   * @name CheckUserConfiguredPaymentProviders
+   * @request GET:/companies/{companyId}/users/{userId}/providers/check-configured-providers
+   * @secure
+   */
+  export namespace CheckUserConfiguredPaymentProviders {
+    export type RequestParams = { companyId: string; userId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = GetConfiguredProvidersResponseDto;
+  }
+  /**
+   * @description Requests a configuration of Stripe payment provider in the user (needs to be finished with oauth connection)
+   * @tags Users Payment Providers (Used for Resale)
+   * @name RequestUserStripePaymentProvider
+   * @request PATCH:/companies/{companyId}/users/{userId}/providers/stripe
+   * @secure
+   */
+  export namespace RequestUserStripePaymentProvider {
+    export type RequestParams = { companyId: string; userId: string };
+    export type RequestQuery = {};
+    export type RequestBody = ConnectOrRefreshStripePaymentProviderDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = StripeConnectAccountResponseDto;
+  }
+  /**
+   * @description Finishes user connection of Stripe payment provider configuration
+   * @tags Users Payment Providers (Used for Resale)
+   * @name FinishUserStripePaymentProvider
+   * @request PATCH:/companies/{companyId}/users/{userId}/providers/stripe/finish-connection
+   * @secure
+   */
+  export namespace FinishUserStripePaymentProvider {
+    export type RequestParams = { companyId: string; userId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = UserPaymentProviderEntityDto;
+  }
+  /**
+   * @description Refreshes an user stripe payment provider connection
+   * @tags Users Payment Providers (Used for Resale)
+   * @name RefreshUserStripePaymentProvider
+   * @request PATCH:/companies/{companyId}/users/{userId}/providers/stripe/refresh-connection
+   * @secure
+   */
+  export namespace RefreshUserStripePaymentProvider {
+    export type RequestParams = { companyId: string; userId: string };
+    export type RequestQuery = {};
+    export type RequestBody = ConnectOrRefreshStripePaymentProviderDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = StripeConnectAccountResponseDto;
+  }
+  /**
+   * @description Deletes some user payment provider configuration
+   * @tags Users Payment Providers (Used for Resale)
+   * @name DeleteUserPaymentProvider
+   * @request DELETE:/companies/{companyId}/users/{userId}/providers/{provider}
+   * @secure
+   */
+  export namespace DeleteUserPaymentProvider {
+    export type RequestParams = { companyId: string; userId: string; provider: PaymentProviderEnum };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * @description Lists all available user credit cards
+   * @tags Users Credit Cards
+   * @name ListUserCreditCards
+   * @request GET:/companies/{companyId}/users/{userId}/credit-cards
+   * @secure
+   */
+  export namespace ListUserCreditCards {
+    export type RequestParams = { companyId: string; userId: string };
+    export type RequestQuery = {
+      page?: number;
+      limit?: number;
+      search?: string;
+      sortBy?: string;
+      orderBy?: OrderByEnum;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = PublicUserCreditCardEntityPaginatedDto;
+  }
+  /**
+   * @description Saves a new user credit card
+   * @tags Users Credit Cards
+   * @name SaveUserCreditCard
+   * @request POST:/companies/{companyId}/users/{userId}/credit-cards
+   * @secure
+   */
+  export namespace SaveUserCreditCard {
+    export type RequestParams = { companyId: string; userId: string };
+    export type RequestQuery = {};
+    export type RequestBody = SaveUserCreditCardDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = PublicUserCreditCardEntityDto;
+  }
+  /**
+   * @description Deletes some user credit card by its id
+   * @tags Users Credit Cards
+   * @name DeleteUserCreditCard
+   * @request DELETE:/companies/{companyId}/users/{userId}/credit-cards/{creditCardId}
+   * @secure
+   */
+  export namespace DeleteUserCreditCard {
+    export type RequestParams = { companyId: string; userId: string; creditCardId: string };
     export type RequestQuery = {};
     export type RequestBody = never;
     export type RequestHeaders = {};
@@ -5102,6 +5323,190 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<void, void>({
         path: `/companies/${companyId}/products-resale/${productId}/cancel`,
         method: 'PATCH',
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * @description Lists available users payment providers
+     *
+     * @tags Users Payment Providers (Used for Resale)
+     * @name ListUserPaymentProviders
+     * @request GET:/companies/{companyId}/users/{userId}/providers
+     * @secure
+     */
+    listUserPaymentProviders: (
+      companyId: string,
+      userId: string,
+      query?: { page?: number; limit?: number; search?: string; sortBy?: string; orderBy?: OrderByEnum },
+      params: RequestParams = {},
+    ) =>
+      this.request<UserPaymentProviderEntityPaginatedDto, void>({
+        path: `/companies/${companyId}/users/${userId}/providers`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Gets user state of missing/configured required company payment provider
+     *
+     * @tags Users Payment Providers (Used for Resale)
+     * @name CheckUserConfiguredPaymentProviders
+     * @request GET:/companies/{companyId}/users/{userId}/providers/check-configured-providers
+     * @secure
+     */
+    checkUserConfiguredPaymentProviders: (companyId: string, userId: string, params: RequestParams = {}) =>
+      this.request<GetConfiguredProvidersResponseDto, void>({
+        path: `/companies/${companyId}/users/${userId}/providers/check-configured-providers`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Requests a configuration of Stripe payment provider in the user (needs to be finished with oauth connection)
+     *
+     * @tags Users Payment Providers (Used for Resale)
+     * @name RequestUserStripePaymentProvider
+     * @request PATCH:/companies/{companyId}/users/{userId}/providers/stripe
+     * @secure
+     */
+    requestUserStripePaymentProvider: (
+      companyId: string,
+      userId: string,
+      data: ConnectOrRefreshStripePaymentProviderDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<StripeConnectAccountResponseDto, void>({
+        path: `/companies/${companyId}/users/${userId}/providers/stripe`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Finishes user connection of Stripe payment provider configuration
+     *
+     * @tags Users Payment Providers (Used for Resale)
+     * @name FinishUserStripePaymentProvider
+     * @request PATCH:/companies/{companyId}/users/{userId}/providers/stripe/finish-connection
+     * @secure
+     */
+    finishUserStripePaymentProvider: (companyId: string, userId: string, params: RequestParams = {}) =>
+      this.request<UserPaymentProviderEntityDto, void>({
+        path: `/companies/${companyId}/users/${userId}/providers/stripe/finish-connection`,
+        method: 'PATCH',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Refreshes an user stripe payment provider connection
+     *
+     * @tags Users Payment Providers (Used for Resale)
+     * @name RefreshUserStripePaymentProvider
+     * @request PATCH:/companies/{companyId}/users/{userId}/providers/stripe/refresh-connection
+     * @secure
+     */
+    refreshUserStripePaymentProvider: (
+      companyId: string,
+      userId: string,
+      data: ConnectOrRefreshStripePaymentProviderDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<StripeConnectAccountResponseDto, void>({
+        path: `/companies/${companyId}/users/${userId}/providers/stripe/refresh-connection`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Deletes some user payment provider configuration
+     *
+     * @tags Users Payment Providers (Used for Resale)
+     * @name DeleteUserPaymentProvider
+     * @request DELETE:/companies/{companyId}/users/{userId}/providers/{provider}
+     * @secure
+     */
+    deleteUserPaymentProvider: (
+      companyId: string,
+      userId: string,
+      provider: PaymentProviderEnum,
+      params: RequestParams = {},
+    ) =>
+      this.request<void, void>({
+        path: `/companies/${companyId}/users/${userId}/providers/${provider}`,
+        method: 'DELETE',
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * @description Lists all available user credit cards
+     *
+     * @tags Users Credit Cards
+     * @name ListUserCreditCards
+     * @request GET:/companies/{companyId}/users/{userId}/credit-cards
+     * @secure
+     */
+    listUserCreditCards: (
+      companyId: string,
+      userId: string,
+      query?: { page?: number; limit?: number; search?: string; sortBy?: string; orderBy?: OrderByEnum },
+      params: RequestParams = {},
+    ) =>
+      this.request<PublicUserCreditCardEntityPaginatedDto, void>({
+        path: `/companies/${companyId}/users/${userId}/credit-cards`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Saves a new user credit card
+     *
+     * @tags Users Credit Cards
+     * @name SaveUserCreditCard
+     * @request POST:/companies/{companyId}/users/{userId}/credit-cards
+     * @secure
+     */
+    saveUserCreditCard: (companyId: string, userId: string, data: SaveUserCreditCardDto, params: RequestParams = {}) =>
+      this.request<PublicUserCreditCardEntityDto, void>({
+        path: `/companies/${companyId}/users/${userId}/credit-cards`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Deletes some user credit card by its id
+     *
+     * @tags Users Credit Cards
+     * @name DeleteUserCreditCard
+     * @request DELETE:/companies/{companyId}/users/{userId}/credit-cards/{creditCardId}
+     * @secure
+     */
+    deleteUserCreditCard: (companyId: string, userId: string, creditCardId: string, params: RequestParams = {}) =>
+      this.request<void, void>({
+        path: `/companies/${companyId}/users/${userId}/credit-cards/${creditCardId}`,
+        method: 'DELETE',
         secure: true,
         ...params,
       }),
