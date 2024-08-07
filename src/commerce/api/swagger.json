@@ -14,9 +14,38 @@
             }
           },
           {
+            "name": "createdAt",
+            "required": false,
+            "in": "query",
+            "example": "2022-01-30T10:30:40-03:00",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          },
+          {
             "name": "page",
             "required": false,
             "in": "query",
+            "example": 1,
             "schema": {
               "default": 1,
               "type": "number"
@@ -26,6 +55,7 @@
             "name": "limit",
             "required": false,
             "in": "query",
+            "example": 10,
             "schema": {
               "default": 10,
               "type": "number"
@@ -37,23 +67,6 @@
             "in": "query",
             "schema": {
               "type": "string"
-            }
-          },
-          {
-            "name": "sortBy",
-            "required": false,
-            "in": "query",
-            "example": "createdAt",
-            "schema": {
-              "$ref": "#/components/schemas/OrderSortByEnum"
-            }
-          },
-          {
-            "name": "orderBy",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/OrderByEnum"
             }
           },
           {
@@ -147,6 +160,108 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Orders"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/companies/{companyId}/orders/usage-report": {
+      "get": {
+        "operationId": "getUsageReport",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "createdAt",
+            "required": false,
+            "in": "query",
+            "example": "2022-01-30T10:30:40-03:00",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "example": [
+              "pending"
+            ],
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "pending",
+                  "confirming_payment",
+                  "waiting_delivery",
+                  "delivering",
+                  "concluded",
+                  "failed",
+                  "cancelled",
+                  "partially_cancelled",
+                  "expired"
+                ]
+              }
+            }
+          },
+          {
+            "name": "currencyId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
           },
           "401": {
             "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
@@ -287,6 +402,178 @@
         ]
       }
     },
+    "/companies/{companyId}/orders/get-by-deliver-id/{deliverId}": {
+      "get": {
+        "operationId": "getPublicOrderByDeliverId",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "deliverId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Orders"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/companies/{companyId}/orders/get-by-kyc-user-context-id/{kycUserContextId}": {
+      "get": {
+        "operationId": "getByKycUserContextId",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "kycUserContextId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fetchNewestStatus",
+            "required": false,
+            "in": "query",
+            "example": false,
+            "description": "Use this attribute to force fetching the newest status available based on payment driver used.",
+            "schema": {
+              "default": false,
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Orders"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/companies/{companyId}/orders/{orderId}/pay": {
+      "patch": {
+        "operationId": "payOrder",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PayOrderDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Orders"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
     "/admin/companies/{companyId}/orders": {
       "get": {
         "operationId": "listOrders",
@@ -302,9 +589,38 @@
             }
           },
           {
+            "name": "createdAt",
+            "required": false,
+            "in": "query",
+            "example": "2022-01-30T10:30:40-03:00",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          },
+          {
             "name": "page",
             "required": false,
             "in": "query",
+            "example": 1,
             "schema": {
               "default": 1,
               "type": "number"
@@ -314,6 +630,7 @@
             "name": "limit",
             "required": false,
             "in": "query",
+            "example": 10,
             "schema": {
               "default": 10,
               "type": "number"
@@ -328,12 +645,171 @@
             }
           },
           {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "example": [
+              "pending"
+            ],
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "pending",
+                  "confirming_payment",
+                  "waiting_delivery",
+                  "delivering",
+                  "concluded",
+                  "failed",
+                  "cancelled",
+                  "partially_cancelled",
+                  "expired"
+                ]
+              }
+            }
+          },
+          {
+            "name": "createdFrom",
+            "required": false,
+            "in": "query",
+            "example": null,
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "createdUntil",
+            "required": false,
+            "in": "query",
+            "example": null,
+            "schema": {
+              "format": "date-time",
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "currencyId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "paymentMethod",
+            "required": false,
+            "in": "query",
+            "example": "pix",
+            "schema": {
+              "$ref": "#/components/schemas/PaymentMethodEnum"
+            }
+          },
+          {
+            "name": "paymentProvider",
+            "required": false,
+            "in": "query",
+            "example": "stripe",
+            "schema": {
+              "$ref": "#/components/schemas/PaymentProviderEnum"
+            }
+          },
+          {
+            "name": "utmCampaign",
+            "required": false,
+            "in": "query",
+            "example": "super_sales",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "productId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderEntityPaginatedDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Orders (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/admin/companies/{companyId}/orders/xls": {
+      "get": {
+        "operationId": "requestCompanyOrdersExportGeneration",
+        "summary": "",
+        "description": "Requests an order exports XLS based on listing params",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "createdAt",
+            "required": false,
+            "in": "query",
+            "example": "2022-01-30T10:30:40-03:00",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
             "name": "sortBy",
             "required": false,
             "in": "query",
-            "example": "createdAt",
             "schema": {
-              "$ref": "#/components/schemas/OrderSortByEnum"
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
             }
           },
           {
@@ -445,12 +921,12 @@
           }
         ],
         "responses": {
-          "200": {
+          "201": {
             "description": "",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/OrderEntityPaginatedDto"
+                  "$ref": "#/components/schemas/ExportEntityDto"
                 }
               }
             }
@@ -901,6 +1377,534 @@
         },
         "tags": [
           "Order Documents (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/admin/companies/{companyId}/order-products": {
+      "get": {
+        "operationId": "listOrderProducts",
+        "summary": "",
+        "description": "List order products",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "createdAt",
+            "required": false,
+            "in": "query",
+            "example": "2022-01-30T10:30:40-03:00",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "example": 1,
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "example": 10,
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "example": [
+              "pending"
+            ],
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "pending",
+                  "confirming_payment",
+                  "waiting_delivery",
+                  "delivering",
+                  "concluded",
+                  "failed",
+                  "cancelled",
+                  "partially_cancelled",
+                  "expired"
+                ]
+              }
+            }
+          },
+          {
+            "name": "userId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "currencyId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "paymentMethod",
+            "required": false,
+            "in": "query",
+            "example": "pix",
+            "schema": {
+              "$ref": "#/components/schemas/PaymentMethodEnum"
+            }
+          },
+          {
+            "name": "paymentProvider",
+            "required": false,
+            "in": "query",
+            "example": "stripe",
+            "schema": {
+              "$ref": "#/components/schemas/PaymentProviderEnum"
+            }
+          },
+          {
+            "name": "utmCampaign",
+            "required": false,
+            "in": "query",
+            "example": "super_sales",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "productId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Order Products (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/admin/companies/{companyId}/order-products/xls": {
+      "get": {
+        "operationId": "requestCompanyOrderProductsExportGeneration",
+        "summary": "",
+        "description": "Requests an order products export XLS based on listing params",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "createdAt",
+            "required": false,
+            "in": "query",
+            "example": "2022-01-30T10:30:40-03:00",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "example": [
+              "pending"
+            ],
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "pending",
+                  "confirming_payment",
+                  "waiting_delivery",
+                  "delivering",
+                  "concluded",
+                  "failed",
+                  "cancelled",
+                  "partially_cancelled",
+                  "expired"
+                ]
+              }
+            }
+          },
+          {
+            "name": "userId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "currencyId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "paymentMethod",
+            "required": false,
+            "in": "query",
+            "example": "pix",
+            "schema": {
+              "$ref": "#/components/schemas/PaymentMethodEnum"
+            }
+          },
+          {
+            "name": "paymentProvider",
+            "required": false,
+            "in": "query",
+            "example": "stripe",
+            "schema": {
+              "$ref": "#/components/schemas/PaymentProviderEnum"
+            }
+          },
+          {
+            "name": "utmCampaign",
+            "required": false,
+            "in": "query",
+            "example": "super_sales",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "productId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExportEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Order Products (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/super-admin/orders/xls": {
+      "get": {
+        "operationId": "requestSystemOrdersExportGeneration",
+        "summary": "",
+        "description": "Requests an order exports XLS for all tenants based on listing params",
+        "parameters": [
+          {
+            "name": "createdAt",
+            "required": false,
+            "in": "query",
+            "example": "2022-01-30T10:30:40-03:00",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          },
+          {
+            "name": "status",
+            "required": false,
+            "in": "query",
+            "example": [
+              "pending"
+            ],
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "pending",
+                  "confirming_payment",
+                  "waiting_delivery",
+                  "delivering",
+                  "concluded",
+                  "failed",
+                  "cancelled",
+                  "partially_cancelled",
+                  "expired"
+                ]
+              }
+            }
+          },
+          {
+            "name": "userId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "currencyId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "paymentMethod",
+            "required": false,
+            "in": "query",
+            "example": "pix",
+            "schema": {
+              "$ref": "#/components/schemas/PaymentMethodEnum"
+            }
+          },
+          {
+            "name": "paymentProvider",
+            "required": false,
+            "in": "query",
+            "example": "stripe",
+            "schema": {
+              "$ref": "#/components/schemas/PaymentProviderEnum"
+            }
+          },
+          {
+            "name": "utmCampaign",
+            "required": false,
+            "in": "query",
+            "example": "super_sales",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "productId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "excludeSandboxes",
+            "required": false,
+            "in": "query",
+            "example": true,
+            "schema": {
+              "default": true,
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExportEntityDto"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Orders (Super Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/super-admin/orders/dispatch-order-event": {
+      "post": {
+        "operationId": "dispatchSystemOrderEvent",
+        "summary": "",
+        "description": "Dispatches an order system event that will be used to execute some system functionalities",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DispatchOrderEventDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Orders (Super Admin)"
         ],
         "security": [
           {
@@ -3484,7 +4488,7 @@
       "get": {
         "operationId": "getCompanyNotificationConfig",
         "summary": "",
-        "description": "Gets some company notification config by its type",
+        "description": "Gets some email company notification config by its type",
         "parameters": [
           {
             "name": "companyId",
@@ -3540,7 +4544,7 @@
       "patch": {
         "operationId": "setCompanyNotificationConfig",
         "summary": "",
-        "description": "Sets some company notification config by its type",
+        "description": "Sets some company notification email config by its type",
         "parameters": [
           {
             "name": "companyId",
@@ -3577,6 +4581,498 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/CompanyNotificationEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Companies (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/admin/companies/{companyId}/split-configurations": {
+      "get": {
+        "operationId": "listCompanySplitConfigurations",
+        "summary": "",
+        "description": "Lists all company split configuration rules",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "createdAt",
+            "required": false,
+            "in": "query",
+            "example": "2022-01-30T10:30:40-03:00",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "example": 1,
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "example": 10,
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "type",
+            "required": false,
+            "in": "query",
+            "example": [
+              "product_price"
+            ],
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "client_service_fee",
+                  "company_service_fee",
+                  "resale_fee",
+                  "gas_fee",
+                  "product_price"
+                ]
+              }
+            }
+          },
+          {
+            "name": "paymentProvider",
+            "required": false,
+            "in": "query",
+            "example": [
+              "asaas"
+            ],
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "pagar_me",
+                  "paypal",
+                  "transfer",
+                  "stripe",
+                  "asaas",
+                  "crypto",
+                  "free",
+                  "braza"
+                ]
+              }
+            }
+          },
+          {
+            "name": "paymentMethod",
+            "required": false,
+            "in": "query",
+            "example": [
+              "pix"
+            ],
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "credit_card",
+                  "debit_card",
+                  "pix",
+                  "crypto",
+                  "transfer",
+                  "billet"
+                ]
+              }
+            }
+          },
+          {
+            "name": "contractAddress",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "productId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "userId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompanySplitConfigurationEntityPaginatedDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Companies (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      },
+      "post": {
+        "operationId": "createCompanySplitConfiguration",
+        "summary": "",
+        "description": "Creates a new company split configuration rule",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCompanySplitConfigurationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompanySplitConfigurationEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Companies (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/admin/companies/{companyId}/split-configurations/{id}": {
+      "get": {
+        "operationId": "getCompanySplitConfigurationById",
+        "summary": "",
+        "description": "Gets some company split configuration rule by its id",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompanySplitConfigurationEntityWithCorrelatedDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Companies (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "updateCompanySplitConfiguration",
+        "summary": "",
+        "description": "Updates some company split configuration rule",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateCompanySplitConfigurationDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CompanySplitConfigurationEntityWithCorrelatedDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Companies (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "deleteCompanySplitConfiguration",
+        "summary": "",
+        "description": "Deletes some company split configuration rule",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Companies (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/admin/companies/{companyId}/split-configurations/{id}/correlated-configurations": {
+      "get": {
+        "operationId": "getCorrelatedSplitConfigurations",
+        "summary": "",
+        "description": "Gets some company split configuration correlated rules",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CorrelatedSplitConfigurationsResponseDto"
                 }
               }
             }
@@ -4787,6 +6283,269 @@
         ]
       }
     },
+    "/companies/{companyId}/referral/check-can-create": {
+      "get": {
+        "operationId": "canCreateReferralCoupon",
+        "summary": "",
+        "description": "Checks if user can create a referral coupon for some product id",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "productId",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "format": "uuid",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckCanCreateReferralResponseDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "User Referral Coupons"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/companies/{companyId}/referral": {
+      "get": {
+        "operationId": "listUserReferralCoupons",
+        "summary": "",
+        "description": "Lists all user company referral coupons",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReferralPromotionEntityPaginatedDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "User Referral Coupons"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      },
+      "post": {
+        "operationId": "activateUserReferralCoupon",
+        "summary": "",
+        "description": "Activates a new user referral coupon based on some company product",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActivateUserReferralPromotionDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReferralPromotionEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "User Referral Coupons"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/companies/{companyId}/referral/{productId}": {
+      "get": {
+        "operationId": "getUserReferralCoupon",
+        "summary": "",
+        "description": "Gets some user company referral coupon by product id",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "productId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ReferralPromotionEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "User Referral Coupons"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
     "/admin/companies/{companyId}/promotions": {
       "get": {
         "operationId": "listPromotions",
@@ -5794,6 +7553,645 @@
         },
         "tags": [
           "Companies Promotions (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/admin/companies/{companyId}/rewards": {
+      "get": {
+        "operationId": "listRewards",
+        "summary": "",
+        "description": "Lists all company rewards",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RewardEntityPaginatedDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Companies Rewards (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      },
+      "post": {
+        "operationId": "createReward",
+        "summary": "",
+        "description": "Creates a new company reward",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateRewardDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RewardEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Companies Rewards (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/admin/companies/{companyId}/rewards/{rewardId}": {
+      "get": {
+        "operationId": "getReward",
+        "summary": "",
+        "description": "Gets some company reward by id",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "rewardId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RewardEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Companies Rewards (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      },
+      "patch": {
+        "operationId": "updateReward",
+        "summary": "",
+        "description": "Updates some company reward",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "rewardId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateRewardDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RewardEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Companies Rewards (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "deleteReward",
+        "summary": "",
+        "description": "Deletes some company reward",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "rewardId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Companies Rewards (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/admin/companies/{companyId}/rewards/{rewardId}/activate": {
+      "patch": {
+        "operationId": "activateRewardById",
+        "summary": "",
+        "description": "Activates some company reward by id",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "rewardId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RewardEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Companies Rewards (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/admin/companies/{companyId}/rewards/{rewardId}/deactivate": {
+      "patch": {
+        "operationId": "deactivateRewardById",
+        "summary": "",
+        "description": "Deactivates some company reward by id",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "rewardId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RewardEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Companies Rewards (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/admin/companies/{companyId}/exports": {
+      "get": {
+        "operationId": "listCompanyExports",
+        "summary": "",
+        "description": "Lists all company exports",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExportEntityPaginatedDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Exports (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/admin/companies/{companyId}/exports/{exportId}": {
+      "get": {
+        "operationId": "getCompanyExport",
+        "summary": "",
+        "description": "Gets some specific company export by its ID",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "exportId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExportEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Exports (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/admin/companies/{companyId}/exports/generate/orders": {
+      "post": {
+        "operationId": "requestCompanyOrdersExport",
+        "summary": "",
+        "description": "Requests an order exports XLS based on some params",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OrdersAdminExportDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExportEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Exports (Admin)"
         ],
         "security": [
           {
@@ -6902,6 +9300,81 @@
         ]
       }
     },
+    "/admin/companies/{companyId}/projects/{projectId}/pages/{pageId}/duplicate": {
+      "patch": {
+        "operationId": "duplicateCompanyProjectPageById",
+        "summary": "",
+        "description": "Duplicates some company project page by id",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "projectId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "pageId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DuplicateProjectPageRequestDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectPageEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Projects (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
     "/globals/component-modules": {
       "get": {
         "operationId": "listComponentModules",
@@ -7207,213 +9680,6 @@
         },
         "tags": [
           "Projects"
-        ],
-        "security": [
-          {
-            "bearer": []
-          },
-          {
-            "x-w3block-api-key": []
-          },
-          {
-            "x-w3block-id": []
-          },
-          {
-            "x-w3block-secret": []
-          }
-        ]
-      }
-    },
-    "/admin/companies/{companyId}/exports": {
-      "get": {
-        "operationId": "listCompanyExports",
-        "summary": "",
-        "description": "Lists all company exports",
-        "parameters": [
-          {
-            "name": "companyId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "page",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "default": 1,
-              "type": "number"
-            }
-          },
-          {
-            "name": "limit",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "default": 10,
-              "type": "number"
-            }
-          },
-          {
-            "name": "search",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "sortBy",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "orderBy",
-            "required": false,
-            "in": "query",
-            "schema": {
-              "$ref": "#/components/schemas/OrderByEnum"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ExportEntityPaginatedDto"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
-          }
-        },
-        "tags": [
-          "Exports (Admin)"
-        ],
-        "security": [
-          {
-            "bearer": []
-          },
-          {
-            "x-w3block-api-key": []
-          },
-          {
-            "x-w3block-id": []
-          },
-          {
-            "x-w3block-secret": []
-          }
-        ]
-      }
-    },
-    "/admin/companies/{companyId}/exports/{exportId}": {
-      "get": {
-        "operationId": "getCompanyExport",
-        "summary": "",
-        "description": "Gets some specific company export by its ID",
-        "parameters": [
-          {
-            "name": "companyId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "exportId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ExportEntityDto"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
-          }
-        },
-        "tags": [
-          "Exports (Admin)"
-        ],
-        "security": [
-          {
-            "bearer": []
-          },
-          {
-            "x-w3block-api-key": []
-          },
-          {
-            "x-w3block-id": []
-          },
-          {
-            "x-w3block-secret": []
-          }
-        ]
-      }
-    },
-    "/admin/companies/{companyId}/exports/generate/orders": {
-      "post": {
-        "operationId": "requestCompanyOrdersExportGeneration",
-        "summary": "",
-        "description": "Requests an order exports XLS based on some params",
-        "parameters": [
-          {
-            "name": "companyId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ExportOrdersDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ExportEntityDto"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
-          }
-        },
-        "tags": [
-          "Exports (Admin)"
         ],
         "security": [
           {
@@ -8245,7 +10511,7 @@
   "info": {
     "title": "commerce-backend",
     "description": "",
-    "version": "2.23.0",
+    "version": "2.43.4",
     "contact": {}
   },
   "tags": [],
@@ -8286,13 +10552,6 @@
       }
     },
     "schemas": {
-      "OrderSortByEnum": {
-        "type": "string",
-        "enum": [
-          "createdAt",
-          "updatedAt"
-        ]
-      },
       "OrderByEnum": {
         "type": "string",
         "enum": [
@@ -8363,14 +10622,6 @@
         "type": "object",
         "properties": {}
       },
-      "CurrencyEntity": {
-        "type": "object",
-        "properties": {}
-      },
-      "OrderProductEntity": {
-        "type": "object",
-        "properties": {}
-      },
       "OrderStatus": {
         "type": "string",
         "enum": [
@@ -8385,28 +10636,13 @@
           "expired"
         ]
       },
-      "PaymentProvider": {
-        "type": "string",
-        "enum": [
-          "pagar_me",
-          "paypal",
-          "transfer",
-          "stripe",
-          "asaas",
-          "crypto",
-          "free"
-        ]
+      "OrderProductEntity": {
+        "type": "object",
+        "properties": {}
       },
-      "PaymentMethodEnum": {
-        "type": "string",
-        "enum": [
-          "credit_card",
-          "debit_card",
-          "pix",
-          "crypto",
-          "transfer",
-          "billet"
-        ]
+      "PaymentEntity": {
+        "type": "object",
+        "properties": {}
       },
       "OrderEntityDto": {
         "type": "object",
@@ -8447,47 +10683,10 @@
           "address": {
             "$ref": "#/components/schemas/AddressEntity"
           },
-          "currencyId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "currency": {
-            "$ref": "#/components/schemas/CurrencyEntity"
-          },
-          "currencyAmount": {
-            "type": "string"
-          },
-          "currencyAmountDiscount": {
-            "type": "string"
-          },
-          "products": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/OrderProductEntity"
-            }
-          },
           "status": {
             "default": "pending",
             "example": "pending",
             "$ref": "#/components/schemas/OrderStatus"
-          },
-          "paymentProvider": {
-            "example": "pagar_me",
-            "$ref": "#/components/schemas/PaymentProvider"
-          },
-          "providerTransactionId": {
-            "type": "object",
-            "example": "za_1012skak1"
-          },
-          "paymentMethod": {
-            "example": "credit_card",
-            "$ref": "#/components/schemas/PaymentMethodEnum"
-          },
-          "paymentInfo": {
-            "type": "object",
-            "example": {
-              "paymentUrl": "https://example.com/order/1/pay"
-            }
           },
           "deliverDate": {
             "format": "date-time",
@@ -8497,20 +10696,21 @@
             "format": "date-time",
             "type": "string"
           },
-          "gasFee": {
-            "type": "string"
+          "deliverId": {
+            "type": "string",
+            "example": "B61JHC"
           },
-          "clientServiceFee": {
-            "type": "string"
+          "products": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderProductEntity"
+            }
           },
-          "totalAmount": {
-            "type": "string"
-          },
-          "originalCurrencyAmount": {
-            "type": "string"
-          },
-          "originalTotalAmount": {
-            "type": "string"
+          "payments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PaymentEntity"
+            }
           }
         },
         "required": [
@@ -8519,17 +10719,9 @@
           "userId",
           "destinationWalletAddress",
           "addressId",
-          "currencyId",
-          "currencyAmount",
-          "currencyAmountDiscount",
-          "products",
           "status",
-          "paymentInfo",
-          "gasFee",
-          "clientServiceFee",
-          "totalAmount",
-          "originalCurrencyAmount",
-          "originalTotalAmount"
+          "products",
+          "payments"
         ]
       },
       "OrderEntityPaginatedDto": {
@@ -8553,6 +10745,23 @@
           "meta"
         ]
       },
+      "OrderProductExpectedPriceDto": {
+        "type": "object",
+        "properties": {
+          "currencyId": {
+            "type": "string",
+            "example": "65fe1119-6ec0-4b78-8d30-cb989914bdcb"
+          },
+          "expectedPrice": {
+            "type": "string",
+            "example": "100"
+          }
+        },
+        "required": [
+          "currencyId",
+          "expectedPrice"
+        ]
+      },
       "OrderProductDto": {
         "type": "object",
         "properties": {
@@ -8574,14 +10783,113 @@
               "format": "uuid"
             }
           },
+          "quantity": {
+            "type": "string",
+            "example": "1",
+            "default": "1"
+          },
           "expectedPrice": {
             "type": "string",
-            "example": "100"
+            "example": "100",
+            "deprecated": true
+          },
+          "expectedPrices": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderProductExpectedPriceDto"
+            }
           }
         },
         "required": [
           "productId",
-          "expectedPrice"
+          "expectedPrices"
+        ]
+      },
+      "MultiPaymentSelectionAmountTypeEnum": {
+        "type": "string",
+        "enum": [
+          "percentage",
+          "all_remaining",
+          "fixed"
+        ]
+      },
+      "PaymentMethodEnum": {
+        "type": "string",
+        "enum": [
+          "credit_card",
+          "debit_card",
+          "pix",
+          "crypto",
+          "transfer",
+          "billet"
+        ]
+      },
+      "PaymentProviderEnum": {
+        "type": "string",
+        "enum": [
+          "pagar_me",
+          "paypal",
+          "transfer",
+          "stripe",
+          "asaas",
+          "crypto",
+          "free",
+          "braza"
+        ]
+      },
+      "OrderMultiPaymentSelectionDto": {
+        "type": "object",
+        "properties": {
+          "currencyId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "65fe1119-6ec0-4b78-8d30-cb989914bdcb"
+          },
+          "amountType": {
+            "example": "percentage",
+            "$ref": "#/components/schemas/MultiPaymentSelectionAmountTypeEnum"
+          },
+          "amount": {
+            "type": "string",
+            "example": "100"
+          },
+          "paymentMethod": {
+            "example": "pix",
+            "$ref": "#/components/schemas/PaymentMethodEnum"
+          },
+          "paymentProvider": {
+            "example": "stripe",
+            "$ref": "#/components/schemas/PaymentProviderEnum"
+          },
+          "providerInputs": {
+            "type": "object",
+            "example": {
+              "ssn": "659.315.680-93",
+              "save_credit_card": true,
+              "save_credit_card_name": "My Credit Card"
+            }
+          }
+        },
+        "required": [
+          "currencyId",
+          "amountType",
+          "amount"
+        ]
+      },
+      "OrderSignedGasFeeDto": {
+        "type": "object",
+        "properties": {
+          "currencyId": {
+            "type": "string",
+            "example": "65fe1119-6ec0-4b78-8d30-cb989914bdcb"
+          },
+          "signedGasFee": {
+            "type": "string",
+            "example": "===812hgsahbncva"
+          }
+        },
+        "required": [
+          "currencyId"
         ]
       },
       "UtmParamsDto": {
@@ -8609,18 +10917,6 @@
           }
         }
       },
-      "PaymentProviderEnum": {
-        "type": "string",
-        "enum": [
-          "pagar_me",
-          "paypal",
-          "transfer",
-          "stripe",
-          "asaas",
-          "crypto",
-          "free"
-        ]
-      },
       "CreateOrderDto": {
         "type": "object",
         "properties": {
@@ -8630,39 +10926,33 @@
               "$ref": "#/components/schemas/OrderProductDto"
             }
           },
-          "currencyId": {
-            "type": "string",
-            "example": "65fe1119-6ec0-4b78-8d30-cb989914bdcb"
-          },
           "addressId": {
             "type": "string",
+            "format": "uuid",
             "example": null
           },
           "destinationWalletAddress": {
             "type": "string",
             "example": "0xd3304183ec1fa687e380b67419875f97f1db05f5"
           },
+          "destinationUserId": {
+            "type": "string",
+            "format": "uuid"
+          },
           "signedGasFee": {
             "type": "string",
-            "example": "===812hgsahbncva"
+            "example": "===812hgsahbncva",
+            "deprecated": true
+          },
+          "signedGasFees": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderSignedGasFeeDto"
+            }
           },
           "successUrl": {
             "type": "string",
             "example": "https://domain.com"
-          },
-          "paymentMethod": {
-            "example": "pix",
-            "$ref": "#/components/schemas/PaymentMethodEnum"
-          },
-          "paymentProvider": {
-            "example": "stripe",
-            "$ref": "#/components/schemas/PaymentProviderEnum"
-          },
-          "providerInputs": {
-            "type": "object",
-            "example": {
-              "ssn": "659.315.680-93"
-            }
           },
           "utmParams": {
             "$ref": "#/components/schemas/UtmParamsDto"
@@ -8670,11 +10960,51 @@
           "couponCode": {
             "type": "string",
             "example": "coupon-code"
+          },
+          "currencyId": {
+            "type": "string",
+            "example": "65fe1119-6ec0-4b78-8d30-cb989914bdcb",
+            "deprecated": true
+          },
+          "paymentMethod": {
+            "example": "pix",
+            "deprecated": true,
+            "$ref": "#/components/schemas/PaymentMethodEnum"
+          },
+          "paymentProvider": {
+            "example": "stripe",
+            "deprecated": true,
+            "$ref": "#/components/schemas/PaymentProviderEnum"
+          },
+          "providerInputs": {
+            "type": "object",
+            "example": {
+              "ssn": "659.315.680-93",
+              "save_credit_card": true,
+              "save_credit_card_name": "My Credit Card"
+            },
+            "deprecated": true
+          },
+          "payments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderMultiPaymentSelectionDto"
+            }
+          },
+          "acceptSimilarOrderInShortPeriod": {
+            "type": "object",
+            "example": false,
+            "default": false,
+            "description": "When some user tries to create two similar orders in a short period of time, we consider it as an interaction error. Sending this value as true will skip this check and proceed with order creation"
+          },
+          "passShareCodeData": {
+            "type": "object"
           }
         },
         "required": [
           "orderProducts",
-          "currencyId"
+          "signedGasFees",
+          "payments"
         ]
       },
       "OrderProductPreviewDto": {
@@ -8697,10 +11027,42 @@
               "type": "string",
               "format": "uuid"
             }
+          },
+          "quantity": {
+            "type": "string",
+            "example": "1",
+            "default": "1"
           }
         },
         "required": [
           "productId"
+        ]
+      },
+      "OrderPreviewMultiPaymentSelectionDto": {
+        "type": "object",
+        "properties": {
+          "currencyId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "65fe1119-6ec0-4b78-8d30-cb989914bdcb"
+          },
+          "amountType": {
+            "example": "percentage",
+            "$ref": "#/components/schemas/MultiPaymentSelectionAmountTypeEnum"
+          },
+          "amount": {
+            "type": "string",
+            "example": "100"
+          },
+          "paymentMethod": {
+            "example": "pix",
+            "$ref": "#/components/schemas/PaymentMethodEnum"
+          }
+        },
+        "required": [
+          "currencyId",
+          "amountType",
+          "amount"
         ]
       },
       "OrderPreviewDto": {
@@ -8711,14 +11073,6 @@
             "items": {
               "$ref": "#/components/schemas/OrderProductPreviewDto"
             }
-          },
-          "currencyId": {
-            "type": "string",
-            "example": "65fe1119-6ec0-4b78-8d30-cb989914bdcb"
-          },
-          "paymentMethod": {
-            "example": "pix",
-            "$ref": "#/components/schemas/PaymentMethodEnum"
           },
           "acceptIncompleteCart": {
             "type": "object",
@@ -8732,23 +11086,55 @@
           "destinationWalletAddress": {
             "type": "string",
             "example": "0xd3304183ec1fa687e380b67419875f97f1db05f5"
+          },
+          "destinationUserId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "currencyId": {
+            "type": "string",
+            "example": "65fe1119-6ec0-4b78-8d30-cb989914bdcb",
+            "deprecated": true
+          },
+          "paymentMethod": {
+            "example": "pix",
+            "deprecated": true,
+            "$ref": "#/components/schemas/PaymentMethodEnum"
+          },
+          "anchorPaymentsCurrencyId": {
+            "type": "string",
+            "format": "uuid",
+            "example": "65fe1119-6ec0-4b78-8d30-cb989914bdcb",
+            "default": null
+          },
+          "payments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderPreviewMultiPaymentSelectionDto"
+            }
           }
         },
         "required": [
           "orderProducts",
-          "currencyId"
+          "payments"
         ]
       },
-      "CreateOrderDocumentDto": {
+      "PayOrderDto": {
         "type": "object",
         "properties": {
-          "assetId": {
+          "payments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrderMultiPaymentSelectionDto"
+            }
+          },
+          "successUrl": {
             "type": "string",
-            "format": "uuid"
+            "example": "https://domain.com"
           }
         },
         "required": [
-          "assetId"
+          "payments"
         ]
       },
       "CompanyEntityDto": {
@@ -8772,6 +11158,178 @@
         },
         "required": [
           "id"
+        ]
+      },
+      "AssetTypeEnum": {
+        "type": "string",
+        "enum": [
+          "image",
+          "video",
+          "document"
+        ]
+      },
+      "AssetStatusEnum": {
+        "type": "string",
+        "enum": [
+          "waiting_upload",
+          "waiting_association",
+          "associated",
+          "excluded",
+          "expired"
+        ]
+      },
+      "AssetProviderEnum": {
+        "type": "string",
+        "enum": [
+          "cloudinary"
+        ]
+      },
+      "AssetTargetEnum": {
+        "type": "string",
+        "enum": [
+          "product",
+          "order_document",
+          "refund",
+          "storefront_page",
+          "storefront_theme",
+          "export"
+        ]
+      },
+      "AssetEntityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "companyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "company": {
+            "$ref": "#/components/schemas/CompanyEntityDto"
+          },
+          "type": {
+            "example": "image",
+            "$ref": "#/components/schemas/AssetTypeEnum"
+          },
+          "status": {
+            "example": "associated",
+            "$ref": "#/components/schemas/AssetStatusEnum"
+          },
+          "provider": {
+            "example": "cloudinary",
+            "$ref": "#/components/schemas/AssetProviderEnum"
+          },
+          "directLink": {
+            "type": "string",
+            "example": "https://dummyimage.com/200x200/fff/000"
+          },
+          "target": {
+            "example": "product",
+            "nullable": true,
+            "$ref": "#/components/schemas/AssetTargetEnum"
+          }
+        },
+        "required": [
+          "id",
+          "companyId",
+          "type",
+          "status",
+          "provider"
+        ]
+      },
+      "ExportTypeEnum": {
+        "type": "string",
+        "enum": [
+          "orders_report",
+          "order_products_report"
+        ]
+      },
+      "ExportStatusEnum": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "generating",
+          "ready_for_download",
+          "failed",
+          "expired"
+        ]
+      },
+      "ExportEntityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "companyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "example": "orders_report",
+            "$ref": "#/components/schemas/ExportTypeEnum"
+          },
+          "status": {
+            "example": "ready_for_download",
+            "$ref": "#/components/schemas/ExportStatusEnum"
+          },
+          "readyForDownloadDate": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "expiresIn": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "assetId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "asset": {
+            "$ref": "#/components/schemas/AssetEntityDto"
+          },
+          "params": {
+            "type": "object",
+            "example": null
+          }
+        },
+        "required": [
+          "id",
+          "companyId",
+          "type",
+          "status",
+          "assetId",
+          "asset"
+        ]
+      },
+      "CreateOrderDocumentDto": {
+        "type": "object",
+        "properties": {
+          "assetId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "assetId"
         ]
       },
       "OrderEntity": {
@@ -8846,6 +11404,38 @@
           "meta"
         ]
       },
+      "OrderStatusEnum": {
+        "type": "string",
+        "enum": [
+          "pending",
+          "confirming_payment",
+          "waiting_delivery",
+          "delivering",
+          "concluded",
+          "failed",
+          "cancelled",
+          "partially_cancelled",
+          "expired"
+        ]
+      },
+      "DispatchOrderEventDto": {
+        "type": "object",
+        "properties": {
+          "orderId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "default": "concluded",
+            "example": "concluded",
+            "$ref": "#/components/schemas/OrderStatusEnum"
+          }
+        },
+        "required": [
+          "orderId",
+          "status"
+        ]
+      },
       "ProductSortBy": {
         "type": "string",
         "enum": [
@@ -8859,12 +11449,33 @@
           "relevance"
         ]
       },
-      "ImageDto": {
+      "ImageVariantMatchDto": {
+        "type": "object",
+        "properties": {
+          "keyLabel": {
+            "type": "string"
+          },
+          "keyValue": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "keyLabel",
+          "keyValue"
+        ]
+      },
+      "ProductImageDto": {
         "type": "object",
         "properties": {
           "assetId": {
             "type": "string",
             "format": "uuid"
+          },
+          "variants": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ImageVariantMatchDto"
+            }
           }
         },
         "required": [
@@ -8901,6 +11512,17 @@
           }
         }
       },
+      "ProductKycRequirementConfigDto": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "slug"
+        ]
+      },
       "ProductRequirementDto": {
         "type": "object",
         "properties": {
@@ -8924,6 +11546,9 @@
           },
           "requirementModalContent": {
             "type": "string"
+          },
+          "requireKycContext": {
+            "$ref": "#/components/schemas/ProductKycRequirementConfigDto"
           }
         },
         "required": [
@@ -8934,6 +11559,65 @@
           "requirementDescription",
           "requirementModalContent"
         ]
+      },
+      "PassShareCodeDataFieldType": {
+        "type": "string",
+        "enum": [
+          "textarea",
+          "text"
+        ]
+      },
+      "PassShareCodeDataFieldConfigDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "example": "text",
+            "$ref": "#/components/schemas/PassShareCodeDataFieldType"
+          },
+          "label": {
+            "type": "string"
+          },
+          "required": {
+            "type": "boolean",
+            "default": true,
+            "example": true
+          }
+        },
+        "required": [
+          "name",
+          "type",
+          "label"
+        ]
+      },
+      "PassShareCodeConfigDto": {
+        "type": "object",
+        "properties": {
+          "dataFields": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PassShareCodeDataFieldConfigDto"
+            }
+          },
+          "enabled": {
+            "type": "boolean",
+            "default": true,
+            "example": true
+          }
+        },
+        "required": [
+          "enabled"
+        ]
+      },
+      "ProductSettingsDto": {
+        "type": "object",
+        "properties": {
+          "passShareCodeConfig": {
+            "$ref": "#/components/schemas/PassShareCodeConfigDto"
+          }
+        }
       },
       "ProductDistributionType": {
         "type": "string",
@@ -8973,7 +11657,7 @@
           "images": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ImageDto"
+              "$ref": "#/components/schemas/ProductImageDto"
             }
           },
           "prices": {
@@ -9022,15 +11706,13 @@
             "type": "object",
             "example": null
           },
-          "setIssuedAtMetadata": {
-            "type": "boolean",
-            "example": false,
-            "default": false
-          },
           "relevance": {
             "type": "number",
             "default": 0,
             "example": 0
+          },
+          "settings": {
+            "$ref": "#/components/schemas/ProductSettingsDto"
           }
         },
         "required": [
@@ -9070,7 +11752,7 @@
           "images": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ImageDto"
+              "$ref": "#/components/schemas/ProductImageDto"
             }
           },
           "prices": {
@@ -9119,15 +11801,13 @@
             "type": "object",
             "example": null
           },
-          "setIssuedAtMetadata": {
-            "type": "boolean",
-            "example": false,
-            "default": false
-          },
           "relevance": {
             "type": "number",
             "default": 0,
             "example": 0
+          },
+          "settings": {
+            "$ref": "#/components/schemas/ProductSettingsDto"
           }
         }
       },
@@ -9200,7 +11880,7 @@
           "images": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/ImageDto"
+              "$ref": "#/components/schemas/ProductImageDto"
             }
           },
           "prices": {
@@ -9223,7 +11903,9 @@
               42,
               1337,
               80001,
-              137
+              137,
+              1284,
+              1285
             ]
           },
           "tokenId": {
@@ -9474,6 +12156,17 @@
           "delay"
         ]
       },
+      "OrderExpirationConfigDto": {
+        "type": "object",
+        "properties": {
+          "ignorePaymentsAfterExecutionOrder": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "ignorePaymentsAfterExecutionOrder"
+        ]
+      },
       "CompanyConfigurationEntityDto": {
         "type": "object",
         "properties": {
@@ -9528,6 +12221,9 @@
           },
           "sendPassPdf": {
             "type": "boolean"
+          },
+          "orderExpirationConfig": {
+            "$ref": "#/components/schemas/OrderExpirationConfigDto"
           }
         },
         "required": [
@@ -9557,6 +12253,9 @@
             "type": "number",
             "default": 0,
             "example": 0
+          },
+          "orderExpirationConfig": {
+            "$ref": "#/components/schemas/OrderExpirationConfigDto"
           }
         },
         "required": [
@@ -9735,7 +12434,8 @@
           "admin_order_concluded",
           "admin_order_failed",
           "user_order_waiting_delivery",
-          "user_order_concluded"
+          "user_order_concluded",
+          "destination_user_order_waiting_delivery"
         ]
       },
       "EmailSenderDto": {
@@ -9753,6 +12453,13 @@
         "required": [
           "email",
           "name"
+        ]
+      },
+      "NotificationProviderEnum": {
+        "type": "string",
+        "enum": [
+          "email",
+          "twilio_whatsapp"
         ]
       },
       "CompanyNotificationEntityDto": {
@@ -9777,6 +12484,10 @@
           "type": {
             "nullable": false,
             "$ref": "#/components/schemas/NotificationTypeEnum"
+          },
+          "provider": {
+            "nullable": false,
+            "$ref": "#/components/schemas/NotificationProviderEnum"
           },
           "disabled": {
             "type": "boolean"
@@ -9825,6 +12536,7 @@
           "id",
           "companyId",
           "type",
+          "provider",
           "disabled"
         ]
       },
@@ -9867,6 +12579,349 @@
           "customHtmlContent",
           "customTextContent",
           "customParams"
+        ]
+      },
+      "CompanySplitConfigurationEntityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "companyConfigurationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "companyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "productId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "contractAddress": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "paymentMethod": {
+            "type": "string",
+            "enum": [
+              "credit_card",
+              "debit_card",
+              "pix",
+              "crypto",
+              "transfer",
+              "billet"
+            ],
+            "example": "pix"
+          },
+          "paymentProvider": {
+            "type": "string",
+            "enum": [
+              "pagar_me",
+              "paypal",
+              "transfer",
+              "stripe",
+              "asaas",
+              "crypto",
+              "free",
+              "braza"
+            ],
+            "example": "asaas"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "client_service_fee",
+              "company_service_fee",
+              "resale_fee",
+              "gas_fee",
+              "product_price"
+            ],
+            "example": "product_price"
+          },
+          "percentage": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "id",
+          "companyConfigurationId",
+          "companyId",
+          "userId",
+          "type"
+        ]
+      },
+      "CompanySplitConfigurationEntityPaginatedDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CompanySplitConfigurationEntityDto"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMetaDto"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinksDto"
+          }
+        },
+        "required": [
+          "items",
+          "meta"
+        ]
+      },
+      "CreateCompanySplitConfigurationDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "client_service_fee",
+              "company_service_fee",
+              "resale_fee",
+              "gas_fee",
+              "product_price"
+            ],
+            "example": "product_price"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "percentage": {
+            "type": "number"
+          },
+          "description": {
+            "type": "string",
+            "example": null,
+            "default": null,
+            "nullable": true
+          },
+          "paymentProvider": {
+            "type": "string",
+            "enum": [
+              "pagar_me",
+              "paypal",
+              "transfer",
+              "stripe",
+              "asaas",
+              "crypto",
+              "free",
+              "braza"
+            ],
+            "example": null
+          },
+          "paymentMethod": {
+            "type": "string",
+            "enum": [
+              "credit_card",
+              "debit_card",
+              "pix",
+              "crypto",
+              "transfer",
+              "billet"
+            ],
+            "example": null
+          },
+          "contractAddress": {
+            "type": "string"
+          },
+          "productId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "type",
+          "userId",
+          "percentage"
+        ]
+      },
+      "CompanySplitConfigurationEntityWithCorrelatedDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "companyConfigurationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "companyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "productId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "contractAddress": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "paymentMethod": {
+            "type": "string",
+            "enum": [
+              "credit_card",
+              "debit_card",
+              "pix",
+              "crypto",
+              "transfer",
+              "billet"
+            ],
+            "example": "pix"
+          },
+          "paymentProvider": {
+            "type": "string",
+            "enum": [
+              "pagar_me",
+              "paypal",
+              "transfer",
+              "stripe",
+              "asaas",
+              "crypto",
+              "free",
+              "braza"
+            ],
+            "example": "asaas"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "client_service_fee",
+              "company_service_fee",
+              "resale_fee",
+              "gas_fee",
+              "product_price"
+            ],
+            "example": "product_price"
+          },
+          "percentage": {
+            "type": "number"
+          },
+          "correlatedConfigurations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CompanySplitConfigurationEntityDto"
+            }
+          }
+        },
+        "required": [
+          "id",
+          "companyConfigurationId",
+          "companyId",
+          "userId",
+          "type",
+          "correlatedConfigurations"
+        ]
+      },
+      "UpdateCompanySplitConfigurationDto": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "example": null,
+            "default": null,
+            "nullable": true
+          },
+          "paymentProvider": {
+            "type": "string",
+            "enum": [
+              "pagar_me",
+              "paypal",
+              "transfer",
+              "stripe",
+              "asaas",
+              "crypto",
+              "free",
+              "braza"
+            ],
+            "example": null
+          },
+          "paymentMethod": {
+            "type": "string",
+            "enum": [
+              "credit_card",
+              "debit_card",
+              "pix",
+              "crypto",
+              "transfer",
+              "billet"
+            ],
+            "example": null
+          },
+          "contractAddress": {
+            "type": "string"
+          },
+          "productId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "client_service_fee",
+              "company_service_fee",
+              "resale_fee",
+              "gas_fee",
+              "product_price"
+            ],
+            "example": "product_price"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "percentage": {
+            "type": "number"
+          }
+        }
+      },
+      "CorrelatedSplitConfigurationsResponseDto": {
+        "type": "object",
+        "properties": {
+          "correlatedConfigurations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CompanySplitConfigurationEntityDto"
+            }
+          }
+        },
+        "required": [
+          "correlatedConfigurations"
         ]
       },
       "SuperAdminCompanySetInfoDto": {
@@ -9970,6 +13025,15 @@
             "items": {
               "$ref": "#/components/schemas/CurrencyPaymentProviderEntityDto"
             }
+          },
+          "configured": {
+            "type": "boolean"
+          },
+          "canProvideCashback": {
+            "type": "boolean"
+          },
+          "decimals": {
+            "type": "number"
           }
         },
         "required": [
@@ -10339,6 +13403,10 @@
           "lastResult": {
             "type": "object",
             "example": null
+          },
+          "usePatch": {
+            "type": "boolean",
+            "default": false
           }
         },
         "required": [
@@ -10346,7 +13414,8 @@
           "companyId",
           "status",
           "errors",
-          "data"
+          "data",
+          "usePatch"
         ]
       },
       "WebhookEntityPaginatedDto": {
@@ -10368,25 +13437,6 @@
         "required": [
           "items",
           "meta"
-        ]
-      },
-      "AssetTypeEnum": {
-        "type": "string",
-        "enum": [
-          "image",
-          "video",
-          "document"
-        ]
-      },
-      "AssetTargetEnum": {
-        "type": "string",
-        "enum": [
-          "product",
-          "order_document",
-          "refund",
-          "storefront_page",
-          "storefront_theme",
-          "export"
         ]
       },
       "RequestAssetUploadDto": {
@@ -10449,22 +13499,6 @@
           "queryParams"
         ]
       },
-      "AssetStatusEnum": {
-        "type": "string",
-        "enum": [
-          "waiting_upload",
-          "waiting_association",
-          "associated",
-          "excluded",
-          "expired"
-        ]
-      },
-      "AssetProviderEnum": {
-        "type": "string",
-        "enum": [
-          "cloudinary"
-        ]
-      },
       "AssetEntityWithProviderUploadParamsDto": {
         "type": "object",
         "properties": {
@@ -10521,6 +13555,22 @@
           "providerUploadParams"
         ]
       },
+      "CheckCanCreateReferralResponseDto": {
+        "type": "object",
+        "properties": {
+          "productId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "canCreate": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "productId",
+          "canCreate"
+        ]
+      },
       "PromotionRequirementsDto": {
         "type": "object",
         "properties": {
@@ -10557,8 +13607,96 @@
               "type": "string",
               "format": "uuid"
             }
+          },
+          "destinationWalletAddresses": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
           }
         }
+      },
+      "RewardAmountTypeEnum": {
+        "type": "string",
+        "enum": [
+          "fixed",
+          "percentage"
+        ]
+      },
+      "RewardEntityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "companyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "amountType": {
+            "example": "fixed",
+            "$ref": "#/components/schemas/RewardAmountTypeEnum"
+          },
+          "amount": {
+            "type": "string"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "keyErc20ContractId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "productId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "promotionOwnerReward": {
+            "type": "boolean"
+          },
+          "currencyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "promotionOwnerWhitelistId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "userWhitelistId": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "required": [
+          "id",
+          "companyId",
+          "amountType",
+          "amount",
+          "isActive",
+          "keyErc20ContractId",
+          "productId",
+          "promotionOwnerReward",
+          "currencyId"
+        ]
       },
       "PromotionTypeEnum": {
         "type": "string",
@@ -10572,6 +13710,158 @@
         "enum": [
           "fixed",
           "percentage"
+        ]
+      },
+      "ReferralPromotionEntityDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "createdAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "updatedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "deletedAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "companyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "publicDescription": {
+            "type": "string"
+          },
+          "type": {
+            "example": "coupon",
+            "$ref": "#/components/schemas/PromotionTypeEnum"
+          },
+          "amountType": {
+            "example": "fixed",
+            "$ref": "#/components/schemas/PromotionAmountTypeEnum"
+          },
+          "amount": {
+            "type": "string"
+          },
+          "amountByCart": {
+            "type": "boolean"
+          },
+          "code": {
+            "type": "string"
+          },
+          "applyToAllProducts": {
+            "type": "boolean"
+          },
+          "applyToAllUsers": {
+            "type": "boolean"
+          },
+          "isCombinable": {
+            "type": "boolean"
+          },
+          "startAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "endAt": {
+            "format": "date-time",
+            "type": "string"
+          },
+          "usages": {
+            "type": "number"
+          },
+          "maxUsages": {
+            "type": "number"
+          },
+          "maxUsagesPerUser": {
+            "type": "number"
+          },
+          "requirements": {
+            "$ref": "#/components/schemas/PromotionRequirementsDto"
+          },
+          "ownerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "hasActiveRewards": {
+            "type": "boolean"
+          },
+          "ownerRewards": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RewardEntityDto"
+            }
+          },
+          "userRewards": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RewardEntityDto"
+            }
+          },
+          "productId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "id",
+          "companyId",
+          "description",
+          "publicDescription",
+          "type",
+          "amountType",
+          "amount",
+          "amountByCart",
+          "applyToAllProducts",
+          "applyToAllUsers",
+          "isCombinable",
+          "usages",
+          "hasActiveRewards",
+          "ownerRewards",
+          "userRewards",
+          "productId"
+        ]
+      },
+      "ReferralPromotionEntityPaginatedDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ReferralPromotionEntityDto"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMetaDto"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinksDto"
+          }
+        },
+        "required": [
+          "items",
+          "meta"
+        ]
+      },
+      "ActivateUserReferralPromotionDto": {
+        "type": "object",
+        "properties": {
+          "productId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "productId"
         ]
       },
       "PromotionEntityDto": {
@@ -10649,6 +13939,10 @@
           },
           "requirements": {
             "$ref": "#/components/schemas/PromotionRequirementsDto"
+          },
+          "ownerId": {
+            "type": "string",
+            "format": "uuid"
           }
         },
         "required": [
@@ -11034,6 +14328,221 @@
           "whitelists"
         ]
       },
+      "RewardEntityPaginatedDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RewardEntityDto"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMetaDto"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinksDto"
+          }
+        },
+        "required": [
+          "items",
+          "meta"
+        ]
+      },
+      "CreateRewardDto": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "productId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "promotionOwnerReward": {
+            "type": "boolean"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "keyErc20ContractId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "currencyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "amountType": {
+            "example": "fixed",
+            "$ref": "#/components/schemas/RewardAmountTypeEnum"
+          },
+          "amount": {
+            "type": "string"
+          },
+          "promotionOwnerWhitelistId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userWhitelistId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "productId",
+          "promotionOwnerReward",
+          "isActive",
+          "keyErc20ContractId",
+          "amountType",
+          "amount"
+        ]
+      },
+      "UpdateRewardDto": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "nullable": true
+          },
+          "productId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "promotionOwnerReward": {
+            "type": "boolean"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "keyErc20ContractId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "currencyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "amountType": {
+            "example": "fixed",
+            "$ref": "#/components/schemas/RewardAmountTypeEnum"
+          },
+          "amount": {
+            "type": "string"
+          },
+          "promotionOwnerWhitelistId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userWhitelistId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "productId",
+          "promotionOwnerReward",
+          "isActive",
+          "keyErc20ContractId",
+          "amountType",
+          "amount"
+        ]
+      },
+      "ExportEntityPaginatedDto": {
+        "type": "object",
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExportEntityDto"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/PaginationMetaDto"
+          },
+          "links": {
+            "$ref": "#/components/schemas/PaginationLinksDto"
+          }
+        },
+        "required": [
+          "items",
+          "meta"
+        ]
+      },
+      "OrdersAdminExportDto": {
+        "type": "object",
+        "properties": {
+          "createdAt": {
+            "type": "string",
+            "example": "2022-01-30T10:30:40-03:00"
+          },
+          "sortBy": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "orderBy": {
+            "default": "DESC",
+            "$ref": "#/components/schemas/OrderByEnum"
+          },
+          "status": {
+            "type": "array",
+            "example": [
+              "pending"
+            ],
+            "items": {
+              "type": "string",
+              "enum": [
+                "pending",
+                "confirming_payment",
+                "waiting_delivery",
+                "delivering",
+                "concluded",
+                "failed",
+                "cancelled",
+                "partially_cancelled",
+                "expired"
+              ]
+            }
+          },
+          "createdFrom": {
+            "format": "date-time",
+            "type": "string",
+            "example": null
+          },
+          "createdUntil": {
+            "format": "date-time",
+            "type": "string",
+            "example": null
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "currencyId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "paymentMethod": {
+            "example": "pix",
+            "$ref": "#/components/schemas/PaymentMethodEnum"
+          },
+          "paymentProvider": {
+            "example": "stripe",
+            "$ref": "#/components/schemas/PaymentProviderEnum"
+          },
+          "utmCampaign": {
+            "type": "string",
+            "example": "super_sales"
+          },
+          "productId": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      },
       "ProjectHostEntityDto": {
         "type": "object",
         "properties": {
@@ -11137,7 +14646,8 @@
         "enum": [
           "all",
           "authenticated",
-          "whitelist"
+          "whitelist",
+          "anonymous"
         ]
       },
       "ProjectAuthConfigDto": {
@@ -11187,8 +14697,7 @@
           }
         },
         "required": [
-          "routePattern",
-          "isRoutePatternRegex"
+          "routePattern"
         ]
       },
       "SetProjectThemeRequestDto": {
@@ -11333,6 +14842,10 @@
             "type": "string",
             "example": "/"
           },
+          "routePatternRegex": {
+            "type": "string",
+            "example": "/"
+          },
           "isRoutePatternRegex": {
             "type": "boolean",
             "example": true
@@ -11387,6 +14900,28 @@
         "required": [
           "items",
           "meta"
+        ]
+      },
+      "DuplicateProjectPageRequestDto": {
+        "type": "object",
+        "properties": {
+          "routePattern": {
+            "type": "string",
+            "example": "/"
+          },
+          "isRoutePatternRegex": {
+            "type": "boolean",
+            "example": false,
+            "default": false
+          },
+          "name": {
+            "type": "string",
+            "example": "My first page"
+          }
+        },
+        "required": [
+          "routePattern",
+          "isRoutePatternRegex"
         ]
       },
       "ComponentModuleSortByEnum": {
@@ -11501,218 +15036,6 @@
         "required": [
           "label"
         ]
-      },
-      "AssetEntityDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "companyId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "company": {
-            "$ref": "#/components/schemas/CompanyEntityDto"
-          },
-          "type": {
-            "example": "image",
-            "$ref": "#/components/schemas/AssetTypeEnum"
-          },
-          "status": {
-            "example": "associated",
-            "$ref": "#/components/schemas/AssetStatusEnum"
-          },
-          "provider": {
-            "example": "cloudinary",
-            "$ref": "#/components/schemas/AssetProviderEnum"
-          },
-          "directLink": {
-            "type": "string",
-            "example": "https://dummyimage.com/200x200/fff/000"
-          },
-          "target": {
-            "example": "product",
-            "nullable": true,
-            "$ref": "#/components/schemas/AssetTargetEnum"
-          }
-        },
-        "required": [
-          "id",
-          "companyId",
-          "type",
-          "status",
-          "provider"
-        ]
-      },
-      "ExportTypeEnum": {
-        "type": "string",
-        "enum": [
-          "orders_report"
-        ]
-      },
-      "ExportStatusEnum": {
-        "type": "string",
-        "enum": [
-          "pending",
-          "generating",
-          "ready_for_download",
-          "failed",
-          "expired"
-        ]
-      },
-      "ExportEntityDto": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "createdAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "updatedAt": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "companyId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "type": {
-            "example": "orders_report",
-            "$ref": "#/components/schemas/ExportTypeEnum"
-          },
-          "status": {
-            "example": "ready_for_download",
-            "$ref": "#/components/schemas/ExportStatusEnum"
-          },
-          "readyForDownloadDate": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "expiresIn": {
-            "format": "date-time",
-            "type": "string"
-          },
-          "assetId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "asset": {
-            "$ref": "#/components/schemas/AssetEntityDto"
-          },
-          "params": {
-            "type": "object",
-            "example": null
-          }
-        },
-        "required": [
-          "id",
-          "companyId",
-          "type",
-          "status",
-          "assetId",
-          "asset"
-        ]
-      },
-      "ExportEntityPaginatedDto": {
-        "type": "object",
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ExportEntityDto"
-            }
-          },
-          "meta": {
-            "$ref": "#/components/schemas/PaginationMetaDto"
-          },
-          "links": {
-            "$ref": "#/components/schemas/PaginationLinksDto"
-          }
-        },
-        "required": [
-          "items",
-          "meta"
-        ]
-      },
-      "ExportOrdersDto": {
-        "type": "object",
-        "properties": {
-          "createdFrom": {
-            "format": "date-time",
-            "type": "string",
-            "example": null
-          },
-          "createdUntil": {
-            "format": "date-time",
-            "type": "string",
-            "example": null
-          },
-          "userId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "currencyId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "paymentMethod": {
-            "example": "pix",
-            "$ref": "#/components/schemas/PaymentMethodEnum"
-          },
-          "paymentProvider": {
-            "example": "stripe",
-            "$ref": "#/components/schemas/PaymentProviderEnum"
-          },
-          "utmCampaign": {
-            "type": "string",
-            "example": "super_sales"
-          },
-          "orderBy": {
-            "example": "ASC",
-            "$ref": "#/components/schemas/OrderByEnum"
-          },
-          "sortBy": {
-            "example": "createdAt",
-            "$ref": "#/components/schemas/OrderSortByEnum"
-          },
-          "status": {
-            "type": "array",
-            "example": [
-              "pending"
-            ],
-            "items": {
-              "type": "string",
-              "enum": [
-                "pending",
-                "confirming_payment",
-                "waiting_delivery",
-                "delivering",
-                "concluded",
-                "failed",
-                "cancelled",
-                "partially_cancelled",
-                "expired"
-              ]
-            }
-          },
-          "productId": {
-            "type": "string",
-            "format": "uuid"
-          }
-        }
       },
       "I18nItemDto": {
         "type": "object",

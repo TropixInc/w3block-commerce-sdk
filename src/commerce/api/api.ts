@@ -8,11 +8,6 @@
  * ---------------------------------------------------------------
  */
 
-export enum OrderSortByEnum {
-  CreatedAt = 'createdAt',
-  UpdatedAt = 'updatedAt',
-}
-
 export enum OrderByEnum {
   ASC = 'ASC',
   DESC = 'DESC',
@@ -55,10 +50,6 @@ export type UserEntity = object;
 
 export type AddressEntity = object;
 
-export type CurrencyEntity = object;
-
-export type OrderProductEntity = object;
-
 export enum OrderStatus {
   Pending = 'pending',
   ConfirmingPayment = 'confirming_payment',
@@ -71,24 +62,9 @@ export enum OrderStatus {
   Expired = 'expired',
 }
 
-export enum PaymentProvider {
-  PagarMe = 'pagar_me',
-  Paypal = 'paypal',
-  Transfer = 'transfer',
-  Stripe = 'stripe',
-  Asaas = 'asaas',
-  Crypto = 'crypto',
-  Free = 'free',
-}
+export type OrderProductEntity = object;
 
-export enum PaymentMethodEnum {
-  CreditCard = 'credit_card',
-  DebitCard = 'debit_card',
-  Pix = 'pix',
-  Crypto = 'crypto',
-  Transfer = 'transfer',
-  Billet = 'billet',
-}
+export type PaymentEntity = object;
 
 export interface OrderEntityDto {
   /** @format uuid */
@@ -113,44 +89,33 @@ export interface OrderEntityDto {
   addressId: string;
   address?: AddressEntity;
 
-  /** @format uuid */
-  currencyId: string;
-  currency?: CurrencyEntity;
-  currencyAmount: string;
-  currencyAmountDiscount: string;
-  products: OrderProductEntity[];
-
   /** @example pending */
   status: OrderStatus;
-
-  /** @example pagar_me */
-  paymentProvider?: PaymentProvider;
-
-  /** @example za_1012skak1 */
-  providerTransactionId?: object;
-
-  /** @example credit_card */
-  paymentMethod?: PaymentMethodEnum;
-
-  /** @example {"paymentUrl":"https://example.com/order/1/pay"} */
-  paymentInfo: object;
 
   /** @format date-time */
   deliverDate?: string;
 
   /** @format date-time */
   expiresIn?: string;
-  gasFee: string;
-  clientServiceFee: string;
-  totalAmount: string;
-  originalCurrencyAmount: string;
-  originalTotalAmount: string;
+
+  /** @example B61JHC */
+  deliverId?: string;
+  products: OrderProductEntity[];
+  payments: PaymentEntity[];
 }
 
 export interface OrderEntityPaginatedDto {
   items: OrderEntityDto[];
   meta: PaginationMetaDto;
   links?: PaginationLinksDto;
+}
+
+export interface OrderProductExpectedPriceDto {
+  /** @example 65fe1119-6ec0-4b78-8d30-cb989914bdcb */
+  currencyId: string;
+
+  /** @example 100 */
+  expectedPrice: string;
 }
 
 export interface OrderProductDto {
@@ -169,8 +134,69 @@ export interface OrderProductDto {
   /** @example [] */
   variantIds?: string[];
 
+  /** @example 1 */
+  quantity?: string;
+
   /** @example 100 */
-  expectedPrice: string;
+  expectedPrice?: string;
+  expectedPrices: OrderProductExpectedPriceDto[];
+}
+
+export enum MultiPaymentSelectionAmountTypeEnum {
+  Percentage = 'percentage',
+  AllRemaining = 'all_remaining',
+  Fixed = 'fixed',
+}
+
+export enum PaymentMethodEnum {
+  CreditCard = 'credit_card',
+  DebitCard = 'debit_card',
+  Pix = 'pix',
+  Crypto = 'crypto',
+  Transfer = 'transfer',
+  Billet = 'billet',
+}
+
+export enum PaymentProviderEnum {
+  PagarMe = 'pagar_me',
+  Paypal = 'paypal',
+  Transfer = 'transfer',
+  Stripe = 'stripe',
+  Asaas = 'asaas',
+  Crypto = 'crypto',
+  Free = 'free',
+  Braza = 'braza',
+}
+
+export interface OrderMultiPaymentSelectionDto {
+  /**
+   * @format uuid
+   * @example 65fe1119-6ec0-4b78-8d30-cb989914bdcb
+   */
+  currencyId: string;
+
+  /** @example percentage */
+  amountType: MultiPaymentSelectionAmountTypeEnum;
+
+  /** @example 100 */
+  amount: string;
+
+  /** @example pix */
+  paymentMethod?: PaymentMethodEnum;
+
+  /** @example stripe */
+  paymentProvider?: PaymentProviderEnum;
+
+  /** @example {"ssn":"659.315.680-93","save_credit_card":true,"save_credit_card_name":"My Credit Card"} */
+  providerInputs?: object;
+}
+
+export interface OrderSignedGasFeeDto {
+  /** @example 65fe1119-6ec0-4b78-8d30-cb989914bdcb */
+  currencyId: string;
+
+  /** @example ===812hgsahbncva */
+  signedGasFee?: string;
 }
 
 export interface UtmParamsDto {
@@ -190,33 +216,34 @@ export interface UtmParamsDto {
   utm_content?: string;
 }
 
-export enum PaymentProviderEnum {
-  PagarMe = 'pagar_me',
-  Paypal = 'paypal',
-  Transfer = 'transfer',
-  Stripe = 'stripe',
-  Asaas = 'asaas',
-  Crypto = 'crypto',
-  Free = 'free',
-}
-
 export interface CreateOrderDto {
   orderProducts: OrderProductDto[];
 
-  /** @example 65fe1119-6ec0-4b78-8d30-cb989914bdcb */
-  currencyId: string;
-
-  /** @example null */
+  /**
+   * @format uuid
+   * @example null
+   */
   addressId?: string;
 
   /** @example 0xd3304183ec1fa687e380b67419875f97f1db05f5 */
   destinationWalletAddress?: string;
 
+  /** @format uuid */
+  destinationUserId?: string;
+
   /** @example ===812hgsahbncva */
   signedGasFee?: string;
+  signedGasFees: OrderSignedGasFeeDto[];
 
   /** @example https://domain.com */
   successUrl?: string;
+  utmParams?: UtmParamsDto;
+
+  /** @example coupon-code */
+  couponCode?: string;
+
+  /** @example 65fe1119-6ec0-4b78-8d30-cb989914bdcb */
+  currencyId?: string;
 
   /** @example pix */
   paymentMethod?: PaymentMethodEnum;
@@ -224,12 +251,16 @@ export interface CreateOrderDto {
   /** @example stripe */
   paymentProvider?: PaymentProviderEnum;
 
-  /** @example {"ssn":"659.315.680-93"} */
+  /** @example {"ssn":"659.315.680-93","save_credit_card":true,"save_credit_card_name":"My Credit Card"} */
   providerInputs?: object;
-  utmParams?: UtmParamsDto;
+  payments: OrderMultiPaymentSelectionDto[];
 
-  /** @example coupon-code */
-  couponCode?: string;
+  /**
+   * When some user tries to create two similar orders in a short period of time, we consider it as an interaction error. Sending this value as true will skip this check and proceed with order creation
+   * @example false
+   */
+  acceptSimilarOrderInShortPeriod?: object;
+  passShareCodeData?: object;
 }
 
 export interface OrderProductPreviewDto {
@@ -247,16 +278,30 @@ export interface OrderProductPreviewDto {
 
   /** @example [] */
   variantIds?: string[];
+
+  /** @example 1 */
+  quantity?: string;
+}
+
+export interface OrderPreviewMultiPaymentSelectionDto {
+  /**
+   * @format uuid
+   * @example 65fe1119-6ec0-4b78-8d30-cb989914bdcb
+   */
+  currencyId: string;
+
+  /** @example percentage */
+  amountType: MultiPaymentSelectionAmountTypeEnum;
+
+  /** @example 100 */
+  amount: string;
+
+  /** @example pix */
+  paymentMethod?: PaymentMethodEnum;
 }
 
 export interface OrderPreviewDto {
   orderProducts: OrderProductPreviewDto[];
-
-  /** @example 65fe1119-6ec0-4b78-8d30-cb989914bdcb */
-  currencyId: string;
-
-  /** @example pix */
-  paymentMethod?: PaymentMethodEnum;
 
   /** @example true */
   acceptIncompleteCart?: object;
@@ -266,11 +311,29 @@ export interface OrderPreviewDto {
 
   /** @example 0xd3304183ec1fa687e380b67419875f97f1db05f5 */
   destinationWalletAddress?: string;
+
+  /** @format uuid */
+  destinationUserId?: string;
+
+  /** @example 65fe1119-6ec0-4b78-8d30-cb989914bdcb */
+  currencyId?: string;
+
+  /** @example pix */
+  paymentMethod?: PaymentMethodEnum;
+
+  /**
+   * @format uuid
+   * @example 65fe1119-6ec0-4b78-8d30-cb989914bdcb
+   */
+  anchorPaymentsCurrencyId?: string;
+  payments: OrderPreviewMultiPaymentSelectionDto[];
 }
 
-export interface CreateOrderDocumentDto {
-  /** @format uuid */
-  assetId: string;
+export interface PayOrderDto {
+  payments: OrderMultiPaymentSelectionDto[];
+
+  /** @example https://domain.com */
+  successUrl?: string;
 }
 
 export interface CompanyEntityDto {
@@ -283,6 +346,114 @@ export interface CompanyEntityDto {
   /** @format date-time */
   updatedAt?: string;
   name?: string;
+}
+
+export enum AssetTypeEnum {
+  Image = 'image',
+  Video = 'video',
+  Document = 'document',
+}
+
+export enum AssetStatusEnum {
+  WaitingUpload = 'waiting_upload',
+  WaitingAssociation = 'waiting_association',
+  Associated = 'associated',
+  Excluded = 'excluded',
+  Expired = 'expired',
+}
+
+export enum AssetProviderEnum {
+  Cloudinary = 'cloudinary',
+}
+
+export enum AssetTargetEnum {
+  Product = 'product',
+  OrderDocument = 'order_document',
+  Refund = 'refund',
+  StorefrontPage = 'storefront_page',
+  StorefrontTheme = 'storefront_theme',
+  Export = 'export',
+}
+
+export interface AssetEntityDto {
+  /** @format uuid */
+  id: string;
+
+  /** @format date-time */
+  createdAt?: string;
+
+  /** @format date-time */
+  updatedAt?: string;
+
+  /** @format uuid */
+  companyId: string;
+  company?: CompanyEntityDto;
+
+  /** @example image */
+  type: AssetTypeEnum;
+
+  /** @example associated */
+  status: AssetStatusEnum;
+
+  /** @example cloudinary */
+  provider: AssetProviderEnum;
+
+  /** @example https://dummyimage.com/200x200/fff/000 */
+  directLink?: string;
+
+  /** @example product */
+  target?: AssetTargetEnum | null;
+}
+
+export enum ExportTypeEnum {
+  OrdersReport = 'orders_report',
+  OrderProductsReport = 'order_products_report',
+}
+
+export enum ExportStatusEnum {
+  Pending = 'pending',
+  Generating = 'generating',
+  ReadyForDownload = 'ready_for_download',
+  Failed = 'failed',
+  Expired = 'expired',
+}
+
+export interface ExportEntityDto {
+  /** @format uuid */
+  id: string;
+
+  /** @format date-time */
+  createdAt?: string;
+
+  /** @format date-time */
+  updatedAt?: string;
+
+  /** @format uuid */
+  companyId: string;
+
+  /** @example orders_report */
+  type: ExportTypeEnum;
+
+  /** @example ready_for_download */
+  status: ExportStatusEnum;
+
+  /** @format date-time */
+  readyForDownloadDate?: string;
+
+  /** @format date-time */
+  expiresIn?: string;
+
+  /** @format uuid */
+  assetId: string;
+  asset: AssetEntityDto;
+
+  /** @example null */
+  params?: object;
+}
+
+export interface CreateOrderDocumentDto {
+  /** @format uuid */
+  assetId: string;
 }
 
 export type OrderEntity = object;
@@ -317,6 +488,26 @@ export interface OrderDocumentsEntityPaginatedDto {
   links?: PaginationLinksDto;
 }
 
+export enum OrderStatusEnum {
+  Pending = 'pending',
+  ConfirmingPayment = 'confirming_payment',
+  WaitingDelivery = 'waiting_delivery',
+  Delivering = 'delivering',
+  Concluded = 'concluded',
+  Failed = 'failed',
+  Cancelled = 'cancelled',
+  PartiallyCancelled = 'partially_cancelled',
+  Expired = 'expired',
+}
+
+export interface DispatchOrderEventDto {
+  /** @format uuid */
+  orderId: string;
+
+  /** @example concluded */
+  status: OrderStatusEnum;
+}
+
 export enum ProductSortBy {
   CreatedAt = 'createdAt',
   UpdatedAt = 'updatedAt',
@@ -328,9 +519,15 @@ export enum ProductSortBy {
   Relevance = 'relevance',
 }
 
-export interface ImageDto {
+export interface ImageVariantMatchDto {
+  keyLabel: string;
+  keyValue: string;
+}
+
+export interface ProductImageDto {
   /** @format uuid */
   assetId: string;
+  variants?: ImageVariantMatchDto[];
 }
 
 export interface ProductPriceDto {
@@ -349,6 +546,10 @@ export interface ProductDraftDto {
   range?: string;
 }
 
+export interface ProductKycRequirementConfigDto {
+  slug: string;
+}
+
 export interface ProductRequirementDto {
   /** @format uuid */
   companyId: string;
@@ -361,6 +562,34 @@ export interface ProductRequirementDto {
   requirementCTALabel: string;
   requirementDescription: string;
   requirementModalContent: string;
+  requireKycContext?: ProductKycRequirementConfigDto;
+}
+
+export enum PassShareCodeDataFieldType {
+  Textarea = 'textarea',
+  Text = 'text',
+}
+
+export interface PassShareCodeDataFieldConfigDto {
+  name: string;
+
+  /** @example text */
+  type: PassShareCodeDataFieldType;
+  label: string;
+
+  /** @example true */
+  required?: boolean;
+}
+
+export interface PassShareCodeConfigDto {
+  dataFields?: PassShareCodeDataFieldConfigDto[];
+
+  /** @example true */
+  enabled: boolean;
+}
+
+export interface ProductSettingsDto {
+  passShareCodeConfig?: PassShareCodeConfigDto;
 }
 
 export enum ProductDistributionType {
@@ -383,7 +612,7 @@ export interface CreateProductDto {
 
   /** @example My Description */
   description: string;
-  images?: ImageDto[];
+  images?: ProductImageDto[];
   prices: ProductPriceDto[];
 
   /** @example random */
@@ -416,11 +645,9 @@ export interface CreateProductDto {
   /** @example null */
   terms?: object;
 
-  /** @example false */
-  setIssuedAtMetadata?: boolean;
-
   /** @example 0 */
   relevance?: number;
+  settings?: ProductSettingsDto;
 }
 
 export type ProductEntity = object;
@@ -434,7 +661,7 @@ export interface UpdateProductDto {
 
   /** @example My Description */
   description?: string;
-  images?: ImageDto[];
+  images?: ProductImageDto[];
   prices?: ProductPriceDto[];
 
   /** @example random */
@@ -467,11 +694,9 @@ export interface UpdateProductDto {
   /** @example null */
   terms?: object;
 
-  /** @example false */
-  setIssuedAtMetadata?: boolean;
-
   /** @example 0 */
   relevance?: number;
+  settings?: ProductSettingsDto;
 }
 
 export enum ProductOrderRuleSortBy {
@@ -525,14 +750,14 @@ export interface ResaleProductDto {
 
   /** @example A beautiful product */
   description: string;
-  images?: ImageDto[];
+  images?: ProductImageDto[];
   prices: ProductPriceDto[];
 
   /** @example 0xDAA50a02340cBcFA1a6F4c02765430Ffe411b125 */
   contractAddress: string;
 
   /** @example 80001 */
-  chainId: 1 | 3 | 4 | 42 | 1337 | 80001 | 137;
+  chainId: 1 | 3 | 4 | 42 | 1337 | 80001 | 137 | 1284 | 1285;
   tokenId: string;
 
   /** @example null */
@@ -640,6 +865,10 @@ export interface DeliverDelayDto {
   delay: number;
 }
 
+export interface OrderExpirationConfigDto {
+  ignorePaymentsAfterExecutionOrder: number;
+}
+
 export interface CompanyConfigurationEntityDto {
   /** @format uuid */
   id: string;
@@ -662,6 +891,7 @@ export interface CompanyConfigurationEntityDto {
   resaleFeePercentage: number;
   disableGasBilling: boolean;
   sendPassPdf: boolean;
+  orderExpirationConfig?: OrderExpirationConfigDto;
 }
 
 export interface UpdateCompanyConfigurationsDto {
@@ -671,6 +901,7 @@ export interface UpdateCompanyConfigurationsDto {
 
   /** @example 0 */
   resaleFeePercentage: number;
+  orderExpirationConfig?: OrderExpirationConfigDto;
 }
 
 export interface SetCompanyPaymentProviderSelectionDto {
@@ -745,11 +976,17 @@ export enum NotificationTypeEnum {
   AdminOrderFailed = 'admin_order_failed',
   UserOrderWaitingDelivery = 'user_order_waiting_delivery',
   UserOrderConcluded = 'user_order_concluded',
+  DestinationUserOrderWaitingDelivery = 'destination_user_order_waiting_delivery',
 }
 
 export interface EmailSenderDto {
   email: string;
   name: string;
+}
+
+export enum NotificationProviderEnum {
+  Email = 'email',
+  TwilioWhatsapp = 'twilio_whatsapp',
 }
 
 export interface CompanyNotificationEntityDto {
@@ -765,6 +1002,7 @@ export interface CompanyNotificationEntityDto {
   /** @format uuid */
   companyId: string;
   type: NotificationTypeEnum;
+  provider: NotificationProviderEnum;
   disabled: boolean;
   customSubject?: string | null;
   customHtmlContent?: string | null;
@@ -794,6 +1032,131 @@ export interface SetCompanyNotificationDto {
 
   /** @example null */
   customParams: object | null;
+}
+
+export interface CompanySplitConfigurationEntityDto {
+  /** @format uuid */
+  id: string;
+
+  /** @format date-time */
+  createdAt?: string;
+
+  /** @format date-time */
+  updatedAt?: string;
+
+  /** @format uuid */
+  companyConfigurationId: string;
+
+  /** @format uuid */
+  companyId: string;
+
+  /** @format uuid */
+  userId: string;
+
+  /** @format uuid */
+  productId?: string;
+  contractAddress?: string;
+  description?: string;
+
+  /** @example pix */
+  paymentMethod?: 'credit_card' | 'debit_card' | 'pix' | 'crypto' | 'transfer' | 'billet';
+
+  /** @example asaas */
+  paymentProvider?: 'pagar_me' | 'paypal' | 'transfer' | 'stripe' | 'asaas' | 'crypto' | 'free' | 'braza';
+
+  /** @example product_price */
+  type: 'client_service_fee' | 'company_service_fee' | 'resale_fee' | 'gas_fee' | 'product_price';
+  percentage?: number;
+}
+
+export interface CompanySplitConfigurationEntityPaginatedDto {
+  items: CompanySplitConfigurationEntityDto[];
+  meta: PaginationMetaDto;
+  links?: PaginationLinksDto;
+}
+
+export interface CreateCompanySplitConfigurationDto {
+  /** @example product_price */
+  type: 'client_service_fee' | 'company_service_fee' | 'resale_fee' | 'gas_fee' | 'product_price';
+
+  /** @format uuid */
+  userId: string;
+  percentage: number;
+
+  /** @example null */
+  description?: string | null;
+
+  /** @example null */
+  paymentProvider?: 'pagar_me' | 'paypal' | 'transfer' | 'stripe' | 'asaas' | 'crypto' | 'free' | 'braza';
+
+  /** @example null */
+  paymentMethod?: 'credit_card' | 'debit_card' | 'pix' | 'crypto' | 'transfer' | 'billet';
+  contractAddress?: string;
+
+  /** @format uuid */
+  productId?: string;
+}
+
+export interface CompanySplitConfigurationEntityWithCorrelatedDto {
+  /** @format uuid */
+  id: string;
+
+  /** @format date-time */
+  createdAt?: string;
+
+  /** @format date-time */
+  updatedAt?: string;
+
+  /** @format uuid */
+  companyConfigurationId: string;
+
+  /** @format uuid */
+  companyId: string;
+
+  /** @format uuid */
+  userId: string;
+
+  /** @format uuid */
+  productId?: string;
+  contractAddress?: string;
+  description?: string;
+
+  /** @example pix */
+  paymentMethod?: 'credit_card' | 'debit_card' | 'pix' | 'crypto' | 'transfer' | 'billet';
+
+  /** @example asaas */
+  paymentProvider?: 'pagar_me' | 'paypal' | 'transfer' | 'stripe' | 'asaas' | 'crypto' | 'free' | 'braza';
+
+  /** @example product_price */
+  type: 'client_service_fee' | 'company_service_fee' | 'resale_fee' | 'gas_fee' | 'product_price';
+  percentage?: number;
+  correlatedConfigurations: CompanySplitConfigurationEntityDto[];
+}
+
+export interface UpdateCompanySplitConfigurationDto {
+  /** @example null */
+  description?: string | null;
+
+  /** @example null */
+  paymentProvider?: 'pagar_me' | 'paypal' | 'transfer' | 'stripe' | 'asaas' | 'crypto' | 'free' | 'braza';
+
+  /** @example null */
+  paymentMethod?: 'credit_card' | 'debit_card' | 'pix' | 'crypto' | 'transfer' | 'billet';
+  contractAddress?: string;
+
+  /** @format uuid */
+  productId?: string;
+
+  /** @example product_price */
+  type?: 'client_service_fee' | 'company_service_fee' | 'resale_fee' | 'gas_fee' | 'product_price';
+
+  /** @format uuid */
+  userId?: string;
+  percentage?: number;
+}
+
+export interface CorrelatedSplitConfigurationsResponseDto {
+  correlatedConfigurations: CompanySplitConfigurationEntityDto[];
 }
 
 export interface SuperAdminCompanySetInfoDto {
@@ -853,6 +1216,9 @@ export interface CurrencyEntityDto {
   /** @example 137 */
   erc20ChainId?: number;
   paymentProviders?: CurrencyPaymentProviderEntityDto[];
+  configured?: boolean;
+  canProvideCashback?: boolean;
+  decimals?: number;
 }
 
 export interface CurrencyEntityPaginatedDto {
@@ -1020,27 +1386,13 @@ export interface WebhookEntityDto {
 
   /** @example null */
   lastResult?: object;
+  usePatch: boolean;
 }
 
 export interface WebhookEntityPaginatedDto {
   items: WebhookEntityDto[];
   meta: PaginationMetaDto;
   links?: PaginationLinksDto;
-}
-
-export enum AssetTypeEnum {
-  Image = 'image',
-  Video = 'video',
-  Document = 'document',
-}
-
-export enum AssetTargetEnum {
-  Product = 'product',
-  OrderDocument = 'order_document',
-  Refund = 'refund',
-  StorefrontPage = 'storefront_page',
-  StorefrontTheme = 'storefront_theme',
-  Export = 'export',
 }
 
 export interface RequestAssetUploadDto {
@@ -1069,18 +1421,6 @@ export interface CloudinaryProviderUploadParamsDto {
 
   /** @example {"filename_override":"false","public_id":"commerce/3fa85f64-5717-4562-b3fc-2c963f66afa6","timestamp":"1666215568","unique_filename":"true"} */
   queryParams: object;
-}
-
-export enum AssetStatusEnum {
-  WaitingUpload = 'waiting_upload',
-  WaitingAssociation = 'waiting_association',
-  Associated = 'associated',
-  Excluded = 'excluded',
-  Expired = 'expired',
-}
-
-export enum AssetProviderEnum {
-  Cloudinary = 'cloudinary',
 }
 
 export interface AssetEntityWithProviderUploadParamsDto {
@@ -1114,6 +1454,12 @@ export interface AssetEntityWithProviderUploadParamsDto {
   providerUploadParams: CloudinaryProviderUploadParamsDto;
 }
 
+export interface CheckCanCreateReferralResponseDto {
+  /** @format uuid */
+  productId: string;
+  canCreate: boolean;
+}
+
 export interface PromotionRequirementsDto {
   minCartPrice?: string;
   maxCartPrice?: string;
@@ -1125,6 +1471,51 @@ export interface PromotionRequirementsDto {
   /** @example ["pix"] */
   paymentMethods?: string[];
   currencyIds?: string[];
+  destinationWalletAddresses?: string[];
+}
+
+export enum RewardAmountTypeEnum {
+  Fixed = 'fixed',
+  Percentage = 'percentage',
+}
+
+export interface RewardEntityDto {
+  /** @format uuid */
+  id: string;
+
+  /** @format date-time */
+  createdAt?: string;
+
+  /** @format date-time */
+  updatedAt?: string;
+
+  /** @format date-time */
+  deletedAt?: string;
+
+  /** @format uuid */
+  companyId: string;
+  description?: string | null;
+
+  /** @example fixed */
+  amountType: RewardAmountTypeEnum;
+  amount: string;
+  isActive: boolean;
+
+  /** @format uuid */
+  keyErc20ContractId: string;
+
+  /** @format uuid */
+  productId: string;
+  promotionOwnerReward: boolean;
+
+  /** @format uuid */
+  currencyId: string;
+
+  /** @format uuid */
+  promotionOwnerWhitelistId?: string | null;
+
+  /** @format uuid */
+  userWhitelistId?: string | null;
 }
 
 export enum PromotionTypeEnum {
@@ -1135,6 +1526,67 @@ export enum PromotionTypeEnum {
 export enum PromotionAmountTypeEnum {
   Fixed = 'fixed',
   Percentage = 'percentage',
+}
+
+export interface ReferralPromotionEntityDto {
+  /** @format uuid */
+  id: string;
+
+  /** @format date-time */
+  createdAt?: string;
+
+  /** @format date-time */
+  updatedAt?: string;
+
+  /** @format date-time */
+  deletedAt?: string;
+
+  /** @format uuid */
+  companyId: string;
+  description: string | null;
+  publicDescription: string;
+
+  /** @example coupon */
+  type: PromotionTypeEnum;
+
+  /** @example fixed */
+  amountType: PromotionAmountTypeEnum;
+  amount: string;
+  amountByCart: boolean;
+  code?: string;
+  applyToAllProducts: boolean;
+  applyToAllUsers: boolean;
+  isCombinable: boolean;
+
+  /** @format date-time */
+  startAt?: string;
+
+  /** @format date-time */
+  endAt?: string;
+  usages: number;
+  maxUsages?: number;
+  maxUsagesPerUser?: number;
+  requirements?: PromotionRequirementsDto;
+
+  /** @format uuid */
+  ownerId?: string;
+  hasActiveRewards: boolean;
+  ownerRewards: RewardEntityDto[];
+  userRewards: RewardEntityDto[];
+
+  /** @format uuid */
+  productId: string;
+}
+
+export interface ReferralPromotionEntityPaginatedDto {
+  items: ReferralPromotionEntityDto[];
+  meta: PaginationMetaDto;
+  links?: PaginationLinksDto;
+}
+
+export interface ActivateUserReferralPromotionDto {
+  /** @format uuid */
+  productId: string;
 }
 
 export interface PromotionEntityDto {
@@ -1176,6 +1628,9 @@ export interface PromotionEntityDto {
   maxUsages?: number;
   maxUsagesPerUser?: number;
   requirements?: PromotionRequirementsDto;
+
+  /** @format uuid */
+  ownerId?: string;
 }
 
 export interface PromotionEntityPaginatedDto {
@@ -1312,6 +1767,118 @@ export interface SetAndOverridePromotionWhitelistsDto {
   whitelists: CreatePromotionWhitelistDto[] | null;
 }
 
+export interface RewardEntityPaginatedDto {
+  items: RewardEntityDto[];
+  meta: PaginationMetaDto;
+  links?: PaginationLinksDto;
+}
+
+export interface CreateRewardDto {
+  description?: string | null;
+
+  /** @format uuid */
+  productId: string;
+  promotionOwnerReward: boolean;
+  isActive: boolean;
+
+  /** @format uuid */
+  keyErc20ContractId: string;
+
+  /** @format uuid */
+  currencyId?: string;
+
+  /** @example fixed */
+  amountType: RewardAmountTypeEnum;
+  amount: string;
+
+  /** @format uuid */
+  promotionOwnerWhitelistId?: string;
+
+  /** @format uuid */
+  userWhitelistId?: string;
+}
+
+export interface UpdateRewardDto {
+  description?: string | null;
+
+  /** @format uuid */
+  productId: string;
+  promotionOwnerReward: boolean;
+  isActive: boolean;
+
+  /** @format uuid */
+  keyErc20ContractId: string;
+
+  /** @format uuid */
+  currencyId?: string;
+
+  /** @example fixed */
+  amountType: RewardAmountTypeEnum;
+  amount: string;
+
+  /** @format uuid */
+  promotionOwnerWhitelistId?: string;
+
+  /** @format uuid */
+  userWhitelistId?: string;
+}
+
+export interface ExportEntityPaginatedDto {
+  items: ExportEntityDto[];
+  meta: PaginationMetaDto;
+  links?: PaginationLinksDto;
+}
+
+export interface OrdersAdminExportDto {
+  /** @example 2022-01-30T10:30:40-03:00 */
+  createdAt?: string;
+  sortBy?: string[];
+  orderBy?: OrderByEnum;
+
+  /** @example ["pending"] */
+  status?: (
+    | 'pending'
+    | 'confirming_payment'
+    | 'waiting_delivery'
+    | 'delivering'
+    | 'concluded'
+    | 'failed'
+    | 'cancelled'
+    | 'partially_cancelled'
+    | 'expired'
+  )[];
+
+  /**
+   * @format date-time
+   * @example null
+   */
+  createdFrom?: string;
+
+  /**
+   * @format date-time
+   * @example null
+   */
+  createdUntil?: string;
+
+  /** @format uuid */
+  userId?: string;
+
+  /** @format uuid */
+  currencyId?: string;
+
+  /** @example pix */
+  paymentMethod?: PaymentMethodEnum;
+
+  /** @example stripe */
+  paymentProvider?: PaymentProviderEnum;
+
+  /** @example super_sales */
+  utmCampaign?: string;
+
+  /** @format uuid */
+  productId?: string;
+}
+
 export interface ProjectHostEntityDto {
   /** @format uuid */
   id: string;
@@ -1358,6 +1925,7 @@ export enum ProjectAuthTypeEnum {
   All = 'all',
   Authenticated = 'authenticated',
   Whitelist = 'whitelist',
+  Anonymous = 'anonymous',
 }
 
 export interface ProjectAuthConfigDto {
@@ -1374,7 +1942,7 @@ export interface SetProjectPageRequestDto {
   routePattern: string;
 
   /** @example false */
-  isRoutePatternRegex: boolean;
+  isRoutePatternRegex?: boolean;
 
   /** @example null */
   data?: object;
@@ -1455,6 +2023,9 @@ export interface ProjectPageEntityDto {
   /** @example / */
   routePattern: string;
 
+  /** @example / */
+  routePatternRegex?: string;
+
   /** @example true */
   isRoutePatternRegex: boolean;
 
@@ -1473,6 +2044,17 @@ export interface ProjectPageEntityPaginatedDto {
   items: ProjectPageEntityDto[];
   meta: PaginationMetaDto;
   links?: PaginationLinksDto;
+}
+
+export interface DuplicateProjectPageRequestDto {
+  /** @example / */
+  routePattern: string;
+
+  /** @example false */
+  isRoutePatternRegex: boolean;
+
+  /** @example My first page */
+  name?: string;
 }
 
 export enum ComponentModuleSortByEnum {
@@ -1534,138 +2116,6 @@ export interface UpdateComponentModuleRequestDto {
 
   /** @format uuid */
   companyId?: string;
-}
-
-export interface AssetEntityDto {
-  /** @format uuid */
-  id: string;
-
-  /** @format date-time */
-  createdAt?: string;
-
-  /** @format date-time */
-  updatedAt?: string;
-
-  /** @format uuid */
-  companyId: string;
-  company?: CompanyEntityDto;
-
-  /** @example image */
-  type: AssetTypeEnum;
-
-  /** @example associated */
-  status: AssetStatusEnum;
-
-  /** @example cloudinary */
-  provider: AssetProviderEnum;
-
-  /** @example https://dummyimage.com/200x200/fff/000 */
-  directLink?: string;
-
-  /** @example product */
-  target?: AssetTargetEnum | null;
-}
-
-export enum ExportTypeEnum {
-  OrdersReport = 'orders_report',
-}
-
-export enum ExportStatusEnum {
-  Pending = 'pending',
-  Generating = 'generating',
-  ReadyForDownload = 'ready_for_download',
-  Failed = 'failed',
-  Expired = 'expired',
-}
-
-export interface ExportEntityDto {
-  /** @format uuid */
-  id: string;
-
-  /** @format date-time */
-  createdAt?: string;
-
-  /** @format date-time */
-  updatedAt?: string;
-
-  /** @format uuid */
-  companyId: string;
-
-  /** @example orders_report */
-  type: ExportTypeEnum;
-
-  /** @example ready_for_download */
-  status: ExportStatusEnum;
-
-  /** @format date-time */
-  readyForDownloadDate?: string;
-
-  /** @format date-time */
-  expiresIn?: string;
-
-  /** @format uuid */
-  assetId: string;
-  asset: AssetEntityDto;
-
-  /** @example null */
-  params?: object;
-}
-
-export interface ExportEntityPaginatedDto {
-  items: ExportEntityDto[];
-  meta: PaginationMetaDto;
-  links?: PaginationLinksDto;
-}
-
-export interface ExportOrdersDto {
-  /**
-   * @format date-time
-   * @example null
-   */
-  createdFrom?: string;
-
-  /**
-   * @format date-time
-   * @example null
-   */
-  createdUntil?: string;
-
-  /** @format uuid */
-  userId?: string;
-
-  /** @format uuid */
-  currencyId?: string;
-
-  /** @example pix */
-  paymentMethod?: PaymentMethodEnum;
-
-  /** @example stripe */
-  paymentProvider?: PaymentProviderEnum;
-
-  /** @example super_sales */
-  utmCampaign?: string;
-
-  /** @example ASC */
-  orderBy?: OrderByEnum;
-
-  /** @example createdAt */
-  sortBy?: OrderSortByEnum;
-
-  /** @example ["pending"] */
-  status?: (
-    | 'pending'
-    | 'confirming_payment'
-    | 'waiting_delivery'
-    | 'delivering'
-    | 'concluded'
-    | 'failed'
-    | 'cancelled'
-    | 'partially_cancelled'
-    | 'expired'
-  )[];
-
-  /** @format uuid */
-  productId?: string;
 }
 
 export interface I18NItemDto {
@@ -1755,11 +2205,12 @@ export namespace Companies {
   export namespace ListUserOrders {
     export type RequestParams = { companyId: string };
     export type RequestQuery = {
+      createdAt?: string;
+      sortBy?: string[];
+      orderBy?: OrderByEnum;
       page?: number;
       limit?: number;
       search?: string;
-      sortBy?: OrderSortByEnum;
-      orderBy?: OrderByEnum;
       status?: (
         | 'pending'
         | 'confirming_payment'
@@ -1793,6 +2244,36 @@ export namespace Companies {
   /**
    * No description
    * @tags Orders
+   * @name GetUsageReport
+   * @request GET:/companies/{companyId}/orders/usage-report
+   * @secure
+   */
+  export namespace GetUsageReport {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = {
+      createdAt?: string;
+      sortBy?: string[];
+      orderBy?: OrderByEnum;
+      status?: (
+        | 'pending'
+        | 'confirming_payment'
+        | 'waiting_delivery'
+        | 'delivering'
+        | 'concluded'
+        | 'failed'
+        | 'cancelled'
+        | 'partially_cancelled'
+        | 'expired'
+      )[];
+      currencyId?: string;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags Orders
    * @name GetUserOrder
    * @request GET:/companies/{companyId}/orders/{orderId}
    * @secure
@@ -1815,6 +2296,48 @@ export namespace Companies {
     export type RequestParams = { companyId: string };
     export type RequestQuery = {};
     export type RequestBody = OrderPreviewDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags Orders
+   * @name GetPublicOrderByDeliverId
+   * @request GET:/companies/{companyId}/orders/get-by-deliver-id/{deliverId}
+   * @secure
+   */
+  export namespace GetPublicOrderByDeliverId {
+    export type RequestParams = { companyId: string; deliverId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * No description
+   * @tags Orders
+   * @name GetByKycUserContextId
+   * @request GET:/companies/{companyId}/orders/get-by-kyc-user-context-id/{kycUserContextId}
+   * @secure
+   */
+  export namespace GetByKycUserContextId {
+    export type RequestParams = { companyId: string; kycUserContextId: string };
+    export type RequestQuery = { fetchNewestStatus?: boolean };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = OrderEntityDto;
+  }
+  /**
+   * No description
+   * @tags Orders
+   * @name PayOrder
+   * @request PATCH:/companies/{companyId}/orders/{orderId}/pay
+   * @secure
+   */
+  export namespace PayOrder {
+    export type RequestParams = { companyId: string; orderId: string };
+    export type RequestQuery = {};
+    export type RequestBody = PayOrderDto;
     export type RequestHeaders = {};
     export type ResponseBody = void;
   }
@@ -1961,6 +2484,68 @@ export namespace Companies {
     export type ResponseBody = void;
   }
   /**
+   * @description Checks if user can create a referral coupon for some product id
+   * @tags User Referral Coupons
+   * @name CanCreateReferralCoupon
+   * @request GET:/companies/{companyId}/referral/check-can-create
+   * @secure
+   */
+  export namespace CanCreateReferralCoupon {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = { productId: string };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = CheckCanCreateReferralResponseDto;
+  }
+  /**
+   * @description Lists all user company referral coupons
+   * @tags User Referral Coupons
+   * @name ListUserReferralCoupons
+   * @request GET:/companies/{companyId}/referral
+   * @secure
+   */
+  export namespace ListUserReferralCoupons {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = {
+      page?: number;
+      limit?: number;
+      search?: string;
+      sortBy?: string;
+      orderBy?: OrderByEnum;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ReferralPromotionEntityPaginatedDto;
+  }
+  /**
+   * @description Activates a new user referral coupon based on some company product
+   * @tags User Referral Coupons
+   * @name ActivateUserReferralCoupon
+   * @request POST:/companies/{companyId}/referral
+   * @secure
+   */
+  export namespace ActivateUserReferralCoupon {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = {};
+    export type RequestBody = ActivateUserReferralPromotionDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = ReferralPromotionEntityDto;
+  }
+  /**
+   * @description Gets some user company referral coupon by product id
+   * @tags User Referral Coupons
+   * @name GetUserReferralCoupon
+   * @request GET:/companies/{companyId}/referral/{productId}
+   * @secure
+   */
+  export namespace GetUserReferralCoupon {
+    export type RequestParams = { companyId: string; productId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ReferralPromotionEntityDto;
+  }
+  /**
    * @description Lists FAQ items (questions/answers) inside a context by name including global faq contexts and specific company faq context items
    * @tags Faq
    * @name ListFaq
@@ -1995,11 +2580,12 @@ export namespace Admin {
   export namespace ListOrders {
     export type RequestParams = { companyId: string };
     export type RequestQuery = {
+      createdAt?: string;
+      sortBy?: string[];
+      orderBy?: OrderByEnum;
       page?: number;
       limit?: number;
       search?: string;
-      sortBy?: OrderSortByEnum;
-      orderBy?: OrderByEnum;
       status?: (
         | 'pending'
         | 'confirming_payment'
@@ -2023,6 +2609,43 @@ export namespace Admin {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = OrderEntityPaginatedDto;
+  }
+  /**
+   * @description Requests an order exports XLS based on listing params
+   * @tags Orders (Admin)
+   * @name RequestCompanyOrdersExportGeneration
+   * @request GET:/admin/companies/{companyId}/orders/xls
+   * @secure
+   */
+  export namespace RequestCompanyOrdersExportGeneration {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = {
+      createdAt?: string;
+      sortBy?: string[];
+      orderBy?: OrderByEnum;
+      status?: (
+        | 'pending'
+        | 'confirming_payment'
+        | 'waiting_delivery'
+        | 'delivering'
+        | 'concluded'
+        | 'failed'
+        | 'cancelled'
+        | 'partially_cancelled'
+        | 'expired'
+      )[];
+      createdFrom?: string;
+      createdUntil?: string;
+      userId?: string;
+      currencyId?: string;
+      paymentMethod?: PaymentMethodEnum;
+      paymentProvider?: PaymentProviderEnum;
+      utmCampaign?: string;
+      productId?: string;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ExportEntityDto;
   }
   /**
    * @description Get a specific company order by id
@@ -2127,6 +2750,79 @@ export namespace Admin {
     export type RequestBody = never;
     export type RequestHeaders = {};
     export type ResponseBody = void;
+  }
+  /**
+   * @description List order products
+   * @tags Order Products (Admin)
+   * @name ListOrderProducts
+   * @request GET:/admin/companies/{companyId}/order-products
+   * @secure
+   */
+  export namespace ListOrderProducts {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = {
+      createdAt?: string;
+      sortBy?: string[];
+      orderBy?: OrderByEnum;
+      page?: number;
+      limit?: number;
+      search?: string;
+      status?: (
+        | 'pending'
+        | 'confirming_payment'
+        | 'waiting_delivery'
+        | 'delivering'
+        | 'concluded'
+        | 'failed'
+        | 'cancelled'
+        | 'partially_cancelled'
+        | 'expired'
+      )[];
+      userId?: string;
+      currencyId?: string;
+      paymentMethod?: PaymentMethodEnum;
+      paymentProvider?: PaymentProviderEnum;
+      utmCampaign?: string;
+      productId?: string;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * @description Requests an order products export XLS based on listing params
+   * @tags Order Products (Admin)
+   * @name RequestCompanyOrderProductsExportGeneration
+   * @request GET:/admin/companies/{companyId}/order-products/xls
+   * @secure
+   */
+  export namespace RequestCompanyOrderProductsExportGeneration {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = {
+      createdAt?: string;
+      sortBy?: string[];
+      orderBy?: OrderByEnum;
+      status?: (
+        | 'pending'
+        | 'confirming_payment'
+        | 'waiting_delivery'
+        | 'delivering'
+        | 'concluded'
+        | 'failed'
+        | 'cancelled'
+        | 'partially_cancelled'
+        | 'expired'
+      )[];
+      userId?: string;
+      currencyId?: string;
+      paymentMethod?: PaymentMethodEnum;
+      paymentProvider?: PaymentProviderEnum;
+      utmCampaign?: string;
+      productId?: string;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ExportEntityDto;
   }
   /**
    * No description
@@ -2618,7 +3314,7 @@ export namespace Admin {
     export type ResponseBody = void;
   }
   /**
-   * @description Gets some company notification config by its type
+   * @description Gets some email company notification config by its type
    * @tags Companies (Admin)
    * @name GetCompanyNotificationConfig
    * @request GET:/admin/companies/{companyId}/notifications/{notificationType}
@@ -2632,7 +3328,7 @@ export namespace Admin {
     export type ResponseBody = CompanyNotificationEntityDto;
   }
   /**
-   * @description Sets some company notification config by its type
+   * @description Sets some company notification email config by its type
    * @tags Companies (Admin)
    * @name SetCompanyNotificationConfig
    * @request PATCH:/admin/companies/{companyId}/notifications/{notificationType}
@@ -2644,6 +3340,103 @@ export namespace Admin {
     export type RequestBody = SetCompanyNotificationDto;
     export type RequestHeaders = {};
     export type ResponseBody = CompanyNotificationEntityDto;
+  }
+  /**
+   * @description Lists all company split configuration rules
+   * @tags Companies (Admin)
+   * @name ListCompanySplitConfigurations
+   * @request GET:/admin/companies/{companyId}/split-configurations
+   * @secure
+   */
+  export namespace ListCompanySplitConfigurations {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = {
+      createdAt?: string;
+      sortBy?: string[];
+      orderBy?: OrderByEnum;
+      page?: number;
+      limit?: number;
+      search?: string;
+      type?: ('client_service_fee' | 'company_service_fee' | 'resale_fee' | 'gas_fee' | 'product_price')[];
+      paymentProvider?: ('pagar_me' | 'paypal' | 'transfer' | 'stripe' | 'asaas' | 'crypto' | 'free' | 'braza')[];
+      paymentMethod?: ('credit_card' | 'debit_card' | 'pix' | 'crypto' | 'transfer' | 'billet')[];
+      contractAddress?: string[];
+      productId?: string[];
+      userId?: string[];
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = CompanySplitConfigurationEntityPaginatedDto;
+  }
+  /**
+   * @description Creates a new company split configuration rule
+   * @tags Companies (Admin)
+   * @name CreateCompanySplitConfiguration
+   * @request POST:/admin/companies/{companyId}/split-configurations
+   * @secure
+   */
+  export namespace CreateCompanySplitConfiguration {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = {};
+    export type RequestBody = CreateCompanySplitConfigurationDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = CompanySplitConfigurationEntityDto;
+  }
+  /**
+   * @description Gets some company split configuration rule by its id
+   * @tags Companies (Admin)
+   * @name GetCompanySplitConfigurationById
+   * @request GET:/admin/companies/{companyId}/split-configurations/{id}
+   * @secure
+   */
+  export namespace GetCompanySplitConfigurationById {
+    export type RequestParams = { companyId: string; id: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = CompanySplitConfigurationEntityWithCorrelatedDto;
+  }
+  /**
+   * @description Updates some company split configuration rule
+   * @tags Companies (Admin)
+   * @name UpdateCompanySplitConfiguration
+   * @request PATCH:/admin/companies/{companyId}/split-configurations/{id}
+   * @secure
+   */
+  export namespace UpdateCompanySplitConfiguration {
+    export type RequestParams = { companyId: string; id: string };
+    export type RequestQuery = {};
+    export type RequestBody = UpdateCompanySplitConfigurationDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = CompanySplitConfigurationEntityWithCorrelatedDto;
+  }
+  /**
+   * @description Deletes some company split configuration rule
+   * @tags Companies (Admin)
+   * @name DeleteCompanySplitConfiguration
+   * @request DELETE:/admin/companies/{companyId}/split-configurations/{id}
+   * @secure
+   */
+  export namespace DeleteCompanySplitConfiguration {
+    export type RequestParams = { companyId: string; id: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * @description Gets some company split configuration correlated rules
+   * @tags Companies (Admin)
+   * @name GetCorrelatedSplitConfigurations
+   * @request GET:/admin/companies/{companyId}/split-configurations/{id}/correlated-configurations
+   * @secure
+   */
+  export namespace GetCorrelatedSplitConfigurations {
+    export type RequestParams = { companyId: string; id: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = CorrelatedSplitConfigurationsResponseDto;
   }
   /**
    * @description Create a company tag
@@ -3074,6 +3867,158 @@ export namespace Admin {
     export type ResponseBody = void;
   }
   /**
+   * @description Lists all company rewards
+   * @tags Companies Rewards (Admin)
+   * @name ListRewards
+   * @request GET:/admin/companies/{companyId}/rewards
+   * @secure
+   */
+  export namespace ListRewards {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = {
+      page?: number;
+      limit?: number;
+      search?: string;
+      sortBy?: string;
+      orderBy?: OrderByEnum;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = RewardEntityPaginatedDto;
+  }
+  /**
+   * @description Creates a new company reward
+   * @tags Companies Rewards (Admin)
+   * @name CreateReward
+   * @request POST:/admin/companies/{companyId}/rewards
+   * @secure
+   */
+  export namespace CreateReward {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = {};
+    export type RequestBody = CreateRewardDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = RewardEntityDto;
+  }
+  /**
+   * @description Gets some company reward by id
+   * @tags Companies Rewards (Admin)
+   * @name GetReward
+   * @request GET:/admin/companies/{companyId}/rewards/{rewardId}
+   * @secure
+   */
+  export namespace GetReward {
+    export type RequestParams = { companyId: string; rewardId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = RewardEntityDto;
+  }
+  /**
+   * @description Updates some company reward
+   * @tags Companies Rewards (Admin)
+   * @name UpdateReward
+   * @request PATCH:/admin/companies/{companyId}/rewards/{rewardId}
+   * @secure
+   */
+  export namespace UpdateReward {
+    export type RequestParams = { companyId: string; rewardId: string };
+    export type RequestQuery = {};
+    export type RequestBody = UpdateRewardDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = RewardEntityDto;
+  }
+  /**
+   * @description Deletes some company reward
+   * @tags Companies Rewards (Admin)
+   * @name DeleteReward
+   * @request DELETE:/admin/companies/{companyId}/rewards/{rewardId}
+   * @secure
+   */
+  export namespace DeleteReward {
+    export type RequestParams = { companyId: string; rewardId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
+  /**
+   * @description Activates some company reward by id
+   * @tags Companies Rewards (Admin)
+   * @name ActivateRewardById
+   * @request PATCH:/admin/companies/{companyId}/rewards/{rewardId}/activate
+   * @secure
+   */
+  export namespace ActivateRewardById {
+    export type RequestParams = { companyId: string; rewardId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = RewardEntityDto;
+  }
+  /**
+   * @description Deactivates some company reward by id
+   * @tags Companies Rewards (Admin)
+   * @name DeactivateRewardById
+   * @request PATCH:/admin/companies/{companyId}/rewards/{rewardId}/deactivate
+   * @secure
+   */
+  export namespace DeactivateRewardById {
+    export type RequestParams = { companyId: string; rewardId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = RewardEntityDto;
+  }
+  /**
+   * @description Lists all company exports
+   * @tags Exports (Admin)
+   * @name ListCompanyExports
+   * @request GET:/admin/companies/{companyId}/exports
+   * @secure
+   */
+  export namespace ListCompanyExports {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = {
+      page?: number;
+      limit?: number;
+      search?: string;
+      sortBy?: string;
+      orderBy?: OrderByEnum;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ExportEntityPaginatedDto;
+  }
+  /**
+   * @description Gets some specific company export by its ID
+   * @tags Exports (Admin)
+   * @name GetCompanyExport
+   * @request GET:/admin/companies/{companyId}/exports/{exportId}
+   * @secure
+   */
+  export namespace GetCompanyExport {
+    export type RequestParams = { companyId: string; exportId: string };
+    export type RequestQuery = {};
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ExportEntityDto;
+  }
+  /**
+   * @description Requests an order exports XLS based on some params
+   * @tags Exports (Admin)
+   * @name RequestCompanyOrdersExport
+   * @request POST:/admin/companies/{companyId}/exports/generate/orders
+   * @secure
+   */
+  export namespace RequestCompanyOrdersExport {
+    export type RequestParams = { companyId: string };
+    export type RequestQuery = {};
+    export type RequestBody = OrdersAdminExportDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = ExportEntityDto;
+  }
+  /**
    * @description Lists company projects
    * @tags Projects (Admin)
    * @name ListCompanyProjects
@@ -3314,52 +4259,18 @@ export namespace Admin {
     export type ResponseBody = ProjectPageEntityDto;
   }
   /**
-   * @description Lists all company exports
-   * @tags Exports (Admin)
-   * @name ListCompanyExports
-   * @request GET:/admin/companies/{companyId}/exports
+   * @description Duplicates some company project page by id
+   * @tags Projects (Admin)
+   * @name DuplicateCompanyProjectPageById
+   * @request PATCH:/admin/companies/{companyId}/projects/{projectId}/pages/{pageId}/duplicate
    * @secure
    */
-  export namespace ListCompanyExports {
-    export type RequestParams = { companyId: string };
-    export type RequestQuery = {
-      page?: number;
-      limit?: number;
-      search?: string;
-      sortBy?: string;
-      orderBy?: OrderByEnum;
-    };
-    export type RequestBody = never;
-    export type RequestHeaders = {};
-    export type ResponseBody = ExportEntityPaginatedDto;
-  }
-  /**
-   * @description Gets some specific company export by its ID
-   * @tags Exports (Admin)
-   * @name GetCompanyExport
-   * @request GET:/admin/companies/{companyId}/exports/{exportId}
-   * @secure
-   */
-  export namespace GetCompanyExport {
-    export type RequestParams = { companyId: string; exportId: string };
+  export namespace DuplicateCompanyProjectPageById {
+    export type RequestParams = { companyId: string; projectId: string; pageId: string };
     export type RequestQuery = {};
-    export type RequestBody = never;
+    export type RequestBody = DuplicateProjectPageRequestDto;
     export type RequestHeaders = {};
-    export type ResponseBody = ExportEntityDto;
-  }
-  /**
-   * @description Requests an order exports XLS based on some params
-   * @tags Exports (Admin)
-   * @name RequestCompanyOrdersExportGeneration
-   * @request POST:/admin/companies/{companyId}/exports/generate/orders
-   * @secure
-   */
-  export namespace RequestCompanyOrdersExportGeneration {
-    export type RequestParams = { companyId: string };
-    export type RequestQuery = {};
-    export type RequestBody = ExportOrdersDto;
-    export type RequestHeaders = {};
-    export type ResponseBody = ExportEntityDto;
+    export type ResponseBody = ProjectPageEntityDto;
   }
   /**
    * @description Lists all company FAQ contexts
@@ -3522,6 +4433,56 @@ export namespace Admin {
 }
 
 export namespace SuperAdmin {
+  /**
+   * @description Requests an order exports XLS for all tenants based on listing params
+   * @tags Orders (Super Admin)
+   * @name RequestSystemOrdersExportGeneration
+   * @request GET:/super-admin/orders/xls
+   * @secure
+   */
+  export namespace RequestSystemOrdersExportGeneration {
+    export type RequestParams = {};
+    export type RequestQuery = {
+      createdAt?: string;
+      sortBy?: string[];
+      orderBy?: OrderByEnum;
+      status?: (
+        | 'pending'
+        | 'confirming_payment'
+        | 'waiting_delivery'
+        | 'delivering'
+        | 'concluded'
+        | 'failed'
+        | 'cancelled'
+        | 'partially_cancelled'
+        | 'expired'
+      )[];
+      userId?: string;
+      currencyId?: string;
+      paymentMethod?: PaymentMethodEnum;
+      paymentProvider?: PaymentProviderEnum;
+      utmCampaign?: string;
+      productId?: string;
+      excludeSandboxes?: boolean;
+    };
+    export type RequestBody = never;
+    export type RequestHeaders = {};
+    export type ResponseBody = ExportEntityDto;
+  }
+  /**
+   * @description Dispatches an order system event that will be used to execute some system functionalities
+   * @tags Orders (Super Admin)
+   * @name DispatchSystemOrderEvent
+   * @request POST:/super-admin/orders/dispatch-order-event
+   * @secure
+   */
+  export namespace DispatchSystemOrderEvent {
+    export type RequestParams = {};
+    export type RequestQuery = {};
+    export type RequestBody = DispatchOrderEventDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = void;
+  }
   /**
    * @description Enables/Setup company on commerce services
    * @tags Companies (Super Admin)
@@ -3791,7 +4752,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title commerce-backend
- * @version 2.23.0
+ * @version 2.43.4
  * @baseUrl https://commerce.stg.w3block.io
  * @contact
  */
@@ -3808,11 +4769,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     listUserOrders: (
       companyId: string,
       query?: {
+        createdAt?: string;
+        sortBy?: string[];
+        orderBy?: OrderByEnum;
         page?: number;
         limit?: number;
         search?: string;
-        sortBy?: OrderSortByEnum;
-        orderBy?: OrderByEnum;
         status?: (
           | 'pending'
           | 'confirming_payment'
@@ -3859,6 +4821,43 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * No description
      *
      * @tags Orders
+     * @name GetUsageReport
+     * @request GET:/companies/{companyId}/orders/usage-report
+     * @secure
+     */
+    getUsageReport: (
+      companyId: string,
+      query?: {
+        createdAt?: string;
+        sortBy?: string[];
+        orderBy?: OrderByEnum;
+        status?: (
+          | 'pending'
+          | 'confirming_payment'
+          | 'waiting_delivery'
+          | 'delivering'
+          | 'concluded'
+          | 'failed'
+          | 'cancelled'
+          | 'partially_cancelled'
+          | 'expired'
+        )[];
+        currencyId?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<void, void>({
+        path: `/companies/${companyId}/orders/usage-report`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Orders
      * @name GetUserOrder
      * @request GET:/companies/{companyId}/orders/{orderId}
      * @secure
@@ -3890,6 +4889,63 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       this.request<void, void>({
         path: `/companies/${companyId}/orders/preview`,
         method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Orders
+     * @name GetPublicOrderByDeliverId
+     * @request GET:/companies/{companyId}/orders/get-by-deliver-id/{deliverId}
+     * @secure
+     */
+    getPublicOrderByDeliverId: (companyId: string, deliverId: string, params: RequestParams = {}) =>
+      this.request<void, void>({
+        path: `/companies/${companyId}/orders/get-by-deliver-id/${deliverId}`,
+        method: 'GET',
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Orders
+     * @name GetByKycUserContextId
+     * @request GET:/companies/{companyId}/orders/get-by-kyc-user-context-id/{kycUserContextId}
+     * @secure
+     */
+    getByKycUserContextId: (
+      companyId: string,
+      kycUserContextId: string,
+      query?: { fetchNewestStatus?: boolean },
+      params: RequestParams = {},
+    ) =>
+      this.request<OrderEntityDto, void>({
+        path: `/companies/${companyId}/orders/get-by-kyc-user-context-id/${kycUserContextId}`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * No description
+     *
+     * @tags Orders
+     * @name PayOrder
+     * @request PATCH:/companies/{companyId}/orders/{orderId}/pay
+     * @secure
+     */
+    payOrder: (companyId: string, orderId: string, data: PayOrderDto, params: RequestParams = {}) =>
+      this.request<void, void>({
+        path: `/companies/${companyId}/orders/${orderId}/pay`,
+        method: 'PATCH',
         body: data,
         secure: true,
         type: ContentType.Json,
@@ -4097,6 +5153,86 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
+     * @description Checks if user can create a referral coupon for some product id
+     *
+     * @tags User Referral Coupons
+     * @name CanCreateReferralCoupon
+     * @request GET:/companies/{companyId}/referral/check-can-create
+     * @secure
+     */
+    canCreateReferralCoupon: (companyId: string, query: { productId: string }, params: RequestParams = {}) =>
+      this.request<CheckCanCreateReferralResponseDto, void>({
+        path: `/companies/${companyId}/referral/check-can-create`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Lists all user company referral coupons
+     *
+     * @tags User Referral Coupons
+     * @name ListUserReferralCoupons
+     * @request GET:/companies/{companyId}/referral
+     * @secure
+     */
+    listUserReferralCoupons: (
+      companyId: string,
+      query?: { page?: number; limit?: number; search?: string; sortBy?: string; orderBy?: OrderByEnum },
+      params: RequestParams = {},
+    ) =>
+      this.request<ReferralPromotionEntityPaginatedDto, void>({
+        path: `/companies/${companyId}/referral`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Activates a new user referral coupon based on some company product
+     *
+     * @tags User Referral Coupons
+     * @name ActivateUserReferralCoupon
+     * @request POST:/companies/{companyId}/referral
+     * @secure
+     */
+    activateUserReferralCoupon: (
+      companyId: string,
+      data: ActivateUserReferralPromotionDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<ReferralPromotionEntityDto, void>({
+        path: `/companies/${companyId}/referral`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Gets some user company referral coupon by product id
+     *
+     * @tags User Referral Coupons
+     * @name GetUserReferralCoupon
+     * @request GET:/companies/{companyId}/referral/{productId}
+     * @secure
+     */
+    getUserReferralCoupon: (companyId: string, productId: string, params: RequestParams = {}) =>
+      this.request<ReferralPromotionEntityDto, void>({
+        path: `/companies/${companyId}/referral/${productId}`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
      * @description Lists FAQ items (questions/answers) inside a context by name including global faq contexts and specific company faq context items
      *
      * @tags Faq
@@ -4138,11 +5274,12 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     listOrders: (
       companyId: string,
       query?: {
+        createdAt?: string;
+        sortBy?: string[];
+        orderBy?: OrderByEnum;
         page?: number;
         limit?: number;
         search?: string;
-        sortBy?: OrderSortByEnum;
-        orderBy?: OrderByEnum;
         status?: (
           | 'pending'
           | 'confirming_payment'
@@ -4167,6 +5304,51 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     ) =>
       this.request<OrderEntityPaginatedDto, void>({
         path: `/admin/companies/${companyId}/orders`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Requests an order exports XLS based on listing params
+     *
+     * @tags Orders (Admin)
+     * @name RequestCompanyOrdersExportGeneration
+     * @request GET:/admin/companies/{companyId}/orders/xls
+     * @secure
+     */
+    requestCompanyOrdersExportGeneration: (
+      companyId: string,
+      query?: {
+        createdAt?: string;
+        sortBy?: string[];
+        orderBy?: OrderByEnum;
+        status?: (
+          | 'pending'
+          | 'confirming_payment'
+          | 'waiting_delivery'
+          | 'delivering'
+          | 'concluded'
+          | 'failed'
+          | 'cancelled'
+          | 'partially_cancelled'
+          | 'expired'
+        )[];
+        createdFrom?: string;
+        createdUntil?: string;
+        userId?: string;
+        currencyId?: string;
+        paymentMethod?: PaymentMethodEnum;
+        paymentProvider?: PaymentProviderEnum;
+        utmCampaign?: string;
+        productId?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<ExportEntityDto, void>({
+        path: `/admin/companies/${companyId}/orders/xls`,
         method: 'GET',
         query: query,
         secure: true,
@@ -4305,6 +5487,94 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         path: `/admin/companies/${companyId}/orders/${orderId}/order-documents/${id}`,
         method: 'DELETE',
         secure: true,
+        ...params,
+      }),
+
+    /**
+     * @description List order products
+     *
+     * @tags Order Products (Admin)
+     * @name ListOrderProducts
+     * @request GET:/admin/companies/{companyId}/order-products
+     * @secure
+     */
+    listOrderProducts: (
+      companyId: string,
+      query?: {
+        createdAt?: string;
+        sortBy?: string[];
+        orderBy?: OrderByEnum;
+        page?: number;
+        limit?: number;
+        search?: string;
+        status?: (
+          | 'pending'
+          | 'confirming_payment'
+          | 'waiting_delivery'
+          | 'delivering'
+          | 'concluded'
+          | 'failed'
+          | 'cancelled'
+          | 'partially_cancelled'
+          | 'expired'
+        )[];
+        userId?: string;
+        currencyId?: string;
+        paymentMethod?: PaymentMethodEnum;
+        paymentProvider?: PaymentProviderEnum;
+        utmCampaign?: string;
+        productId?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<void, void>({
+        path: `/admin/companies/${companyId}/order-products`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * @description Requests an order products export XLS based on listing params
+     *
+     * @tags Order Products (Admin)
+     * @name RequestCompanyOrderProductsExportGeneration
+     * @request GET:/admin/companies/{companyId}/order-products/xls
+     * @secure
+     */
+    requestCompanyOrderProductsExportGeneration: (
+      companyId: string,
+      query?: {
+        createdAt?: string;
+        sortBy?: string[];
+        orderBy?: OrderByEnum;
+        status?: (
+          | 'pending'
+          | 'confirming_payment'
+          | 'waiting_delivery'
+          | 'delivering'
+          | 'concluded'
+          | 'failed'
+          | 'cancelled'
+          | 'partially_cancelled'
+          | 'expired'
+        )[];
+        userId?: string;
+        currencyId?: string;
+        paymentMethod?: PaymentMethodEnum;
+        paymentProvider?: PaymentProviderEnum;
+        utmCampaign?: string;
+        productId?: string;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<ExportEntityDto, void>({
+        path: `/admin/companies/${companyId}/order-products/xls`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
         ...params,
       }),
 
@@ -4999,7 +6269,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
-     * @description Gets some company notification config by its type
+     * @description Gets some email company notification config by its type
      *
      * @tags Companies (Admin)
      * @name GetCompanyNotificationConfig
@@ -5020,7 +6290,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
-     * @description Sets some company notification config by its type
+     * @description Sets some company notification email config by its type
      *
      * @tags Companies (Admin)
      * @name SetCompanyNotificationConfig
@@ -5039,6 +6309,138 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         body: data,
         secure: true,
         type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Lists all company split configuration rules
+     *
+     * @tags Companies (Admin)
+     * @name ListCompanySplitConfigurations
+     * @request GET:/admin/companies/{companyId}/split-configurations
+     * @secure
+     */
+    listCompanySplitConfigurations: (
+      companyId: string,
+      query?: {
+        createdAt?: string;
+        sortBy?: string[];
+        orderBy?: OrderByEnum;
+        page?: number;
+        limit?: number;
+        search?: string;
+        type?: ('client_service_fee' | 'company_service_fee' | 'resale_fee' | 'gas_fee' | 'product_price')[];
+        paymentProvider?: ('pagar_me' | 'paypal' | 'transfer' | 'stripe' | 'asaas' | 'crypto' | 'free' | 'braza')[];
+        paymentMethod?: ('credit_card' | 'debit_card' | 'pix' | 'crypto' | 'transfer' | 'billet')[];
+        contractAddress?: string[];
+        productId?: string[];
+        userId?: string[];
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<CompanySplitConfigurationEntityPaginatedDto, void>({
+        path: `/admin/companies/${companyId}/split-configurations`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Creates a new company split configuration rule
+     *
+     * @tags Companies (Admin)
+     * @name CreateCompanySplitConfiguration
+     * @request POST:/admin/companies/{companyId}/split-configurations
+     * @secure
+     */
+    createCompanySplitConfiguration: (
+      companyId: string,
+      data: CreateCompanySplitConfigurationDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<CompanySplitConfigurationEntityDto, void>({
+        path: `/admin/companies/${companyId}/split-configurations`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Gets some company split configuration rule by its id
+     *
+     * @tags Companies (Admin)
+     * @name GetCompanySplitConfigurationById
+     * @request GET:/admin/companies/{companyId}/split-configurations/{id}
+     * @secure
+     */
+    getCompanySplitConfigurationById: (companyId: string, id: string, params: RequestParams = {}) =>
+      this.request<CompanySplitConfigurationEntityWithCorrelatedDto, void>({
+        path: `/admin/companies/${companyId}/split-configurations/${id}`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Updates some company split configuration rule
+     *
+     * @tags Companies (Admin)
+     * @name UpdateCompanySplitConfiguration
+     * @request PATCH:/admin/companies/{companyId}/split-configurations/{id}
+     * @secure
+     */
+    updateCompanySplitConfiguration: (
+      companyId: string,
+      id: string,
+      data: UpdateCompanySplitConfigurationDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<CompanySplitConfigurationEntityWithCorrelatedDto, void>({
+        path: `/admin/companies/${companyId}/split-configurations/${id}`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Deletes some company split configuration rule
+     *
+     * @tags Companies (Admin)
+     * @name DeleteCompanySplitConfiguration
+     * @request DELETE:/admin/companies/{companyId}/split-configurations/{id}
+     * @secure
+     */
+    deleteCompanySplitConfiguration: (companyId: string, id: string, params: RequestParams = {}) =>
+      this.request<void, void>({
+        path: `/admin/companies/${companyId}/split-configurations/${id}`,
+        method: 'DELETE',
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * @description Gets some company split configuration correlated rules
+     *
+     * @tags Companies (Admin)
+     * @name GetCorrelatedSplitConfigurations
+     * @request GET:/admin/companies/{companyId}/split-configurations/{id}/correlated-configurations
+     * @secure
+     */
+    getCorrelatedSplitConfigurations: (companyId: string, id: string, params: RequestParams = {}) =>
+      this.request<CorrelatedSplitConfigurationsResponseDto, void>({
+        path: `/admin/companies/${companyId}/split-configurations/${id}/correlated-configurations`,
+        method: 'GET',
+        secure: true,
         format: 'json',
         ...params,
       }),
@@ -5609,6 +7011,191 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
+     * @description Lists all company rewards
+     *
+     * @tags Companies Rewards (Admin)
+     * @name ListRewards
+     * @request GET:/admin/companies/{companyId}/rewards
+     * @secure
+     */
+    listRewards: (
+      companyId: string,
+      query?: { page?: number; limit?: number; search?: string; sortBy?: string; orderBy?: OrderByEnum },
+      params: RequestParams = {},
+    ) =>
+      this.request<RewardEntityPaginatedDto, void>({
+        path: `/admin/companies/${companyId}/rewards`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Creates a new company reward
+     *
+     * @tags Companies Rewards (Admin)
+     * @name CreateReward
+     * @request POST:/admin/companies/{companyId}/rewards
+     * @secure
+     */
+    createReward: (companyId: string, data: CreateRewardDto, params: RequestParams = {}) =>
+      this.request<RewardEntityDto, void>({
+        path: `/admin/companies/${companyId}/rewards`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Gets some company reward by id
+     *
+     * @tags Companies Rewards (Admin)
+     * @name GetReward
+     * @request GET:/admin/companies/{companyId}/rewards/{rewardId}
+     * @secure
+     */
+    getReward: (companyId: string, rewardId: string, params: RequestParams = {}) =>
+      this.request<RewardEntityDto, void>({
+        path: `/admin/companies/${companyId}/rewards/${rewardId}`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Updates some company reward
+     *
+     * @tags Companies Rewards (Admin)
+     * @name UpdateReward
+     * @request PATCH:/admin/companies/{companyId}/rewards/{rewardId}
+     * @secure
+     */
+    updateReward: (companyId: string, rewardId: string, data: UpdateRewardDto, params: RequestParams = {}) =>
+      this.request<RewardEntityDto, void>({
+        path: `/admin/companies/${companyId}/rewards/${rewardId}`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Deletes some company reward
+     *
+     * @tags Companies Rewards (Admin)
+     * @name DeleteReward
+     * @request DELETE:/admin/companies/{companyId}/rewards/{rewardId}
+     * @secure
+     */
+    deleteReward: (companyId: string, rewardId: string, params: RequestParams = {}) =>
+      this.request<void, void>({
+        path: `/admin/companies/${companyId}/rewards/${rewardId}`,
+        method: 'DELETE',
+        secure: true,
+        ...params,
+      }),
+
+    /**
+     * @description Activates some company reward by id
+     *
+     * @tags Companies Rewards (Admin)
+     * @name ActivateRewardById
+     * @request PATCH:/admin/companies/{companyId}/rewards/{rewardId}/activate
+     * @secure
+     */
+    activateRewardById: (companyId: string, rewardId: string, params: RequestParams = {}) =>
+      this.request<RewardEntityDto, void>({
+        path: `/admin/companies/${companyId}/rewards/${rewardId}/activate`,
+        method: 'PATCH',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Deactivates some company reward by id
+     *
+     * @tags Companies Rewards (Admin)
+     * @name DeactivateRewardById
+     * @request PATCH:/admin/companies/{companyId}/rewards/{rewardId}/deactivate
+     * @secure
+     */
+    deactivateRewardById: (companyId: string, rewardId: string, params: RequestParams = {}) =>
+      this.request<RewardEntityDto, void>({
+        path: `/admin/companies/${companyId}/rewards/${rewardId}/deactivate`,
+        method: 'PATCH',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Lists all company exports
+     *
+     * @tags Exports (Admin)
+     * @name ListCompanyExports
+     * @request GET:/admin/companies/{companyId}/exports
+     * @secure
+     */
+    listCompanyExports: (
+      companyId: string,
+      query?: { page?: number; limit?: number; search?: string; sortBy?: string; orderBy?: OrderByEnum },
+      params: RequestParams = {},
+    ) =>
+      this.request<ExportEntityPaginatedDto, void>({
+        path: `/admin/companies/${companyId}/exports`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Gets some specific company export by its ID
+     *
+     * @tags Exports (Admin)
+     * @name GetCompanyExport
+     * @request GET:/admin/companies/{companyId}/exports/{exportId}
+     * @secure
+     */
+    getCompanyExport: (companyId: string, exportId: string, params: RequestParams = {}) =>
+      this.request<ExportEntityDto, void>({
+        path: `/admin/companies/${companyId}/exports/${exportId}`,
+        method: 'GET',
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Requests an order exports XLS based on some params
+     *
+     * @tags Exports (Admin)
+     * @name RequestCompanyOrdersExport
+     * @request POST:/admin/companies/{companyId}/exports/generate/orders
+     * @secure
+     */
+    requestCompanyOrdersExport: (companyId: string, data: OrdersAdminExportDto, params: RequestParams = {}) =>
+      this.request<ExportEntityDto, void>({
+        path: `/admin/companies/${companyId}/exports/generate/orders`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
      * @description Lists company projects
      *
      * @tags Projects (Admin)
@@ -5949,56 +7536,23 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
 
     /**
-     * @description Lists all company exports
+     * @description Duplicates some company project page by id
      *
-     * @tags Exports (Admin)
-     * @name ListCompanyExports
-     * @request GET:/admin/companies/{companyId}/exports
+     * @tags Projects (Admin)
+     * @name DuplicateCompanyProjectPageById
+     * @request PATCH:/admin/companies/{companyId}/projects/{projectId}/pages/{pageId}/duplicate
      * @secure
      */
-    listCompanyExports: (
+    duplicateCompanyProjectPageById: (
       companyId: string,
-      query?: { page?: number; limit?: number; search?: string; sortBy?: string; orderBy?: OrderByEnum },
+      projectId: string,
+      pageId: string,
+      data: DuplicateProjectPageRequestDto,
       params: RequestParams = {},
     ) =>
-      this.request<ExportEntityPaginatedDto, void>({
-        path: `/admin/companies/${companyId}/exports`,
-        method: 'GET',
-        query: query,
-        secure: true,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * @description Gets some specific company export by its ID
-     *
-     * @tags Exports (Admin)
-     * @name GetCompanyExport
-     * @request GET:/admin/companies/{companyId}/exports/{exportId}
-     * @secure
-     */
-    getCompanyExport: (companyId: string, exportId: string, params: RequestParams = {}) =>
-      this.request<ExportEntityDto, void>({
-        path: `/admin/companies/${companyId}/exports/${exportId}`,
-        method: 'GET',
-        secure: true,
-        format: 'json',
-        ...params,
-      }),
-
-    /**
-     * @description Requests an order exports XLS based on some params
-     *
-     * @tags Exports (Admin)
-     * @name RequestCompanyOrdersExportGeneration
-     * @request POST:/admin/companies/{companyId}/exports/generate/orders
-     * @secure
-     */
-    requestCompanyOrdersExportGeneration: (companyId: string, data: ExportOrdersDto, params: RequestParams = {}) =>
-      this.request<ExportEntityDto, void>({
-        path: `/admin/companies/${companyId}/exports/generate/orders`,
-        method: 'POST',
+      this.request<ProjectPageEntityDto, void>({
+        path: `/admin/companies/${companyId}/projects/${projectId}/pages/${pageId}/duplicate`,
+        method: 'PATCH',
         body: data,
         secure: true,
         type: ContentType.Json,
@@ -6201,6 +7755,67 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
       }),
   };
   superAdmin = {
+    /**
+     * @description Requests an order exports XLS for all tenants based on listing params
+     *
+     * @tags Orders (Super Admin)
+     * @name RequestSystemOrdersExportGeneration
+     * @request GET:/super-admin/orders/xls
+     * @secure
+     */
+    requestSystemOrdersExportGeneration: (
+      query?: {
+        createdAt?: string;
+        sortBy?: string[];
+        orderBy?: OrderByEnum;
+        status?: (
+          | 'pending'
+          | 'confirming_payment'
+          | 'waiting_delivery'
+          | 'delivering'
+          | 'concluded'
+          | 'failed'
+          | 'cancelled'
+          | 'partially_cancelled'
+          | 'expired'
+        )[];
+        userId?: string;
+        currencyId?: string;
+        paymentMethod?: PaymentMethodEnum;
+        paymentProvider?: PaymentProviderEnum;
+        utmCampaign?: string;
+        productId?: string;
+        excludeSandboxes?: boolean;
+      },
+      params: RequestParams = {},
+    ) =>
+      this.request<ExportEntityDto, any>({
+        path: `/super-admin/orders/xls`,
+        method: 'GET',
+        query: query,
+        secure: true,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Dispatches an order system event that will be used to execute some system functionalities
+     *
+     * @tags Orders (Super Admin)
+     * @name DispatchSystemOrderEvent
+     * @request POST:/super-admin/orders/dispatch-order-event
+     * @secure
+     */
+    dispatchSystemOrderEvent: (data: DispatchOrderEventDto, params: RequestParams = {}) =>
+      this.request<void, any>({
+        path: `/super-admin/orders/dispatch-order-event`,
+        method: 'POST',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        ...params,
+      }),
+
     /**
      * @description Enables/Setup company on commerce services
      *
