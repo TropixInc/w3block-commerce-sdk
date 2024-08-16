@@ -11164,7 +11164,7 @@
   "info": {
     "title": "commerce-backend",
     "description": "",
-    "version": "2.49.0",
+    "version": "2.49.1",
     "contact": {}
   },
   "tags": [],
@@ -13624,7 +13624,8 @@
               "free",
               "braza"
             ],
-            "example": null
+            "example": null,
+            "nullable": true
           },
           "paymentMethod": {
             "type": "string",
@@ -13638,10 +13639,12 @@
               "google_pay",
               "apple_pay"
             ],
-            "example": null
+            "example": null,
+            "nullable": true
           },
           "contractAddress": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "chainId": {
             "type": "number",
@@ -13656,11 +13659,13 @@
               137,
               1284,
               1285
-            ]
+            ],
+            "nullable": true
           },
           "productId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "nullable": true
           }
         },
         "required": [
@@ -13788,7 +13793,8 @@
               "free",
               "braza"
             ],
-            "example": null
+            "example": null,
+            "nullable": true
           },
           "paymentMethod": {
             "type": "string",
@@ -13802,10 +13808,12 @@
               "google_pay",
               "apple_pay"
             ],
-            "example": null
+            "example": null,
+            "nullable": true
           },
           "contractAddress": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "chainId": {
             "type": "number",
@@ -13820,11 +13828,13 @@
               137,
               1284,
               1285
-            ]
+            ],
+            "nullable": true
           },
           "productId": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "nullable": true
           },
           "type": {
             "type": "string",

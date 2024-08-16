@@ -1173,17 +1173,26 @@ export interface CreateCompanySplitConfigurationDto {
   description?: string | null;
 
   /** @example null */
-  paymentProvider?: 'pagar_me' | 'paypal' | 'transfer' | 'stripe' | 'asaas' | 'crypto' | 'free' | 'braza';
+  paymentProvider?: 'pagar_me' | 'paypal' | 'transfer' | 'stripe' | 'asaas' | 'crypto' | 'free' | 'braza' | null;
 
   /** @example null */
-  paymentMethod?: 'credit_card' | 'debit_card' | 'pix' | 'crypto' | 'transfer' | 'billet' | 'google_pay' | 'apple_pay';
-  contractAddress?: string;
+  paymentMethod?:
+    | 'credit_card'
+    | 'debit_card'
+    | 'pix'
+    | 'crypto'
+    | 'transfer'
+    | 'billet'
+    | 'google_pay'
+    | 'apple_pay'
+    | null;
+  contractAddress?: string | null;
 
   /** @example 1284 */
-  chainId?: 1 | 3 | 4 | 42 | 1337 | 80001 | 137 | 1284 | 1285;
+  chainId?: '1' | '3' | '4' | '42' | '1337' | '80001' | '137' | '1284' | '1285' | null;
 
   /** @format uuid */
-  productId?: string;
+  productId?: string | null;
 }
 
 export interface CompanySplitConfigurationEntityWithCorrelatedDto {
@@ -1228,17 +1237,26 @@ export interface UpdateCompanySplitConfigurationDto {
   description?: string | null;
 
   /** @example null */
-  paymentProvider?: 'pagar_me' | 'paypal' | 'transfer' | 'stripe' | 'asaas' | 'crypto' | 'free' | 'braza';
+  paymentProvider?: 'pagar_me' | 'paypal' | 'transfer' | 'stripe' | 'asaas' | 'crypto' | 'free' | 'braza' | null;
 
   /** @example null */
-  paymentMethod?: 'credit_card' | 'debit_card' | 'pix' | 'crypto' | 'transfer' | 'billet' | 'google_pay' | 'apple_pay';
-  contractAddress?: string;
+  paymentMethod?:
+    | 'credit_card'
+    | 'debit_card'
+    | 'pix'
+    | 'crypto'
+    | 'transfer'
+    | 'billet'
+    | 'google_pay'
+    | 'apple_pay'
+    | null;
+  contractAddress?: string | null;
 
   /** @example 1284 */
-  chainId?: 1 | 3 | 4 | 42 | 1337 | 80001 | 137 | 1284 | 1285;
+  chainId?: '1' | '3' | '4' | '42' | '1337' | '80001' | '137' | '1284' | '1285' | null;
 
   /** @format uuid */
-  productId?: string;
+  productId?: string | null;
 
   /** @example product_price */
   type?: 'client_service_fee' | 'company_service_fee' | 'resale_fee' | 'gas_fee' | 'product_price';
@@ -4993,7 +5011,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title commerce-backend
- * @version 2.49.0
+ * @version 2.49.1
  * @baseUrl https://commerce.stg.w3block.io
  * @contact
  */
