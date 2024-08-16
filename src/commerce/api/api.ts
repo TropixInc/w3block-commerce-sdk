@@ -155,6 +155,8 @@ export enum PaymentMethodEnum {
   Crypto = 'crypto',
   Transfer = 'transfer',
   Billet = 'billet',
+  GooglePay = 'google_pay',
+  ApplePay = 'apple_pay',
 }
 
 export enum PaymentProviderEnum {
@@ -1139,10 +1141,11 @@ export interface CompanySplitConfigurationEntityDto {
   /** @format uuid */
   productId?: string;
   contractAddress?: string;
+  chainId?: number;
   description?: string;
 
   /** @example pix */
-  paymentMethod?: 'credit_card' | 'debit_card' | 'pix' | 'crypto' | 'transfer' | 'billet';
+  paymentMethod?: 'credit_card' | 'debit_card' | 'pix' | 'crypto' | 'transfer' | 'billet' | 'google_pay' | 'apple_pay';
 
   /** @example asaas */
   paymentProvider?: 'pagar_me' | 'paypal' | 'transfer' | 'stripe' | 'asaas' | 'crypto' | 'free' | 'braza';
@@ -1173,8 +1176,11 @@ export interface CreateCompanySplitConfigurationDto {
   paymentProvider?: 'pagar_me' | 'paypal' | 'transfer' | 'stripe' | 'asaas' | 'crypto' | 'free' | 'braza';
 
   /** @example null */
-  paymentMethod?: 'credit_card' | 'debit_card' | 'pix' | 'crypto' | 'transfer' | 'billet';
+  paymentMethod?: 'credit_card' | 'debit_card' | 'pix' | 'crypto' | 'transfer' | 'billet' | 'google_pay' | 'apple_pay';
   contractAddress?: string;
+
+  /** @example 1284 */
+  chainId?: 1 | 3 | 4 | 42 | 1337 | 80001 | 137 | 1284 | 1285;
 
   /** @format uuid */
   productId?: string;
@@ -1202,10 +1208,11 @@ export interface CompanySplitConfigurationEntityWithCorrelatedDto {
   /** @format uuid */
   productId?: string;
   contractAddress?: string;
+  chainId?: number;
   description?: string;
 
   /** @example pix */
-  paymentMethod?: 'credit_card' | 'debit_card' | 'pix' | 'crypto' | 'transfer' | 'billet';
+  paymentMethod?: 'credit_card' | 'debit_card' | 'pix' | 'crypto' | 'transfer' | 'billet' | 'google_pay' | 'apple_pay';
 
   /** @example asaas */
   paymentProvider?: 'pagar_me' | 'paypal' | 'transfer' | 'stripe' | 'asaas' | 'crypto' | 'free' | 'braza';
@@ -1224,8 +1231,11 @@ export interface UpdateCompanySplitConfigurationDto {
   paymentProvider?: 'pagar_me' | 'paypal' | 'transfer' | 'stripe' | 'asaas' | 'crypto' | 'free' | 'braza';
 
   /** @example null */
-  paymentMethod?: 'credit_card' | 'debit_card' | 'pix' | 'crypto' | 'transfer' | 'billet';
+  paymentMethod?: 'credit_card' | 'debit_card' | 'pix' | 'crypto' | 'transfer' | 'billet' | 'google_pay' | 'apple_pay';
   contractAddress?: string;
+
+  /** @example 1284 */
+  chainId?: 1 | 3 | 4 | 42 | 1337 | 80001 | 137 | 1284 | 1285;
 
   /** @format uuid */
   productId?: string;
@@ -3580,8 +3590,18 @@ export namespace Admin {
       search?: string;
       type?: ('client_service_fee' | 'company_service_fee' | 'resale_fee' | 'gas_fee' | 'product_price')[];
       paymentProvider?: ('pagar_me' | 'paypal' | 'transfer' | 'stripe' | 'asaas' | 'crypto' | 'free' | 'braza')[];
-      paymentMethod?: ('credit_card' | 'debit_card' | 'pix' | 'crypto' | 'transfer' | 'billet')[];
+      paymentMethod?: (
+        | 'credit_card'
+        | 'debit_card'
+        | 'pix'
+        | 'crypto'
+        | 'transfer'
+        | 'billet'
+        | 'google_pay'
+        | 'apple_pay'
+      )[];
       contractAddress?: string[];
+      chainId?: (1 | 3 | 4 | 42 | 1337 | 80001 | 137 | 1284 | 1285)[];
       productId?: string[];
       userId?: string[];
     };
@@ -4973,7 +4993,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title commerce-backend
- * @version 2.43.4
+ * @version 2.49.0
  * @baseUrl https://commerce.stg.w3block.io
  * @contact
  */
@@ -6737,8 +6757,18 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
         search?: string;
         type?: ('client_service_fee' | 'company_service_fee' | 'resale_fee' | 'gas_fee' | 'product_price')[];
         paymentProvider?: ('pagar_me' | 'paypal' | 'transfer' | 'stripe' | 'asaas' | 'crypto' | 'free' | 'braza')[];
-        paymentMethod?: ('credit_card' | 'debit_card' | 'pix' | 'crypto' | 'transfer' | 'billet')[];
+        paymentMethod?: (
+          | 'credit_card'
+          | 'debit_card'
+          | 'pix'
+          | 'crypto'
+          | 'transfer'
+          | 'billet'
+          | 'google_pay'
+          | 'apple_pay'
+        )[];
         contractAddress?: string[];
+        chainId?: (1 | 3 | 4 | 42 | 1337 | 80001 | 137 | 1284 | 1285)[];
         productId?: string[];
         userId?: string[];
       },
