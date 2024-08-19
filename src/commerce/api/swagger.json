@@ -548,8 +548,15 @@
           }
         },
         "responses": {
-          "204": {
-            "description": ""
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OrderEntityDto"
+                }
+              }
+            }
           },
           "401": {
             "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
@@ -3907,7 +3914,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: user, admin, superAdmin, integration, application"
           }
         },
         "tags": [
@@ -3964,7 +3971,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: user, admin, superAdmin, integration, application"
           }
         },
         "tags": [
@@ -4031,7 +4038,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: user, admin, superAdmin, integration, application"
           }
         },
         "tags": [
@@ -4088,7 +4095,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: user, admin, superAdmin, integration, application"
           }
         },
         "tags": [
@@ -4155,7 +4162,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: user, admin, superAdmin, integration, application"
           }
         },
         "tags": [
@@ -4178,6 +4185,80 @@
       }
     },
     "/companies/{companyId}/users/{userId}/providers/{provider}": {
+      "patch": {
+        "operationId": "configureUserPaymentProvider",
+        "summary": "",
+        "description": "Configures some user payment provider",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "provider",
+            "required": true,
+            "in": "path",
+            "example": "pagar_me",
+            "schema": {
+              "$ref": "#/components/schemas/PaymentProviderEnum"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfigureUserPaymentProviderDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserPaymentProviderEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: user, admin, superAdmin, integration, application"
+          }
+        },
+        "tags": [
+          "Users Payment Providers (Used for Resale)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      },
       "delete": {
         "operationId": "deleteUserPaymentProvider",
         "summary": "",
@@ -4214,7 +4295,7 @@
             "description": ""
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: user, admin, superAdmin, integration, application"
           }
         },
         "tags": [
@@ -11164,7 +11245,7 @@
   "info": {
     "title": "commerce-backend",
     "description": "",
-    "version": "2.49.1",
+    "version": "2.49.3",
     "contact": {}
   },
   "tags": [],
@@ -12907,6 +12988,20 @@
         },
         "required": [
           "url"
+        ]
+      },
+      "ConfigureUserPaymentProviderDto": {
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "example": null,
+            "default": null,
+            "nullable": true
+          }
+        },
+        "required": [
+          "data"
         ]
       },
       "PublicUserCreditCardEntityDto": {

@@ -888,6 +888,11 @@ export interface StripeConnectAccountResponseDto {
   url: string;
 }
 
+export interface ConfigureUserPaymentProviderDto {
+  /** @example null */
+  data: object | null;
+}
+
 export interface PublicUserCreditCardEntityDto {
   /** @format uuid */
   id: string;
@@ -2450,7 +2455,7 @@ export namespace Companies {
     export type RequestQuery = {};
     export type RequestBody = PayOrderDto;
     export type RequestHeaders = {};
-    export type ResponseBody = void;
+    export type ResponseBody = OrderEntityDto;
   }
   /**
    * No description
@@ -2641,6 +2646,20 @@ export namespace Companies {
     export type RequestBody = ConnectOrRefreshStripePaymentProviderDto;
     export type RequestHeaders = {};
     export type ResponseBody = StripeConnectAccountResponseDto;
+  }
+  /**
+   * @description Configures some user payment provider
+   * @tags Users Payment Providers (Used for Resale)
+   * @name ConfigureUserPaymentProvider
+   * @request PATCH:/companies/{companyId}/users/{userId}/providers/{provider}
+   * @secure
+   */
+  export namespace ConfigureUserPaymentProvider {
+    export type RequestParams = { companyId: string; userId: string; provider: PaymentProviderEnum };
+    export type RequestQuery = {};
+    export type RequestBody = ConfigureUserPaymentProviderDto;
+    export type RequestHeaders = {};
+    export type ResponseBody = UserPaymentProviderEntityDto;
   }
   /**
    * @description Deletes some user payment provider configuration
@@ -5011,7 +5030,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title commerce-backend
- * @version 2.49.1
+ * @version 2.49.3
  * @baseUrl https://commerce.stg.w3block.io
  * @contact
  */
@@ -5202,12 +5221,13 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      * @secure
      */
     payOrder: (companyId: string, orderId: string, data: PayOrderDto, params: RequestParams = {}) =>
-      this.request<void, void>({
+      this.request<OrderEntityDto, void>({
         path: `/companies/${companyId}/orders/${orderId}/pay`,
         method: 'PATCH',
         body: data,
         secure: true,
         type: ContentType.Json,
+        format: 'json',
         ...params,
       }),
 
@@ -5462,6 +5482,31 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     ) =>
       this.request<StripeConnectAccountResponseDto, void>({
         path: `/companies/${companyId}/users/${userId}/providers/stripe/refresh-connection`,
+        method: 'PATCH',
+        body: data,
+        secure: true,
+        type: ContentType.Json,
+        format: 'json',
+        ...params,
+      }),
+
+    /**
+     * @description Configures some user payment provider
+     *
+     * @tags Users Payment Providers (Used for Resale)
+     * @name ConfigureUserPaymentProvider
+     * @request PATCH:/companies/{companyId}/users/{userId}/providers/{provider}
+     * @secure
+     */
+    configureUserPaymentProvider: (
+      companyId: string,
+      userId: string,
+      provider: PaymentProviderEnum,
+      data: ConfigureUserPaymentProviderDto,
+      params: RequestParams = {},
+    ) =>
+      this.request<UserPaymentProviderEntityDto, void>({
+        path: `/companies/${companyId}/users/${userId}/providers/${provider}`,
         method: 'PATCH',
         body: data,
         secure: true,
