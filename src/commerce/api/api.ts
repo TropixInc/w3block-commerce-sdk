@@ -5030,7 +5030,7 @@ export class HttpClient<SecurityDataType = unknown> {
 
 /**
  * @title commerce-backend
- * @version 2.49.3
+ * @version 2.49.5
  * @baseUrl https://commerce.stg.w3block.io
  * @contact
  */
