@@ -4185,7 +4185,7 @@
       }
     },
     "/companies/{companyId}/users/{userId}/providers/{provider}": {
-      "patch": {
+      "put": {
         "operationId": "configureUserPaymentProvider",
         "summary": "",
         "description": "Configures some user payment provider",

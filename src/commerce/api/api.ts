@@ -2651,7 +2651,7 @@ export namespace Companies {
    * @description Configures some user payment provider
    * @tags Users Payment Providers (Used for Resale)
    * @name ConfigureUserPaymentProvider
-   * @request PATCH:/companies/{companyId}/users/{userId}/providers/{provider}
+   * @request PUT:/companies/{companyId}/users/{userId}/providers/{provider}
    * @secure
    */
   export namespace ConfigureUserPaymentProvider {
@@ -5495,7 +5495,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
      *
      * @tags Users Payment Providers (Used for Resale)
      * @name ConfigureUserPaymentProvider
-     * @request PATCH:/companies/{companyId}/users/{userId}/providers/{provider}
+     * @request PUT:/companies/{companyId}/users/{userId}/providers/{provider}
      * @secure
      */
     configureUserPaymentProvider: (
@@ -5507,7 +5507,7 @@ export class Api<SecurityDataType extends unknown> extends HttpClient<SecurityDa
     ) =>
       this.request<UserPaymentProviderEntityDto, void>({
         path: `/companies/${companyId}/users/${userId}/providers/${provider}`,
-        method: 'PATCH',
+        method: 'PUT',
         body: data,
         secure: true,
         type: ContentType.Json,
