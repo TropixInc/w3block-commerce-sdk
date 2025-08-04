@@ -96,7 +96,7 @@
     "radash": "7.1.0"
   },
   "peerDependencies": {
-    "@w3block/sdk-id": "^0.1.27"
+    "@w3block/sdk-id": "^0.1.89"
   },
   "config": {
     "commitizen": {
@@ -104,7 +104,7 @@
     }
   },
   "engines": {
-    "node": "^16.13.2",
-    "npm": "^8.1.2"
+    "node": ">=16.13.2 <=18",
+    "npm": ">=8.1.2 <=10"
   }
 }
