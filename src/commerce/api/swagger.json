@@ -87,6 +87,7 @@
                   "delivering",
                   "concluded",
                   "failed",
+                  "cancelling",
                   "cancelled",
                   "partially_cancelled",
                   "expired"
@@ -107,7 +108,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration"
           }
         },
         "tags": [
@@ -162,7 +163,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration"
           }
         },
         "tags": [
@@ -242,6 +243,7 @@
                   "delivering",
                   "concluded",
                   "failed",
+                  "cancelling",
                   "cancelled",
                   "partially_cancelled",
                   "expired"
@@ -264,7 +266,7 @@
             "description": ""
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration"
           }
         },
         "tags": [
@@ -330,7 +332,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration"
           }
         },
         "tags": [
@@ -380,7 +382,7 @@
             "description": ""
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration"
           }
         },
         "tags": [
@@ -428,7 +430,7 @@
             "description": ""
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration"
           }
         },
         "tags": [
@@ -494,7 +496,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration"
           }
         },
         "tags": [
@@ -559,7 +561,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration"
           }
         },
         "tags": [
@@ -669,6 +671,7 @@
                   "delivering",
                   "concluded",
                   "failed",
+                  "cancelling",
                   "cancelled",
                   "partially_cancelled",
                   "expired"
@@ -763,7 +766,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -845,6 +848,7 @@
                   "delivering",
                   "concluded",
                   "failed",
+                  "cancelling",
                   "cancelled",
                   "partially_cancelled",
                   "expired"
@@ -925,6 +929,14 @@
               "format": "uuid",
               "type": "string"
             }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -939,7 +951,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -1007,7 +1019,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -1057,7 +1069,7 @@
             "description": ""
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -1107,7 +1119,7 @@
             "description": ""
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -1157,7 +1169,7 @@
             "description": ""
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -1224,7 +1236,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -1321,7 +1333,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -1379,7 +1391,7 @@
             "description": ""
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -1489,6 +1501,7 @@
                   "delivering",
                   "concluded",
                   "failed",
+                  "cancelling",
                   "cancelled",
                   "partially_cancelled",
                   "expired"
@@ -1556,7 +1569,7 @@
             "description": ""
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -1638,6 +1651,7 @@
                   "delivering",
                   "concluded",
                   "failed",
+                  "cancelling",
                   "cancelled",
                   "partially_cancelled",
                   "expired"
@@ -1698,6 +1712,14 @@
               "format": "uuid",
               "type": "string"
             }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "responses": {
@@ -1712,7 +1734,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -1786,6 +1808,7 @@
                   "delivering",
                   "concluded",
                   "failed",
+                  "cancelling",
                   "cancelled",
                   "partially_cancelled",
                   "expired"
@@ -1844,6 +1867,14 @@
             "in": "query",
             "schema": {
               "format": "uuid",
+              "type": "string"
+            }
+          },
+          {
+            "name": "timezone",
+            "required": false,
+            "in": "query",
+            "schema": {
               "type": "string"
             }
           },
@@ -1929,6 +1960,34 @@
         ]
       }
     },
+    "/super-admin/orders/test-db": {
+      "get": {
+        "operationId": "testDb",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Orders (Super Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
     "/companies/{companyId}/products": {
       "get": {
         "operationId": "listProducts",
@@ -1982,6 +2041,15 @@
             "in": "query",
             "schema": {
               "$ref": "#/components/schemas/OrderByEnum"
+            }
+          },
+          {
+            "name": "sortByPriceCurrencyId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid ",
+              "type": "string"
             }
           },
           {
@@ -2224,7 +2292,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -2300,6 +2368,15 @@
             }
           },
           {
+            "name": "sortByPriceCurrencyId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid ",
+              "type": "string"
+            }
+          },
+          {
             "name": "includeMetadata",
             "required": false,
             "in": "query",
@@ -2347,7 +2424,7 @@
             "description": ""
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -2395,7 +2472,7 @@
             "description": ""
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -2451,7 +2528,7 @@
             "description": ""
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -2499,7 +2576,7 @@
             "description": ""
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -2547,7 +2624,7 @@
             "description": ""
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -2597,7 +2674,7 @@
             "description": ""
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -2688,7 +2765,7 @@
             "description": ""
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -2744,7 +2821,7 @@
             "description": ""
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -2800,7 +2877,7 @@
             "description": ""
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -2864,7 +2941,7 @@
             "description": ""
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -2918,7 +2995,7 @@
             "description": ""
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -2942,9 +3019,9 @@
     },
     "/companies/{companyId}/products-resale": {
       "get": {
-        "operationId": "listUserResaleProducts",
+        "operationId": "listCompanyResaleProducts",
         "summary": "",
-        "description": "Lists users product resales",
+        "description": "Lists all products tha can be resold on company",
         "parameters": [
           {
             "name": "companyId",
@@ -2998,6 +3075,15 @@
             }
           },
           {
+            "name": "sortByPriceCurrencyId",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "format": "uuid ",
+              "type": "string"
+            }
+          },
+          {
             "name": "includeMetadata",
             "required": false,
             "in": "query",
@@ -3023,74 +3109,10 @@
         ],
         "responses": {
           "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProductEntity"
-                }
-              }
-            }
+            "description": ""
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
-          }
-        },
-        "tags": [
-          "Products Resale"
-        ],
-        "security": [
-          {
-            "bearer": []
-          },
-          {
-            "x-w3block-api-key": []
-          },
-          {
-            "x-w3block-id": []
-          },
-          {
-            "x-w3block-secret": []
-          }
-        ]
-      },
-      "post": {
-        "operationId": "addProductForResale",
-        "summary": "",
-        "description": "Add some user token for resale inside a company marketplace",
-        "parameters": [
-          {
-            "name": "companyId",
-            "required": true,
-            "in": "path",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ResaleProductDto"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProductEntity"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration"
           }
         },
         "tags": [
@@ -3112,11 +3134,135 @@
         ]
       }
     },
-    "/companies/{companyId}/products-resale/{productId}/cancel": {
-      "patch": {
-        "operationId": "cancelProductResaleById",
+    "/companies/{companyId}/products-resale/{productId}": {
+      "get": {
+        "operationId": "getCompanyResaleProductWithMetadata",
         "summary": "",
-        "description": "Cancels some user token from resale inside a company marketplace",
+        "description": "Gets some specific reselling product with its metadata",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "productId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "previewAmount",
+            "required": false,
+            "in": "query",
+            "example": "100",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "previewPrice",
+            "required": false,
+            "in": "query",
+            "example": "100",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration"
+          }
+        },
+        "tags": [
+          "Products Resale"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      },
+      "post": {
+        "operationId": "addResaleItem",
+        "summary": "Adds some user erc20/nft for resale inside a company marketplace.",
+        "description": "Users can only resale on products that accept resale.",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "productId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddResaleItemToProductDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration"
+          }
+        },
+        "tags": [
+          "Products Resale"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      },
+      "delete": {
+        "operationId": "cancelErc20ProductResale",
+        "summary": "",
+        "description": "Cancels some user ERC20 pool from resale inside a company marketplace",
         "parameters": [
           {
             "name": "companyId",
@@ -3140,7 +3286,157 @@
             "description": ""
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration"
+          }
+        },
+        "tags": [
+          "Products Resale"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/companies/{companyId}/products-resale/{productId}/tokens": {
+      "get": {
+        "operationId": "listCompanyResaleProductTokens",
+        "summary": "",
+        "description": "Lists all available tokens in some resale company token",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "productId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration"
+          }
+        },
+        "tags": [
+          "Products Resale"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/companies/{companyId}/products-resale/{productId}/{productTokenId}": {
+      "delete": {
+        "operationId": "cancelNftProductResale",
+        "summary": "",
+        "description": "Cancels some user ERC20 pool from resale inside a company marketplace",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "productId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "productTokenId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration"
           }
         },
         "tags": [
@@ -3239,7 +3535,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -3304,7 +3600,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -3369,7 +3665,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -3442,7 +3738,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -3498,7 +3794,7 @@
             "description": ""
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -3605,7 +3901,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -3678,7 +3974,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -3751,7 +4047,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -3815,7 +4111,7 @@
             "description": ""
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -3914,7 +4210,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: user, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: user, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -3971,7 +4267,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: user, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: user, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -4021,7 +4317,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ConnectOrRefreshStripePaymentProviderDto"
+                "$ref": "#/components/schemas/ConnectOrRefreshStripeOauthPaymentProviderDto"
               }
             }
           }
@@ -4038,7 +4334,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: user, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: user, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -4095,7 +4391,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: user, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: user, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -4145,7 +4441,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ConnectOrRefreshStripePaymentProviderDto"
+                "$ref": "#/components/schemas/ConnectOrRefreshStripeOauthPaymentProviderDto"
               }
             }
           }
@@ -4162,7 +4458,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: user, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: user, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -4238,7 +4534,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: user, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: user, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -4295,7 +4591,7 @@
             "description": ""
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: user, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: user, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -4394,7 +4690,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration"
           }
         },
         "tags": [
@@ -4459,7 +4755,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration"
           }
         },
         "tags": [
@@ -4482,6 +4778,69 @@
       }
     },
     "/companies/{companyId}/users/{userId}/credit-cards/{creditCardId}": {
+      "get": {
+        "operationId": "getUserCreditCard",
+        "summary": "",
+        "description": "Gets some user credit card by its id",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "creditCardId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PublicUserCreditCardEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration"
+          }
+        },
+        "tags": [
+          "Users Credit Cards"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      },
       "delete": {
         "operationId": "deleteUserCreditCard",
         "summary": "",
@@ -4517,11 +4876,337 @@
             "description": ""
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration"
           }
         },
         "tags": [
           "Users Credit Cards"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/companies/{companyId}/users/{userId}/resales": {
+      "get": {
+        "operationId": "listUserResales",
+        "summary": "",
+        "description": "Lists user resales",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: user, admin, superAdmin, integration"
+          }
+        },
+        "tags": [
+          "Users Resales"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/companies/{companyId}/users/{userId}/resales/summary": {
+      "get": {
+        "operationId": "getUserResaleSummary",
+        "summary": "",
+        "description": "Gets user resale summary by currency",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: user, admin, superAdmin, integration"
+          }
+        },
+        "tags": [
+          "Users Resales"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/companies/{companyId}/users/{userId}/resales/for-sale/nft": {
+      "get": {
+        "operationId": "listUserNFTsForSale",
+        "summary": "",
+        "description": "Lists user NFT products for sale",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: user, admin, superAdmin, integration"
+          }
+        },
+        "tags": [
+          "Users Resales"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/companies/{companyId}/users/{userId}/resales/for-sale/erc20": {
+      "get": {
+        "operationId": "listUserERC20ForSale",
+        "summary": "",
+        "description": "Lists user ERC20 for sale",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "userId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 1,
+              "type": "number"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "default": 10,
+              "type": "number"
+            }
+          },
+          {
+            "name": "search",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sortBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "orderBy",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/OrderByEnum"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: user, admin, superAdmin, integration"
+          }
+        },
+        "tags": [
+          "Users Resales"
         ],
         "security": [
           {
@@ -4566,7 +5251,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -4615,7 +5300,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -4672,7 +5357,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -4724,7 +5409,7 @@
             "description": ""
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -4783,7 +5468,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -4842,7 +5527,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -4866,9 +5551,9 @@
     },
     "/admin/companies/{companyId}/configurations/providers/transfer": {
       "patch": {
-        "operationId": "createTransferPaymentProvider",
+        "operationId": "configureTransferPaymentProvider",
         "summary": "",
-        "description": "Creates configuration of transfer payment provider in the company",
+        "description": "Configures/Refresh configuration of transfer payment provider in the company",
         "parameters": [
           {
             "name": "companyId",
@@ -4901,7 +5586,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -4925,9 +5610,9 @@
     },
     "/admin/companies/{companyId}/configurations/providers/stripe": {
       "patch": {
-        "operationId": "requestStripePaymentProviderConfiguration",
+        "operationId": "configureStripePaymentProvider",
         "summary": "",
-        "description": "Request a configuration of Stripe payment provider in the company (needs to be finished with oauth connection)",
+        "description": "Configures/Refresh configuration of stripe payment provider in the company",
         "parameters": [
           {
             "name": "companyId",
@@ -4954,13 +5639,72 @@
             "content": {
               "application/json": {
                 "schema": {
+                  "$ref": "#/components/schemas/CompanyConfigurationEntityDto"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
+          }
+        },
+        "tags": [
+          "Companies (Admin)"
+        ],
+        "security": [
+          {
+            "bearer": []
+          },
+          {
+            "x-w3block-api-key": []
+          },
+          {
+            "x-w3block-id": []
+          },
+          {
+            "x-w3block-secret": []
+          }
+        ]
+      }
+    },
+    "/admin/companies/{companyId}/configurations/providers/stripe/connect": {
+      "patch": {
+        "operationId": "requestStripeOauthPaymentProviderConfiguration",
+        "summary": "",
+        "description": "Request a configuration of Stripe payment provider in the company based on oauth flow (needs to be finished with oauth connection)",
+        "parameters": [
+          {
+            "name": "companyId",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateStripeOauthPaymentProviderDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
                   "$ref": "#/components/schemas/StripeConnectAccountResponseDto"
                 }
               }
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -4984,7 +5728,7 @@
     },
     "/admin/companies/{companyId}/configurations/providers/stripe/finish-connection": {
       "patch": {
-        "operationId": "finishStripePaymentProviderConfiguration",
+        "operationId": "finishStripeOauthPaymentProviderConfiguration",
         "summary": "",
         "description": "Finish connection of Stripe payment provider configuration",
         "parameters": [
@@ -5002,7 +5746,7 @@
             "description": ""
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -5026,7 +5770,7 @@
     },
     "/admin/companies/{companyId}/configurations/providers/stripe/refresh-connection": {
       "patch": {
-        "operationId": "refreshStripePaymentProviderConfiguration",
+        "operationId": "refreshStripeOauthPaymentProviderConfiguration",
         "summary": "",
         "description": "Refresh Stripe payment provider connection",
         "parameters": [
@@ -5044,7 +5788,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ConnectOrRefreshStripePaymentProviderDto"
+                "$ref": "#/components/schemas/ConnectOrRefreshStripeOauthPaymentProviderDto"
               }
             }
           }
@@ -5061,7 +5805,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -5120,7 +5864,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -5171,7 +5915,7 @@
             "description": ""
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -5229,7 +5973,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -5295,7 +6039,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -5528,7 +6272,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -5585,7 +6329,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -5642,7 +6386,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -5707,7 +6451,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -5755,7 +6499,7 @@
             "description": ""
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -5812,7 +6556,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -5862,6 +6606,9 @@
         "responses": {
           "204": {
             "description": ""
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: integration, superAdmin"
           }
         },
         "tags": [
@@ -5918,6 +6665,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "User doesn't have any of the expected roles: integration, superAdmin"
           }
         },
         "tags": [
@@ -6071,7 +6821,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration"
           }
         },
         "tags": [
@@ -6131,7 +6881,7 @@
             "description": "Allowance increase was successfully sent to blockchain."
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration"
           }
         },
         "tags": [
@@ -6190,7 +6940,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -6280,7 +7030,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -6337,7 +7087,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -6402,7 +7152,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -6493,7 +7243,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -6550,7 +7300,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -6607,7 +7357,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -6672,7 +7422,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -6722,7 +7472,7 @@
             "description": ""
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -6772,7 +7522,7 @@
             "description": ""
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -6871,7 +7621,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -6936,7 +7686,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -6995,7 +7745,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -7053,7 +7803,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration"
           }
         },
         "tags": [
@@ -7144,7 +7894,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration"
           }
         },
         "tags": [
@@ -7201,7 +7951,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration"
           }
         },
         "tags": [
@@ -7258,7 +8008,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: user, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: user, superAdmin, integration"
           }
         },
         "tags": [
@@ -7349,7 +8099,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -7406,7 +8156,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -7463,7 +8213,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -7528,7 +8278,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -7576,7 +8326,7 @@
             "description": ""
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -7675,7 +8425,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -7740,7 +8490,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -7808,7 +8558,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -7873,7 +8623,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -7929,7 +8679,7 @@
             "description": ""
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -8028,7 +8778,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -8093,7 +8843,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -8161,7 +8911,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -8226,7 +8976,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -8282,7 +9032,7 @@
             "description": ""
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -8373,7 +9123,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -8430,7 +9180,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -8487,7 +9237,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -8552,7 +9302,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -8600,7 +9350,7 @@
             "description": ""
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -8657,7 +9407,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -8714,7 +9464,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -8805,7 +9555,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -8862,7 +9612,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -8921,7 +9671,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -9012,7 +9762,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -9069,7 +9819,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -9126,7 +9876,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -9191,7 +9941,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -9239,7 +9989,7 @@
             "description": ""
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -9297,7 +10047,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -9364,7 +10114,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -9422,7 +10172,7 @@
             "description": ""
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -9489,7 +10239,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -9588,7 +10338,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -9653,7 +10403,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -9753,7 +10503,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -9826,7 +10576,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -9882,7 +10632,7 @@
             "description": ""
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -9947,7 +10697,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -10012,7 +10762,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -10087,7 +10837,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -10179,7 +10929,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -10606,7 +11356,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -10663,7 +11413,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -10720,7 +11470,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -10785,7 +11535,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -10884,7 +11634,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -10949,7 +11699,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -11040,7 +11790,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -11097,7 +11847,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -11154,7 +11904,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -11219,7 +11969,7 @@
             }
           },
           "401": {
-            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration, application"
+            "description": "User doesn't have any of the expected roles: administrator, admin, superAdmin, integration"
           }
         },
         "tags": [
@@ -11245,7 +11995,7 @@
   "info": {
     "title": "commerce-backend",
     "description": "",
-    "version": "2.49.5",
+    "version": "2.67.5",
     "contact": {}
   },
   "tags": [],
@@ -11365,6 +12115,7 @@
           "delivering",
           "concluded",
           "failed",
+          "cancelling",
           "cancelled",
           "partially_cancelled",
           "expired"
@@ -11508,6 +12259,13 @@
             "type": "string",
             "format": "uuid",
             "example": "3062cdc2-2bd8-4143-8a04-90fc1e607794"
+          },
+          "resellerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "selectBestPrice": {
+            "type": "boolean"
           },
           "variantIds": {
             "example": [],
@@ -11755,6 +12513,13 @@
             "type": "string",
             "format": "uuid",
             "example": "3062cdc2-2bd8-4143-8a04-90fc1e607794"
+          },
+          "resellerId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "selectBestPrice": {
+            "type": "boolean"
           },
           "variantIds": {
             "example": [],
@@ -12149,6 +12914,7 @@
           "delivering",
           "concluded",
           "failed",
+          "cancelling",
           "cancelled",
           "partially_cancelled",
           "expired"
@@ -12182,7 +12948,8 @@
           "status",
           "contractAddress",
           "name",
-          "relevance"
+          "relevance",
+          "price"
         ]
       },
       "ImageVariantMatchDto": {
@@ -12286,15 +13053,7 @@
           "requireKycContext": {
             "$ref": "#/components/schemas/ProductKycRequirementConfigDto"
           }
-        },
-        "required": [
-          "companyId",
-          "keyCollectionId",
-          "productId",
-          "requirementCTALabel",
-          "requirementDescription",
-          "requirementModalContent"
-        ]
+        }
       },
       "PassShareCodeDataFieldType": {
         "type": "string",
@@ -12352,6 +13111,19 @@
         "properties": {
           "passShareCodeConfig": {
             "$ref": "#/components/schemas/PassShareCodeConfigDto"
+          },
+          "acceptMultipleCurrenciesPurchase": {
+            "type": "boolean",
+            "example": true,
+            "default": true
+          },
+          "minCartItemPrice": {
+            "type": "string",
+            "example": "100"
+          },
+          "disableImageDisplay": {
+            "type": "boolean",
+            "example": true
           }
         }
       },
@@ -12439,8 +13211,12 @@
             "$ref": "#/components/schemas/ProductRequirementDto"
           },
           "terms": {
-            "type": "object",
-            "example": null
+            "example": null,
+            "nullable": true,
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
           },
           "relevance": {
             "type": "number",
@@ -12534,8 +13310,12 @@
             "$ref": "#/components/schemas/ProductRequirementDto"
           },
           "terms": {
-            "type": "object",
-            "example": null
+            "example": null,
+            "nullable": true,
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
           },
           "relevance": {
             "type": "number",
@@ -12602,67 +13382,28 @@
           }
         }
       },
-      "ResaleProductDto": {
+      "AddResaleItemToProductDto": {
         "type": "object",
         "properties": {
-          "name": {
-            "type": "string",
-            "example": "My Product"
-          },
-          "description": {
-            "type": "string",
-            "example": "A beautiful product"
-          },
-          "images": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ProductImageDto"
-            }
-          },
           "prices": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/ProductPriceDto"
             }
           },
-          "contractAddress": {
-            "type": "string",
-            "example": "0xDAA50a02340cBcFA1a6F4c02765430Ffe411b125"
-          },
-          "chainId": {
-            "type": "number",
-            "example": 80001,
-            "enum": [
-              1,
-              3,
-              4,
-              42,
-              1337,
-              80001,
-              137,
-              1284,
-              1285
-            ]
-          },
           "tokenId": {
-            "type": "string"
+            "type": "number"
           },
-          "startSaleAt": {
-            "type": "object",
-            "example": null
+          "amount": {
+            "type": "string",
+            "example": "100"
           },
-          "endSaleAt": {
-            "type": "object",
-            "example": null
+          "unlimited": {
+            "type": "boolean"
           }
         },
         "required": [
-          "name",
-          "description",
-          "prices",
-          "contractAddress",
-          "chainId",
-          "tokenId"
+          "prices"
         ]
       },
       "ProductVariantEntityDto": {
@@ -12964,7 +13705,7 @@
           "providersConfiguredByUser"
         ]
       },
-      "ConnectOrRefreshStripePaymentProviderDto": {
+      "ConnectOrRefreshStripeOauthPaymentProviderDto": {
         "type": "object",
         "properties": {
           "successConnectUrl": {
@@ -13092,6 +13833,10 @@
             "format": "uuid",
             "example": "65fe1119-6ec0-4b78-8d30-cb989914bdcb"
           },
+          "providerInputs": {
+            "type": "object",
+            "example": null
+          },
           "number": {
             "type": "string"
           },
@@ -13114,12 +13859,7 @@
           }
         },
         "required": [
-          "currencyId",
-          "number",
-          "cvv",
-          "expiryMonth",
-          "expiryYear",
-          "holderInfo"
+          "currencyId"
         ]
       },
       "CompanyWithEnabledStateResponseDto": {
@@ -13208,9 +13948,6 @@
               "$ref": "#/components/schemas/DeliverDelayDto"
             }
           },
-          "logo": {
-            "type": "string"
-          },
           "operatorWalletAddress": {
             "type": "string"
           },
@@ -13252,28 +13989,27 @@
       "UpdateCompanyConfigurationsDto": {
         "type": "object",
         "properties": {
-          "logo": {
-            "type": "string",
-            "example": "https://w3block.io/images/1.png"
-          },
           "deliverDelays": {
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/DeliverDelayDto"
             }
           },
+          "clientServiceFeePercentage": {
+            "type": "number",
+            "default": 0,
+            "example": 0
+          },
           "resaleFeePercentage": {
             "type": "number",
             "default": 0,
             "example": 0
           },
-          "orderExpirationConfig": {
-            "$ref": "#/components/schemas/OrderExpirationConfigDto"
+          "disableGasBilling": {
+            "type": "boolean",
+            "default": false
           }
-        },
-        "required": [
-          "resaleFeePercentage"
-        ]
+        }
       },
       "SetCompanyPaymentProviderSelectionDto": {
         "type": "object",
@@ -13380,6 +14116,28 @@
       "CreateStripePaymentProviderDto": {
         "type": "object",
         "properties": {
+          "secret": {
+            "type": "string"
+          },
+          "publicKey": {
+            "type": "string"
+          },
+          "minPaymentPrice": {
+            "type": "number",
+            "example": 50
+          },
+          "checkoutExpireTime": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "secret",
+          "publicKey"
+        ]
+      },
+      "CreateStripeOauthPaymentProviderDto": {
+        "type": "object",
+        "properties": {
           "successConnectUrl": {
             "type": "string"
           },
@@ -13409,6 +14167,26 @@
           },
           "checkoutExpireTime": {
             "type": "number"
+          },
+          "minPaymentPrice": {
+            "type": "number",
+            "example": 50
+          },
+          "maxInstallments": {
+            "type": "number",
+            "example": 1
+          },
+          "minInstallmentPrice": {
+            "type": "number",
+            "example": 50
+          },
+          "canSaveCreditCard": {
+            "type": "boolean",
+            "example": true
+          },
+          "percentageSplit": {
+            "type": "boolean",
+            "example": true
           }
         },
         "required": [
@@ -13418,11 +14196,15 @@
       "NotificationTypeEnum": {
         "type": "string",
         "enum": [
+          "admin_manual_order_created",
           "admin_order_concluded",
           "admin_order_failed",
+          "user_manual_order_created",
           "user_order_waiting_delivery",
           "user_order_concluded",
-          "destination_user_order_waiting_delivery"
+          "destination_user_order_waiting_delivery",
+          "user_provider_account_created",
+          "user_provider_account_document_requested"
         ]
       },
       "EmailSenderDto": {
@@ -14448,6 +15230,14 @@
           "usePatch": {
             "type": "boolean",
             "default": false
+          },
+          "updateWithSystemHeaders": {
+            "type": "boolean",
+            "default": false
+          },
+          "addCreatedAtToBody": {
+            "type": "boolean",
+            "default": false
           }
         },
         "required": [
@@ -14456,7 +15246,9 @@
           "status",
           "errors",
           "data",
-          "usePatch"
+          "usePatch",
+          "updateWithSystemHeaders",
+          "addCreatedAtToBody"
         ]
       },
       "WebhookEntityPaginatedDto": {
@@ -14653,6 +15445,13 @@
             "type": "array",
             "items": {
               "type": "string"
+            }
+          },
+          "notApplicableProductIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
             }
           }
         }
@@ -15542,6 +16341,7 @@
                 "delivering",
                 "concluded",
                 "failed",
+                "cancelling",
                 "cancelled",
                 "partially_cancelled",
                 "expired"
@@ -15581,6 +16381,9 @@
           "productId": {
             "type": "string",
             "format": "uuid"
+          },
+          "timezone": {
+            "type": "string"
           }
         }
       },
